@@ -4,11 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Dart/Flutter monorepo managed with Melos, containing three interconnected packages for network operations and utilities:
+This is a Jaspr web framework monorepo managed with Melos, containing seven interconnected packages for building modern web applications in Dart:
 
-- **jaspr_falconnect**: Network connectivity package (HTTP client, WebSocket, RPC)
-- **dart_falmodel**: Data models and network abstractions
-- **dart_faltool**: Utility extensions and helper functions
+- **jaspr_faltool**: Base utilities, logging, and build configuration
+- **jaspr_falmodel**: Data models, constants, and abstractions
+- **jaspr_falconnect**: Network connectivity (HTTP client, WebSocket, RPC)
+- **jaspr_falkit**: UI component library with layouts, SEO, and theming
+- **jaspr_falstore**: Key-value storage abstractions
+- **jaspr_falmonitor**: Analytics and monitoring (Sentry, Umami integration)
+- **jaspr_falconx**: Main aggregation package that exports all other packages
 
 ## Common Development Commands
 
@@ -16,17 +20,12 @@ This is a Dart/Flutter monorepo managed with Melos, containing three interconnec
 ```bash
 # Get dependencies for all packages
 melos get
-# or
-flutter pub get  # in each package directory
 
 # Upgrade dependencies
 melos upgrade
 
 # Check outdated dependencies
 melos outdated
-
-# Clean and restart (when dependencies are corrupted)
-melos restart
 ```
 
 ### Code Generation
@@ -36,23 +35,32 @@ melos build_runner
 
 # Run build_runner in a specific package
 cd jaspr_falconnect
-flutter pub run build_runner build --delete-conflicting-outputs
+dart pub run build_runner build --delete-conflicting-outputs
 ```
 
 ### Testing
 ```bash
 # Run all tests in a specific package
-cd dart_faltool
+cd jaspr_faltool
 dart test
 
 # Run a single test file
-dart test test/extensions/string_extensions_test.dart
+dart test test/unit_test.dart
 
 # Run tests matching a pattern
-dart test -n "StringExtension"
+dart test -n "TestPattern"
 
 # Run tests with specific tags
 dart test -t "unit"
+```
+
+### Jaspr Development
+```bash
+# Start development server (port 8080)
+jaspr serve
+
+# Build for production (output: build/jaspr/)
+jaspr build
 ```
 
 ### Linting and Analysis
@@ -69,62 +77,73 @@ dart fix --apply
 ### Package Dependencies
 The packages follow a layered architecture:
 ```
-dart_faltool (base utilities)
+jaspr_faltool (base utilities)
     ↑
-dart_falmodel (models & abstractions)
+jaspr_falmodel (models & abstractions)
     ↑
 jaspr_falconnect (network implementation)
+    ↑
+jaspr_falkit (UI components)
+jaspr_falstore (storage)
+jaspr_falmonitor (monitoring)
+    ↑
+jaspr_falconx (aggregation)
 ```
+
+### External Dependencies
+The jaspr packages wrap corresponding dart packages from the dart-falconx repository:
+- `dart_falconnect`: Comprehensive HTTP/WebSocket/RPC client
+- `dart_falmodel`: Base models and network exceptions  
+- `dart_faltool`: Utility extensions and helpers
 
 ### Key Components
 
-**jaspr_falconnect/lib/engine/**
-- **https/**: HTTP client implementation with interceptors (cache, error handling, retry, rate limiting)
-  - `BaseHttpClient`: Abstract class providing typed HTTP methods with automatic JSON conversion
-  - Interceptor pattern for cross-cutting concerns
-  
-- **sockets/**: WebSocket client implementation
-  - `SocketClient`: Abstract WebSocket client with retry logic and interceptor support
-  - Stream-based response handling
-  
-- **rpc/**: JSON-RPC implementation using Freezed for code generation
-  - Request/Response models with proper serialization
+**jaspr_falconnect/**
+- Network connectivity wrapping dart_falconnect with Jaspr-specific features
+- HTTP client with interceptors (cache, error handling, retry, rate limiting)
+- WebSocket client with retry logic and stream-based responses
+- JSON-RPC implementation with Freezed code generation
+
+**jaspr_falkit/**
+- **components/**: UI components including SEO (OpenGraph, Twitter, Schema.org)
+- **layouts/**: Layout system with gesture handling and responsive design
+- **themes/**: Theme management with light/dark mode support
+- **tailwind/**: Tailwind CSS integration for Dart
+
+**jaspr_falmonitor/**
+- Sentry integration for error tracking
+- Umami analytics integration
+- Monitoring utilities and abstractions
 
 ### Code Generation Patterns
 
 The project uses several code generation tools:
 
-1. **Freezed**: For immutable data classes (see `rpc_request.dart`)
+1. **Freezed**: For immutable data classes with JSON serialization
    - Generated files go to `lib/{{path}}/generated/` subdirectory
    
-2. **JsonSerializable**: For JSON serialization
+2. **JsonSerializable**: For JSON conversion
    - Works in conjunction with Freezed
    
-3. **Retrofit**: For REST API client generation
+3. **Auto Route**: Route generation for navigation
+   
+4. **Retrofit**: REST API client generation
 
 When modifying files with code generation annotations (@freezed, @JsonSerializable), always run build_runner afterward.
 
-### Network Exception Hierarchy
-
-The project has a comprehensive exception system in `jaspr_falconnect/lib/engine/https/exceptions/`:
-- HTTP 4xx errors (authentication, forbidden, not found, etc.)
-- HTTP 5xx errors (internal server error, gateway timeout, etc.)
-- Network-specific exceptions (timeout, no internet connection)
-
 ### Important Patterns
 
-1. **Extension Methods**: Heavy use of Dart extensions for type conversions and utilities (see dart_faltool)
+1. **Wrapper Pattern**: Jaspr packages wrap dart packages for web-specific functionality
 
-2. **Interceptor Pattern**: Both HTTP and WebSocket clients use interceptor chains for:
-   - Logging
-   - Error handling
-   - Retry logic
-   - Performance monitoring
-   - Rate limiting
+2. **Export Re-aggregation**: Each package exports both its own code and wrapped dependencies
 
-3. **Stream-Based WebSockets**: WebSocket responses are exposed as filtered streams for reactive programming
+3. **Component-Based UI**: Layout system with gesture handling, theming, and SEO optimization
 
-4. **Type-Safe HTTP Methods**: All HTTP methods require converter functions for automatic JSON to model conversion
+4. **Interceptor Pattern**: HTTP and WebSocket clients use interceptor chains for cross-cutting concerns
+
+5. **Extension Methods**: Heavy use of Dart extensions for type conversions and utilities
+
+6. **Stream-Based Architecture**: WebSocket responses exposed as filtered streams for reactive programming
 
 ## Configuration
 
@@ -134,9 +153,15 @@ The project uses `very_good_analysis` package for strict linting with some rules
 ### Build Configuration
 Code generation outputs are configured to generate into `generated/` subdirectories to keep the main source directories clean (see `build.yaml`).
 
+### Workspace Configuration
+- Dart SDK requirement: >=3.9.0 <4.0.0
+- Workspace-based dependency resolution in root `pubspec.yaml`
+- Melos configuration for monorepo management
+
 ## Development Tips
 
 1. Always run `melos get` after pulling changes that modify pubspec files
 2. Generated files (`*.g.dart`, `*.freezed.dart`) should not be edited manually
 3. When adding new packages to the workspace, update the root `pubspec.yaml` workspace section
-4. The project requires Dart SDK >=3.9.0
+4. For Jaspr-specific development, use `jaspr serve` for hot reload during development
+5. The project requires Dart SDK >=3.9.0 and uses workspace-based dependency resolution
