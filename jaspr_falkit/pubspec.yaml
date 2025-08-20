@@ -1,0 +1,27 @@
+name: jaspr_falkit
+description: A dart falcon package.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ">=3.9.0 <4.0.0"
+
+resolution: workspace
+
+dependencies:
+  jaspr_falmodel:
+    path: ../jaspr_falmodel
+  jaspr_falstore:
+    path: ../jaspr_falstore
+  jaspr_faltool:
+    path: ../jaspr_faltool
+
+  jaspr: ^0.20.0
+  jaspr_router: ^0.7.1
+  jaspr_riverpod: ^0.3.21
+  universal_web: ^1.1.1
+
+dev_dependencies:
+  build_runner: ^2.7.0
+  test: ^1.26.3
+  very_good_analysis: ^9.0.0

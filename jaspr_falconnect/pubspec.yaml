@@ -1,0 +1,30 @@
+name: jaspr_falconnect
+description: A new Flutter package project.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ">=3.9.0 <4.0.0"
+
+resolution: workspace
+
+dependencies:
+  dart_falconnect:
+    path: /Users/nonthawit/Data/Github/FalconX/dart-falconx/dart_falconnect
+
+  jaspr_falmodel:
+    path: ../jaspr_falmodel
+  jaspr_faltool:
+    path: ../jaspr_faltool
+
+  #PLATFORM: All
+  ansicolor: ^2.0.3
+  freezed_annotation: ^3.1.0
+
+dev_dependencies:
+  build_runner: ^2.7.0
+  test: ^1.26.3
+  lints: ^6.0.0
+  json_serializable: ^6.10.0
+  freezed: ^3.2.0
+  very_good_analysis: ^9.0.0
