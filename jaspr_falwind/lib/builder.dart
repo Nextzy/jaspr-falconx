@@ -30,33 +30,73 @@ class TailwindBuilder implements Builder {
     }
 
     bool foundDaisyui = false;
-    String? jasprFalkitPath;
-    final packageConfigFile = File('.dart_tool/package_graph.json');
-    if (await packageConfigFile.exists()) {
+
+    // Find workspace root by looking for melos.yaml
+    Directory? workspaceRoot;
+    final currentDir = Directory.current;
+
+    // Search upwards for melos.yaml to find workspace root
+    Directory searchDir = currentDir;
+    for (int i = 0; i < 5; i++) {
+      // Limit search depth to prevent infinite loops
+      final melosFile = File(p.join(searchDir.path, 'melos.yaml'));
+      if (await melosFile.exists()) {
+        workspaceRoot = searchDir;
+        log.info('Found workspace root at: ${workspaceRoot.path}');
+        break;
+      }
+      final parent = searchDir.parent;
+      if (parent.path == searchDir.path) break; // Reached filesystem root
+      searchDir = parent;
+    }
+
+    // Try to find package_config.json in multiple locations
+    final possibleConfigPaths = <String>[];
+
+    // Add current package's config
+    possibleConfigPaths.add(p.join(currentDir.path, '.dart_tool', 'package_config.json'));
+
+    // Add workspace root's config if found
+    if (workspaceRoot != null) {
+      possibleConfigPaths.add(p.join(workspaceRoot.path, '.dart_tool', 'package_config.json'));
+    }
+
+    // Try to find and read package config
+    File? packageConfigFile;
+    for (final path in possibleConfigPaths) {
+      final file = File(path);
+      if (await file.exists()) {
+        packageConfigFile = file;
+        log.info('Using package config at: ${p.absolute(path)}');
+        break;
+      }
+    }
+
+    if (packageConfigFile != null && await packageConfigFile.exists()) {
       final configJson = jsonDecode(await packageConfigFile.readAsString());
       final packages = configJson['packages'] as List?;
       if (packages != null) {
         for (final package in packages) {
-          if (package['name'] == 'jaspr_daisyui') {
+          if (package['name'] == 'jaspr_falwind') {
             foundDaisyui = true;
-          } else if (package['name'] == 'jaspr_falkit') {
-            final rootUri = package['rootUri'] as String?;
-            if (rootUri != null) {
-              // Convert URI to file path
-              if (rootUri.startsWith('file://')) {
-                jasprFalkitPath = Uri.parse(rootUri).toFilePath();
-              } else if (!rootUri.startsWith('http')) {
-                // Relative path
-                jasprFalkitPath = p.normalize(p.join(Directory.current.path, '.dart_tool', rootUri));
-              }
-            }
+            log.info('Found jaspr_falwind package');
           }
         }
       }
+    } else {
+      log.warning(
+        'Could not find package_config.json. Searching in: ${possibleConfigPaths.map(p.absolute).join(', ')}',
+      );
     }
 
     if (foundDaisyui == false) {
-      log.warning("Cannot find 'jaspr_daisyui' in package config.");
+      log.info('jaspr_falwind not found in package config - this is expected if running from jaspr_falwind itself.');
+      // When running from jaspr_falwind package itself, it won't be in its own package config
+      // Set foundDaisyui to true if we're in the jaspr_falwind directory
+      if (Directory.current.path.contains('jaspr_falwind')) {
+        foundDaisyui = true;
+        log.info('Running from jaspr_falwind package directly');
+      }
     }
 
     // DaisyUI
@@ -86,9 +126,6 @@ class TailwindBuilder implements Builder {
     // Log the paths for debugging
     log.info('Tailwind input: $inputPath');
     log.info('Tailwind output: $outputPath');
-    if (jasprFalkitPath != null) {
-      log.info('Including jaspr_falkit from: $jasprFalkitPath');
-    }
 
     // Check if input file exists
     if (!await File(inputPath).exists()) {
@@ -102,29 +139,23 @@ class TailwindBuilder implements Builder {
     // Add current project paths
     contentPaths.add(p.join(Directory.current.path, '{lib,web}', '**', '*.dart').toPosix(true));
 
-    // Add jaspr_falkit paths if available
-    if (jasprFalkitPath != null) {
-      contentPaths.add(p.join(jasprFalkitPath, '{lib,web}', '**', '*.dart').toPosix(true));
-    }
-
-    // Join all content paths with comma
-    final contentPathsStr = contentPaths.join(',');
-
-    // Run tailwindcss
-    final result = await Process.run('tailwindcss', [
+    // Build the command arguments
+    final commandArgs = [
       '--input',
       inputPath.toPosix(),
       '--output',
       outputPath.toPosix(),
       if (options.config.containsKey('tailwindcss')) options.config['tailwindcss'] as String,
-      if (hasCustomConfig) ...[
-        '--config',
-        p.join(Directory.current.path, 'tailwind.config.js').toPosix(),
-      ] else ...[
-        '--content',
-        contentPathsStr,
-      ],
-    ], runInShell: true);
+      '--cwd',
+      workspaceRoot!.path,
+    ];
+
+    // Log the full command for debugging
+    log.info('Running tailwindcss command:');
+    log.info('tailwindcss ${commandArgs.join(' ')}');
+
+    // Run tailwindcss
+    final result = await Process.run('tailwindcss', commandArgs, runInShell: true);
 
     // Check if the command succeeded
     if (result.exitCode != 0) {
