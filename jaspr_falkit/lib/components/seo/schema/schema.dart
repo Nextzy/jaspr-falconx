@@ -1,7 +1,16 @@
 export 'article.dart';
+export 'base_schema.dart';
 export 'blog.dart';
 export 'blog_posting.dart';
 export 'breadcrumb_list.dart';
+export 'contact_point.dart';
+export 'educational_organization.dart';
 export 'organization.dart';
+export 'person.dart';
+export 'person_helper.dart';
+export 'place.dart';
+export 'postal_address.dart';
 export 'software_application.dart';
 export 'web_page.dart';
+export 'web_schema_helper.dart';
+export 'website.dart';
