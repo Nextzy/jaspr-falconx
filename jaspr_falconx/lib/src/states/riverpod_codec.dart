@@ -1,12 +1,11 @@
-
 import 'package:jaspr_falconx/lib.dart';
 
 Codec<T, dynamic> riverpodCodec<T>(
-  T Function(Map<String, dynamic> json) fromJson,
+  T Function(dynamic json) fromJson,
 ) => RiverpodCodec(fromJson);
 
 Codec<Either<Failure, T>, dynamic> riverpodEitherCodec<T>(
-  T Function(Map<String, dynamic> json) fromJson,
+  T Function(dynamic json) fromJson,
 ) => RiverpodEitherCodec(fromJson);
 
 class RiverpodEncoder<T> extends Converter<T, dynamic> {
@@ -54,13 +53,13 @@ class RiverpodEitherEncoder<T> extends Converter<Either<Failure, T>, dynamic> {
 class RiverpodEitherDecoder<T> extends Converter<dynamic, Either<Failure, T>> {
   const RiverpodEitherDecoder(this.fromJson);
 
-  final T Function(Map<String, dynamic> json) fromJson;
+  final T Function(dynamic json) fromJson;
 
   @override
   Either<Failure, T> convert(dynamic input) {
     final json = jsonDecode(input as String) as Map<String, dynamic>;
     final failureJson = json['failure'] as Map<String, dynamic>?;
-    final dataJson = json['data'] as Map<String, dynamic>?;
+    final dataJson = json['data'];
 
     if (failureJson != null) {
       return Left(
@@ -80,7 +79,7 @@ class RiverpodEitherDecoder<T> extends Converter<dynamic, Either<Failure, T>> {
 class RiverpodEitherCodec<T> extends Codec<Either<Failure, T>, dynamic> {
   const RiverpodEitherCodec(this.fromJson);
 
-  final T Function(Map<String, dynamic> json) fromJson;
+  final T Function(dynamic json) fromJson;
 
   @override
   Converter<Either<Failure, T>, dynamic> get encoder => RiverpodEitherEncoder();

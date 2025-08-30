@@ -5,24 +5,35 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
     extends NullableComponentStateNotifier<DATA> {
   PreloadComponentNotifier({
     DATA? initialData,
-    required DATA Function(Map<String, dynamic> json) fromJson,
+    required DATA Function(dynamic json) fromJson,
     required String id,
   }) : super(initialData) {
-    _preloadProvider = SyncProvider<Either<Failure, DATA?>>((ref) async {
-      return preloadCall();
-    }, id: id, name: id, codec: riverpodEitherCodec(fromJson));
-    _controllerProvider = StateNotifierProvider<
-        PreloadComponentNotifier<DATA, EVENT>, ComponentState<DATA?>>(
-      name: id,
-      (ref) {
-        return this;
+    _preloadProvider = SyncProvider<Either<Failure, DATA?>>(
+      (ref) async {
+        return preloadCall();
       },
+      id: id,
+      name: id,
+      codec: riverpodEitherCodec(fromJson),
     );
+    _controllerProvider =
+        StateNotifierProvider<
+          PreloadComponentNotifier<DATA, EVENT>,
+          ComponentState<DATA?>
+        >(
+          name: id,
+          (ref) {
+            return this;
+          },
+        );
   }
 
   SyncProvider<Either<Failure, DATA?>>? _preloadProvider;
-  StateNotifierProvider<PreloadComponentNotifier<DATA, EVENT>,
-      ComponentState<DATA?>>? _controllerProvider;
+  StateNotifierProvider<
+    PreloadComponentNotifier<DATA, EVENT>,
+    ComponentState<DATA?>
+  >?
+  _controllerProvider;
 
   Future<Either<Failure, DATA?>> preloadCall();
 
@@ -36,13 +47,13 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
   }
 
   ComponentState<DATA?> readPreload(BuildContext context) {
-      //** Preload data on server **//
-      final either = context.read(_preloadProvider!).valueOrNull;
-      if (either?.isFailure ?? false) {
-        return ComponentState.fail(null, feedback: either?.failure);
-      } else {
-        return ComponentState.initial(either?.data);
-      }
+    //** Preload data on server **//
+    final either = context.read(_preloadProvider!).valueOrNull;
+    if (either?.isFailure ?? false) {
+      return ComponentState.fail(null, feedback: either?.failure);
+    } else {
+      return ComponentState.initial(either?.data);
+    }
   }
 
   ComponentState<DATA?> watch(BuildContext context) {
@@ -60,7 +71,6 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
 
     return state;
   }
-
 
   ComponentState<DATA?> read(BuildContext context) {
     final state = context.read(_controllerProvider!);

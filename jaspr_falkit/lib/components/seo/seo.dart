@@ -1,5 +1,6 @@
 export 'alternate_language.dart';
 export 'apple_meta.dart';
+export 'constants.dart';
 export 'default_meta.dart';
 export 'meta_tag.dart';
 export 'microsoft_meta.dart';
