@@ -3,6 +3,7 @@ import 'package:jaspr_falkit/lib.dart';
 /// Base class for all Schema.org components
 abstract class Schema extends DomComponent {
   Schema({
+    super.id,
     required Map<String, dynamic> schemaData,
     Map<String, dynamic>? additionalAttributes,
   }) : _schemaData = schemaData,
@@ -18,8 +19,9 @@ abstract class Schema extends DomComponent {
          children: [
            raw(
              jsonEncode(
-               Map<String, dynamic>.from(schemaData)
-                 ..removeWhere((k, v) => v == null),
+               Map<String, dynamic>.from(
+                 schemaData,
+               )..removeWhere((k, v) => v == null),
              ),
            ),
          ],
@@ -30,63 +32,11 @@ abstract class Schema extends DomComponent {
   /// Get the schema data as a Map
   Map<String, dynamic> get schemaData => _schemaData;
 
-  /// Helper to create image object
-  static Map<String, dynamic> createImageObject(
-    String url, {
-    String? caption,
-    int? width,
-    int? height,
-  }) {
+  /// Helper method to create image object
+  static Map<String, dynamic> createImageObject(String url) {
     return {
       '@type': 'ImageObject',
       'url': url,
-      if (caption != null) 'caption': caption,
-      if (width != null) 'width': width,
-      if (height != null) 'height': height,
-    };
-  }
-
-  /// Helper to create person entity
-  static Map<String, dynamic> createPerson({
-    required String name,
-    String? url,
-    String? email,
-    String? jobTitle,
-    Map<String, dynamic>? worksFor,
-    String? image,
-    List<String>? sameAs,
-  }) {
-    return {
-      '@type': 'Person',
-      'name': name,
-      if (url != null) 'url': url,
-      if (email != null) 'email': email,
-      if (jobTitle != null) 'jobTitle': jobTitle,
-      if (worksFor != null) 'worksFor': worksFor,
-      if (image != null) 'image': image,
-      if (sameAs != null && sameAs.isNotEmpty) 'sameAs': sameAs,
-    };
-  }
-
-  /// Helper to create organization entity
-  static Map<String, dynamic> createOrganization({
-    required String name,
-    String? url,
-    String? logo,
-    String? description,
-    List<String>? sameAs,
-    Map<String, dynamic>? contactPoint,
-    Map<String, dynamic>? address,
-  }) {
-    return {
-      '@type': 'Organization',
-      'name': name,
-      if (url != null) 'url': url,
-      if (logo != null) 'logo': createImageObject(logo),
-      if (description != null) 'description': description,
-      if (sameAs != null && sameAs.isNotEmpty) 'sameAs': sameAs,
-      if (contactPoint != null) 'contactPoint': contactPoint,
-      if (address != null) 'address': address,
     };
   }
 }
@@ -94,12 +44,15 @@ abstract class Schema extends DomComponent {
 /// Schema Group component for @graph support
 class SchemaGroup extends Schema {
   SchemaGroup({
+    super.id,
     required List<Schema> schemas,
     String context = 'https://schema.org',
   }) : super(
          schemaData: {
            '@context': context,
-           '@graph': schemas.map((schema) => schema.schemaData).toList(),
+           '@graph': schemas
+               .map((schema) => schema.schemaData..remove('@context'))
+               .toList(),
          },
        );
 
@@ -249,17 +202,6 @@ class SchemaGroup extends Schema {
 
     return SchemaGroup(schemas: schemas);
   }
-}
-
-/// Helper class for breadcrumb items
-class BreadcrumbItem {
-  const BreadcrumbItem({
-    required this.name,
-    required this.url,
-  });
-
-  final String name;
-  final String url;
 }
 
 /// Generic schema wrapper for arbitrary schema data

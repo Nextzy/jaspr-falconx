@@ -1,7 +1,7 @@
 import 'package:jaspr_falkit/lib.dart';
-import 'package:jaspr_falkit/components/seo/schema/base_schema.dart';
 
-/// EducationalOrganization schema for schools, universities, and educational institutions
+/// EducationalOrganization schema for schools, universities,
+/// and educational institutions
 class EducationalOrganizationSchema extends Schema {
   EducationalOrganizationSchema({
     required String name,
@@ -50,14 +50,17 @@ class EducationalOrganizationSchema extends Schema {
            if (alumni != null && alumni.isNotEmpty) 'alumni': alumni,
            if (legalName != null) 'legalName': legalName,
            if (accreditation != null) 'accreditation': accreditation,
-           if (educationalCredentialAwarded != null && educationalCredentialAwarded.isNotEmpty)
+           if (educationalCredentialAwarded != null &&
+               educationalCredentialAwarded.isNotEmpty)
              'educationalCredentialAwarded': educationalCredentialAwarded,
            if (hasOfferCatalog != null && hasOfferCatalog.isNotEmpty)
              'hasOfferCatalog': hasOfferCatalog,
            if (contactPoint != null) 'contactPoint': contactPoint,
            if (areaServed != null) 'areaServed': areaServed,
-           if (numberOfEmployees != null) 'numberOfEmployees': numberOfEmployees,
-           if (parentOrganization != null) 'parentOrganization': parentOrganization,
+           if (numberOfEmployees != null)
+             'numberOfEmployees': numberOfEmployees,
+           if (parentOrganization != null)
+             'parentOrganization': parentOrganization,
            if (subOrganization != null && subOrganization.isNotEmpty)
              'subOrganization': subOrganization,
            if (department != null) 'department': department,

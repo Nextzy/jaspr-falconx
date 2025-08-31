@@ -1,7 +1,7 @@
 import 'package:jaspr_falkit/lib.dart';
 
-class DefaultTag {
-  const DefaultTag({
+class DefaultMeta extends Fragment {
+  DefaultMeta({
     this.title,
     this.description,
     this.keywords,
@@ -14,7 +14,88 @@ class DefaultTag {
     this.themeColor,
     this.manifest,
     this.imageSrc,
-  });
+  }) : super(
+         children: [
+           if (title.isNotNullOrBlank)
+             DomComponent(
+               id: title?.hashStr(length: 5),
+               tag: 'title',
+               child: raw(title!),
+             ),
+           if (description.isNotNullOrBlank)
+             Meta(
+               name: 'description',
+               content: description,
+               unique: true,
+             ),
+           if (keywords != null && keywords.isNotEmpty)
+             Meta(
+               name: 'keywords',
+               content: keywords.map((str) => str.trim()).join(', '),
+               unique: true,
+             ),
+           if (publisher.isNotNullOrBlank)
+             Meta(
+               name: 'publisher',
+               content: publisher,
+               unique: true,
+             ),
+           if (author.isNotNullOrBlank)
+             Meta(
+               name: 'author',
+               content: author,
+               unique: true,
+             ),
+           if (robots.isNotNullOrBlank)
+             Meta(
+               name: 'robots',
+               content: robots,
+               unique: true,
+             ),
+           if (canonical.isNotNullOrBlank)
+             LinkHeader(
+               rel: 'canonical',
+               href: canonical!,
+               unique: true,
+             ),
+           if (favicon.isNotNullOrBlank)
+             LinkHeader(
+               rel: 'icon',
+               href: favicon!,
+               attributes: {
+                 'sizes': 'any',
+               },
+               unique: true,
+             ),
+           if (faviconSvg.isNotNullOrBlank)
+             LinkHeader(
+               rel: 'icon',
+               href: faviconSvg!,
+               attributes: {
+                 'type': 'image/svg+xml',
+               },
+               unique: true,
+             ),
+           if (themeColor.isNotNullOrBlank)
+             Meta(
+               name: 'theme-color',
+               content: themeColor,
+               unique: true,
+             ),
+           if (manifest.isNotNullOrBlank)
+             LinkHeader(
+               rel: 'manifest',
+               href: manifest!,
+               unique: true,
+             ),
+           if (imageSrc.isNotNullOrBlank)
+             LinkHeader(
+               rel: 'image_src',
+               href: imageSrc!,
+               unique: true,
+             ),
+         ],
+       );
 
   final String? title;
   final String? description;
@@ -28,42 +109,4 @@ class DefaultTag {
   final String? themeColor;
   final String? manifest;
   final String? imageSrc;
-}
-
-class DefaultMeta extends Fragment {
-  DefaultMeta(DefaultTag tag)
-      : super(
-          children: [
-            if (tag.title.isNotNullOrBlank)
-              DomComponent(tag: 'title', child: raw(tag.title!)),
-            if (tag.description.isNotNullOrBlank)
-              Meta(name: 'description', content: tag.description),
-            if (tag.keywords != null && tag.keywords!.isNotEmpty)
-              Meta(
-                  name: 'keywords',
-                  content: tag.keywords!.map((str) => str.trim()).join(', ')),
-            if (tag.publisher.isNotNullOrBlank)
-              Meta(name: 'publisher', content: tag.publisher),
-            if (tag.author.isNotNullOrBlank)
-              Meta(name: 'author', content: tag.author),
-            if (tag.robots.isNotNullOrBlank)
-              Meta(name: 'robots', content: tag.robots),
-            if (tag.canonical.isNotNullOrBlank)
-              link(rel: 'canonical', href: tag.canonical!),
-            if (tag.favicon.isNotNullOrBlank)
-              link(rel: 'icon', href: tag.favicon!, attributes: {
-                'sizes': 'any',
-              }),
-            if (tag.faviconSvg.isNotNullOrBlank)
-              link(rel: 'icon', href: tag.faviconSvg!, attributes: {
-                'type': 'image/svg+xml',
-              }),
-            if (tag.themeColor.isNotNullOrBlank)
-              Meta(name: 'theme-color', content: tag.themeColor),
-            if (tag.manifest.isNotNullOrBlank)
-              link(id: 'manifest', rel: 'manifest', href: tag.manifest!),
-            if (tag.imageSrc.isNotNullOrBlank)
-              link(id: 'image_src', rel: 'image_src', href: tag.imageSrc!),
-          ],
-        );
 }

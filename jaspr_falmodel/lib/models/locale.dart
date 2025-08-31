@@ -1,4 +1,3 @@
-import 'package:jaspr_falmodel/lib.dart';
 
 class Locale {
   const Locale({

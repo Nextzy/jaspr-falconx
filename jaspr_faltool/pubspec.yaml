@@ -12,7 +12,11 @@ dependencies:
   ansicolor: ^2.0.3
 
   dart_faltool:
-    path: /Users/nonthawit/Data/Github/FalconX/dart-falconx/dart_faltool
+    git:
+      url: https://github.com/Nextzy/dart-falconx.git
+      path: dart_faltool
+      ref: fd77887b41c32f305708f8884995c6ca6a323aa6
+#    path: /Users/nonthawit/Data/Github/FalconX/dart-falconx/dart_faltool
 
   jaspr: ^0.20.0
   universal_web: ^1.1.1

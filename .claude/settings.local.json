@@ -4,7 +4,9 @@
       "Bash(grep:*)",
       "Bash(dart analyze:*)",
       "WebFetch(domain:schema.org)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(dart format:*)",
+      "Bash(dart:*)"
     ],
     "deny": [],
     "ask": []

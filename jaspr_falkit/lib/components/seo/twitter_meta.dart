@@ -1,7 +1,7 @@
 import 'package:jaspr_falkit/lib.dart';
 
-class TwitterTag {
-  const TwitterTag({
+class TwitterMeta extends Fragment {
+  TwitterMeta({
     // *** Required *** //
     this.card = 'summary_large_image',
     // *** Recommend *** //
@@ -11,7 +11,50 @@ class TwitterTag {
     this.description,
     this.image,
     this.imageAlt,
-  });
+  }) : super(
+         children: [
+           Meta(
+             name: 'twitter:card',
+             content: card,
+             unique: true,
+           ),
+           if (site.isNotNullOrBlank)
+             Meta(
+               name: 'twitter:site',
+               content: site,
+               unique: true,
+             ),
+           if (creator.isNotNullOrBlank)
+             Meta(
+               name: 'twitter:creator',
+               content: creator,
+               unique: true,
+             ),
+           if (title.isNotNullOrBlank)
+             Meta(
+               name: 'twitter:title',
+               content: title,
+               unique: true,
+             ),
+           if (description.isNotNullOrBlank)
+             Meta(
+               name: 'twitter:description',
+               content: description,
+               unique: true,
+             ),
+           if (image.isNotNullOrBlank)
+             Meta(
+               name: 'twitter:image',
+               content: image,
+               unique: true,
+             ),
+           if (imageAlt.isNotNullOrBlank)
+             Meta(
+               name: 'twitter:image:alt',
+               content: imageAlt,
+             ),
+         ],
+       );
 
   final String? card;
   final String? site;
@@ -20,28 +63,4 @@ class TwitterTag {
   final String? description;
   final String? image;
   final String? imageAlt;
-}
-
-class TwitterMeta extends Fragment {
-  TwitterMeta(TwitterTag tag)
-      : super(
-          children: [
-            Meta(name: 'twitter:card', content: tag.card),
-            if (tag.site.isNotNullOrBlank)
-              Meta(name: 'twitter:site', content: tag.site),
-            if (tag.creator.isNotNullOrBlank)
-              Meta(name: 'twitter:creator', content: tag.creator),
-            if (tag.title.isNotNullOrBlank)
-              Meta(name: 'twitter:title', content: tag.title),
-            if (tag.description.isNotNullOrBlank)
-              Meta(
-                  name: 'twitter:description',
-                  content:
-                      tag.description),
-            if (tag.image.isNotNullOrBlank)
-              Meta(name: 'twitter:image', content: tag.image),
-            if (tag.imageAlt.isNotNullOrBlank)
-              Meta(name: 'twitter:image:alt', content: tag.imageAlt),
-          ],
-        );
 }
