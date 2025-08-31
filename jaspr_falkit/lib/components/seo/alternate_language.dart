@@ -12,15 +12,16 @@ class AlternateLanguageTag {
 
 class AlternateLanguageMeta extends Fragment {
   AlternateLanguageMeta(List<AlternateLanguageTag> tags)
-      : super(
-          children: tags
-              .map(
-                (tag) => link(
-                  rel: 'alternate',
-                  href: tag.url ?? '',
-                  attributes: {if (tag.locale != null) 'hreflang': tag.locale!},
-                ),
-              )
-              .toList(),
-        );
+    : super(
+        children: tags
+            .map(
+              (tag) => LinkHeader(
+                rel: 'alternate',
+                href: tag.url ?? '',
+                attributes: {if (tag.locale != null) 'hreflang': tag.locale!},
+                unique: true,
+              ),
+            )
+            .toList(),
+      );
 }

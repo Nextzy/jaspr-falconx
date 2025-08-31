@@ -1,6 +1,4 @@
 import 'package:jaspr_falkit/lib.dart';
-import 'package:jaspr_falkit/components/seo/schema/web_page.dart';
-import 'package:jaspr_falkit/components/seo/schema/website.dart';
 
 /// Helper class for creating WebSite and WebPage schemas with common patterns
 class WebSchemaHelper {
@@ -10,7 +8,7 @@ class WebSchemaHelper {
     required String url,
     String? description,
     String? searchUrlTemplate,
-    Map<String, String>? publisher,
+    SchemaDataType<OrganizationSchema>? publisher,
     List<String>? socialProfiles,
     String? inLanguage,
   }) {
@@ -25,8 +23,8 @@ class WebSchemaHelper {
         sameAs: socialProfiles,
       );
     }
-    
-    return WebSiteSchema.custom(
+
+    return WebSiteSchema(
       name: name,
       url: url,
       description: description,
@@ -41,10 +39,10 @@ class WebSchemaHelper {
     required String name,
     required String url,
     String? description,
-    Map<String, dynamic>? organization,
+    SchemaDataType<OrganizationSchema>? organization,
     List<String>? socialProfiles,
   }) {
-    return WebPageSchema.enhanced(
+    return WebPageSchema(
       name: name,
       url: url,
       description: description,
@@ -76,18 +74,13 @@ class WebSchemaHelper {
       headline: headline,
       url: url,
       datePublished: datePublished,
-      author: WebPageSchema.createAuthor(name: authorName),
+      author: authorName.toSchemaDataType(),
       description: description,
       dateModified: dateModified ?? datePublished,
-      publisher: publisherName != null
-          ? WebPageSchema.createPublisher(
-              name: publisherName,
-              logo: publisherLogo,
-            )
-          : null,
-      primaryImageOfPage: primaryImageUrl,
+      publisher: publisherName?.toSchemaDataType(),
+      primaryImageOfPage: primaryImageUrl?.toSchemaDataType(),
       keywords: keywords,
-      breadcrumb: breadcrumb,
+      breadcrumb: breadcrumb?.toSchemaDataType(),
     );
   }
 
@@ -97,11 +90,11 @@ class WebSchemaHelper {
     required String url,
     required Map<String, dynamic> product,
     String? description,
-    String? primaryImageUrl,
-    Map<String, dynamic>? breadcrumb,
-    Map<String, dynamic>? publisher,
+    SchemaDataType<ImageSchema>? primaryImageUrl,
+    SchemaDataType<BreadcrumbListSchema>? breadcrumb,
+    SchemaDataType<OrganizationSchema>? publisher,
   }) {
-    return WebPageSchema.enhanced(
+    return WebPageSchema(
       name: name,
       url: url,
       description: description,
@@ -118,7 +111,7 @@ class WebSchemaHelper {
     Map<String, dynamic>? organization,
     Map<String, dynamic>? contactPoint,
   }) {
-    return WebPageSchema.enhanced(
+    return WebPageSchema(
       name: 'Contact Us',
       url: url,
       description: 'Contact information and support',
@@ -141,21 +134,23 @@ class WebSchemaHelper {
     required List<Map<String, String>> faqs,
     String? description,
   }) {
-    return WebPageSchema.enhanced(
+    return WebPageSchema(
       name: name,
       url: url,
       description: description,
       mainEntity: {
         '@type': 'FAQPage',
         'mainEntity': faqs
-            .map((faq) => {
-                  '@type': 'Question',
-                  'name': faq['question'],
-                  'acceptedAnswer': {
-                    '@type': 'Answer',
-                    'text': faq['answer'],
-                  },
-                })
+            .map(
+              (faq) => {
+                '@type': 'Question',
+                'name': faq['question'],
+                'acceptedAnswer': {
+                  '@type': 'Answer',
+                  'text': faq['answer'],
+                },
+              },
+            )
             .toList(),
       },
     );
@@ -167,7 +162,7 @@ class WebSchemaHelper {
     required String searchQuery,
     int? resultCount,
   }) {
-    return WebPageSchema.enhanced(
+    return WebPageSchema(
       name: 'Search Results for: $searchQuery',
       url: url,
       description: 'Search results for $searchQuery',
@@ -188,12 +183,14 @@ class WebSchemaHelper {
       'itemListElement': items
           .asMap()
           .entries
-          .map((entry) => {
-                '@type': 'ListItem',
-                'position': entry.key + 1,
-                'name': entry.value.name,
-                'item': entry.value.url,
-              })
+          .map(
+            (entry) => {
+              '@type': 'ListItem',
+              'position': entry.key + 1,
+              'name': entry.value.name,
+              'item': entry.value.url,
+            },
+          )
           .toList(),
     };
   }

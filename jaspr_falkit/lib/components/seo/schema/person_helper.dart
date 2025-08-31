@@ -1,7 +1,4 @@
 import 'package:jaspr_falkit/lib.dart';
-import 'person.dart';
-import 'postal_address.dart';
-import 'contact_point.dart';
 
 /// Helper class for creating Person schema with common configurations
 class PersonSchemaHelper {
@@ -10,7 +7,7 @@ class PersonSchemaHelper {
     required String name,
     String? email,
     String? url,
-    String? image,
+    SchemaDataType<ImageSchema>? image,
     String? jobTitle,
   }) {
     return PersonSchema(
@@ -30,12 +27,12 @@ class PersonSchemaHelper {
     String? email,
     String? telephone,
     String? jobTitle,
-    String? image,
+    SchemaDataType<ImageSchema>? image,
     String? url,
-    Map<String, String>? worksFor,
-    Map<String, String>? affiliation,
+    SchemaDataType<OrganizationSchema>? worksFor,
+    SchemaDataType<OrganizationSchema>? affiliation,
     List<String>? sameAs,
-    Map<String, String>? address,
+    SchemaDataType<PostalAddressSchema>? address,
   }) {
     return PersonSchema(
       givenName: givenName,
@@ -60,9 +57,9 @@ class PersonSchemaHelper {
     String? familyName,
     String? email,
     String? url,
-    String? image,
+    SchemaDataType<ImageSchema>? image,
     List<String>? sameAs,
-    Map<String, String>? affiliation,
+    SchemaDataType<OrganizationSchema>? affiliation,
   }) {
     return PersonSchema(
       name: name,
@@ -89,15 +86,15 @@ class PersonSchemaHelper {
     String? gender,
     String? nationality,
     String? jobTitle,
-    String? image,
+    SchemaDataType<ImageSchema>? image,
     String? url,
-    Map<String, String>? address,
+    SchemaDataType<PostalAddressSchema>? address,
     Map<String, String>? birthPlace,
-    Map<String, String>? worksFor,
+    SchemaDataType<OrganizationSchema>? worksFor,
     Map<String, String>? alumniOf,
-    Map<String, String>? spouse,
-    List<Map<String, String>>? children,
-    List<Map<String, String>>? parent,
+    SchemaDataType<PersonSchema>? spouse,
+    SchemaListDataType<PersonSchema>? children,
+    SchemaListDataType<PersonSchema>? parent,
     List<String>? sameAs,
   }) {
     return PersonSchema(
@@ -119,7 +116,7 @@ class PersonSchemaHelper {
       worksFor: worksFor,
       alumniOf: alumniOf,
       spouse: spouse,
-      children: children,
+      personChildren: children,
       parent: parent,
       sameAs: sameAs,
     );
@@ -130,10 +127,10 @@ class PersonSchemaHelper {
     required String name,
     required String jobTitle,
     String? email,
-    String? image,
+    SchemaDataType<ImageSchema>? image,
     String? url,
     List<String>? sameAs,
-    Map<String, String>? worksFor,
+    SchemaDataType<OrganizationSchema>? worksFor,
   }) {
     return PersonSchema(
       name: name,

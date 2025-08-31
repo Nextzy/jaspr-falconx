@@ -1,21 +1,17 @@
 import 'package:jaspr_falkit/lib.dart';
-import 'package:jaspr_falkit/components/seo/schema/base_schema.dart';
 
-/// Data class for Article schema
-class ArticleSchemaData {
-  const ArticleSchemaData({
+/// Article schema component with full schema.org support
+class ArticleSchema extends Schema {
+  ArticleSchema({
     this.headline,
     this.alternativeHeadline,
     this.description,
     this.datePublished,
     this.dateModified,
     this.author,
-    this.authorType,
     this.publisher,
-    this.publisherType,
-    this.publisherLogo,
     this.url,
-    this.imageUrl,
+    this.image,
     this.keywords,
     this.articleSection,
     this.articleBody,
@@ -44,213 +40,66 @@ class ArticleSchemaData {
     this.speakable,
     this.backstory,
     this.additionalProperties,
-  });
-
-  final String? headline;
-  final String? alternativeHeadline;
-  final String? description;
-  final DateTime? datePublished;
-  final DateTime? dateModified;
-  final String? author;
-  final String? authorType;
-  final String? publisher;
-  final String? publisherType;
-  final String? publisherLogo;
-  final String? url;
-  final String? imageUrl;
-  final List<String>? keywords;
-  final String? articleSection;
-  final String? articleBody;
-  final int? wordCount;
-  final String? timeRequired;
-  final String? inLanguage;
-  final Map<String, dynamic>? about;
-  final Map<String, dynamic>? mentions;
-  final dynamic citation;
-  final Map<String, dynamic>? comment;
-  final Map<String, dynamic>? contributor;
-  final String? copyrightHolder;
-  final String? copyrightYear;
-  final Map<String, dynamic>? creator;
-  final Map<String, dynamic>? editor;
-  final String? genre;
-  final Map<String, dynamic>? hasPart;
-  final bool? isAccessibleForFree;
-  final Map<String, dynamic>? isPartOf;
-  final String? license;
-  final Map<String, dynamic>? mainEntity;
-  final dynamic position;
-  final String? thumbnailUrl;
-  final Map<String, dynamic>? video;
-  final Map<String, dynamic>? audio;
-  final Map<String, dynamic>? speakable;
-  final String? backstory;
-  final Map<String, dynamic>? additionalProperties;
-}
-
-/// Article schema component with full schema.org support
-class ArticleSchema extends Schema {
-  /// Constructor with data class
-  ArticleSchema(ArticleSchemaData data)
-      : this.custom(
-          headline: data.headline,
-          alternativeHeadline: data.alternativeHeadline,
-          description: data.description,
-          datePublished: data.datePublished?.toIso8601String(),
-          dateModified: data.dateModified?.toIso8601String(),
-          author: data.author != null
-              ? {
-                  '@type': data.authorType ?? 'Person',
-                  'name': data.author,
-                }
-              : null,
-          publisher: data.publisher != null
-              ? {
-                  '@type': data.publisherType ?? 'Organization',
-                  'name': data.publisher,
-                  if (data.publisherLogo != null)
-                    'logo': {
-                      '@type': 'ImageObject',
-                      'url': data.publisherLogo,
-                    },
-                }
-              : null,
-          url: data.url,
-          image: data.imageUrl,
-          keywords: data.keywords,
-          articleSection: data.articleSection,
-          articleBody: data.articleBody,
-          wordCount: data.wordCount,
-          timeRequired: data.timeRequired,
-          inLanguage: data.inLanguage,
-          about: data.about,
-          mentions: data.mentions,
-          citation: data.citation,
-          comment: data.comment,
-          contributor: data.contributor,
-          copyrightHolder: data.copyrightHolder,
-          copyrightYear: data.copyrightYear,
-          creator: data.creator,
-          editor: data.editor,
-          genre: data.genre,
-          hasPart: data.hasPart,
-          isAccessibleForFree: data.isAccessibleForFree,
-          isPartOf: data.isPartOf,
-          license: data.license,
-          mainEntity: data.mainEntity,
-          position: data.position,
-          thumbnailUrl: data.thumbnailUrl,
-          video: data.video,
-          audio: data.audio,
-          speakable: data.speakable,
-          backstory: data.backstory,
-          additionalProperties: data.additionalProperties,
-        );
-
-  /// Custom constructor with individual parameters
-  ArticleSchema.custom({
-    String? headline,
-    String? alternativeHeadline,
-    String? description,
-    String? datePublished,
-    String? dateModified,
-    Map<String, dynamic>? author,
-    Map<String, dynamic>? publisher,
-    String? url,
-    String? image,
-    List<String>? keywords,
-    String? articleSection,
-    String? articleBody,
-    int? wordCount,
-    String? timeRequired,
-    String? inLanguage,
-    Map<String, dynamic>? about,
-    Map<String, dynamic>? mentions,
-    dynamic citation,
-    Map<String, dynamic>? comment,
-    Map<String, dynamic>? contributor,
-    String? copyrightHolder,
-    String? copyrightYear,
-    Map<String, dynamic>? creator,
-    Map<String, dynamic>? editor,
-    String? genre,
-    Map<String, dynamic>? hasPart,
-    bool? isAccessibleForFree,
-    Map<String, dynamic>? isPartOf,
-    String? license,
-    Map<String, dynamic>? mainEntity,
-    dynamic position,
-    String? thumbnailUrl,
-    Map<String, dynamic>? video,
-    Map<String, dynamic>? audio,
-    Map<String, dynamic>? speakable,
-    String? backstory,
-    Map<String, dynamic>? additionalProperties,
   }) : super(
-          schemaData: {
-            '@context': 'https://schema.org',
-            '@type': 'Article',
-                  if (headline != null) 'headline': headline,
-                  if (alternativeHeadline != null)
-                    'alternativeHeadline': alternativeHeadline,
-                  if (description != null) 'description': description,
-                  if (datePublished != null) 'datePublished': datePublished,
-                  if (dateModified != null) 'dateModified': dateModified,
-                  if (author != null) 'author': author,
-                  if (publisher != null) 'publisher': publisher,
-                  if (url != null) 'url': url,
-                  if (image != null)
-                    'image': image is String
-                        ? {'@type': 'ImageObject', 'url': image}
-                        : image,
-                  if (keywords != null && keywords.isNotEmpty)
-                    'keywords': keywords.join(', '),
-                  if (articleSection != null)
-                    'articleSection': articleSection,
-                  if (articleBody != null) 'articleBody': articleBody,
-                  if (wordCount != null) 'wordCount': wordCount,
-                  if (timeRequired != null) 'timeRequired': timeRequired,
-                  if (inLanguage != null) 'inLanguage': inLanguage,
-                  if (about != null) 'about': about,
-                  if (mentions != null) 'mentions': mentions,
-                  if (citation != null) 'citation': citation,
-                  if (comment != null) 'comment': comment,
-                  if (contributor != null) 'contributor': contributor,
-                  if (copyrightHolder != null)
-                    'copyrightHolder': copyrightHolder,
-                  if (copyrightYear != null) 'copyrightYear': copyrightYear,
-                  if (creator != null) 'creator': creator,
-                  if (editor != null) 'editor': editor,
-                  if (genre != null) 'genre': genre,
-                  if (hasPart != null) 'hasPart': hasPart,
-                  if (isAccessibleForFree != null)
-                    'isAccessibleForFree': isAccessibleForFree,
-                  if (isPartOf != null) 'isPartOf': isPartOf,
-                  if (license != null) 'license': license,
-                  if (mainEntity != null) 'mainEntity': mainEntity,
-                  if (position != null) 'position': position,
-                  if (thumbnailUrl != null) 'thumbnailUrl': thumbnailUrl,
-                  if (video != null) 'video': video,
-                  if (audio != null) 'audio': audio,
-                  if (speakable != null) 'speakable': speakable,
-                  if (backstory != null) 'backstory': backstory,
-                  if (additionalProperties != null) ...additionalProperties,
-          },
-        );
+         schemaData: {
+           '@context': 'https://schema.org',
+           '@type': 'Article',
+           if (headline != null) 'headline': headline,
+           if (alternativeHeadline != null)
+             'alternativeHeadline': alternativeHeadline,
+           if (description != null) 'description': description,
+           if (datePublished != null) 'datePublished': datePublished,
+           if (dateModified != null) 'dateModified': dateModified,
+           if (author != null) 'author': author.value,
+           if (publisher != null) 'publisher': publisher.value,
+           if (url != null) 'url': url,
+           if (image != null) 'image': image.value,
+           if (keywords != null && keywords.isNotEmpty)
+             'keywords': keywords.join(', '),
+           if (articleSection != null) 'articleSection': articleSection,
+           if (articleBody != null) 'articleBody': articleBody,
+           if (wordCount != null) 'wordCount': wordCount,
+           if (timeRequired != null) 'timeRequired': timeRequired,
+           if (inLanguage != null) 'inLanguage': inLanguage,
+           if (about != null) 'about': about,
+           if (mentions != null) 'mentions': mentions,
+           if (citation != null) 'citation': citation,
+           if (comment != null) 'comment': comment,
+           if (contributor != null) 'contributor': contributor.value,
+           if (copyrightHolder != null) 'copyrightHolder': copyrightHolder,
+           if (copyrightYear != null) 'copyrightYear': copyrightYear,
+           if (creator != null) 'creator': creator.value,
+           if (editor != null) 'editor': editor.value,
+           if (genre != null) 'genre': genre,
+           if (hasPart != null) 'hasPart': hasPart,
+           if (isAccessibleForFree != null)
+             'isAccessibleForFree': isAccessibleForFree,
+           if (isPartOf != null) 'isPartOf': isPartOf,
+           if (license != null) 'license': license,
+           if (mainEntity != null) 'mainEntity': mainEntity,
+           if (position != null) 'position': position,
+           if (thumbnailUrl != null) 'thumbnailUrl': thumbnailUrl,
+           if (video != null) 'video': video,
+           if (audio != null) 'audio': audio,
+           if (speakable != null) 'speakable': speakable,
+           if (backstory != null) 'backstory': backstory,
+           if (additionalProperties != null) ...additionalProperties,
+         },
+       );
 
   /// Factory constructor for news articles
   factory ArticleSchema.newsArticle({
     required String headline,
     required String datePublished,
-    required Map<String, dynamic> publisher,
+    required SchemaDataType<OrganizationSchema> publisher,
     String? description,
     String? articleSection,
-    Map<String, dynamic>? author,
+    SchemaDataType<PersonSchema>? author,
     String? url,
-    String? image,
+    SchemaDataType<ImageSchema>? image,
     List<String>? keywords,
   }) {
-    return ArticleSchema.custom(
+    return ArticleSchema(
       headline: headline,
       datePublished: datePublished,
       publisher: publisher,
@@ -267,16 +116,16 @@ class ArticleSchema extends Schema {
   factory ArticleSchema.techArticle({
     required String headline,
     required String datePublished,
-    required Map<String, dynamic> author,
+    required SchemaDataType<PersonSchema> author,
     String? description,
     String? articleBody,
     String? url,
-    String? image,
+    SchemaDataType<ImageSchema>? image,
     List<String>? keywords,
     String? genre,
     Map<String, dynamic>? about,
   }) {
-    return ArticleSchema.custom(
+    return ArticleSchema(
       headline: headline,
       datePublished: datePublished,
       author: author,
@@ -289,6 +138,100 @@ class ArticleSchema extends Schema {
       about: about,
     );
   }
+
+  /// Factory constructor for blog posts
+  factory ArticleSchema.blogPost({
+    required String headline,
+    required String datePublished,
+    required SchemaDataType<PersonSchema> author,
+    String? description,
+    String? articleBody,
+    String? url,
+    SchemaDataType<ImageSchema>? image,
+    List<String>? keywords,
+    String? dateModified,
+    SchemaDataType<OrganizationSchema>? publisher,
+  }) {
+    return ArticleSchema(
+      headline: headline,
+      datePublished: datePublished,
+      dateModified: dateModified,
+      author: author,
+      publisher: publisher,
+      description: description,
+      articleBody: articleBody,
+      url: url,
+      image: image,
+      keywords: keywords,
+    );
+  }
+
+  /// Factory constructor for scholarly articles
+  factory ArticleSchema.scholarlyArticle({
+    required String headline,
+    required String datePublished,
+    required SchemaDataType<PersonSchema> author,
+    required String articleBody,
+    String? description,
+    String? url,
+    SchemaDataType<ImageSchema>? image,
+    List<String>? keywords,
+    dynamic citation,
+    String? genre,
+    dynamic isPartOf,
+  }) {
+    return ArticleSchema(
+      headline: headline,
+      datePublished: datePublished,
+      author: author,
+      articleBody: articleBody,
+      description: description,
+      url: url,
+      image: image,
+      keywords: keywords,
+      citation: citation,
+      genre: genre ?? 'Academic',
+      isPartOf: isPartOf is Map<String, dynamic> ? isPartOf : null,
+    );
+  }
+
+  final String? headline;
+  final String? alternativeHeadline;
+  final String? description;
+  final String? datePublished;
+  final String? dateModified;
+  final SchemaDataType<PersonSchema>? author;
+  final SchemaDataType<OrganizationSchema>? publisher;
+  final String? url;
+  final SchemaDataType<ImageSchema>? image;
+  final List<String>? keywords;
+  final String? articleSection;
+  final String? articleBody;
+  final int? wordCount;
+  final String? timeRequired;
+  final String? inLanguage;
+  final Map<String, dynamic>? about;
+  final Map<String, dynamic>? mentions;
+  final dynamic citation; // Can be String, List, or Map
+  final Map<String, dynamic>? comment;
+  final SchemaDataType<PersonSchema>? contributor;
+  final String? copyrightHolder;
+  final String? copyrightYear;
+  final SchemaDataType<PersonSchema>? creator;
+  final SchemaDataType<PersonSchema>? editor;
+  final String? genre;
+  final Map<String, dynamic>? hasPart;
+  final bool? isAccessibleForFree;
+  final Map<String, dynamic>? isPartOf;
+  final String? license;
+  final Map<String, dynamic>? mainEntity;
+  final dynamic position; // Can be String or Number
+  final String? thumbnailUrl;
+  final Map<String, dynamic>? video;
+  final Map<String, dynamic>? audio;
+  final Map<String, dynamic>? speakable;
+  final String? backstory;
+  final Map<String, dynamic>? additionalProperties;
 
   /// Helper method to create author object
   static Map<String, dynamic> createAuthor({
@@ -351,6 +294,26 @@ class ArticleSchema extends Schema {
     };
   }
 
+  /// Helper method to create audio object
+  static Map<String, dynamic> createAudio({
+    required String name,
+    required String description,
+    required String contentUrl,
+    String? duration,
+    String? encodingFormat,
+    String? uploadDate,
+  }) {
+    return {
+      '@type': 'AudioObject',
+      'name': name,
+      'description': description,
+      'contentUrl': contentUrl,
+      if (duration != null) 'duration': duration,
+      if (encodingFormat != null) 'encodingFormat': encodingFormat,
+      if (uploadDate != null) 'uploadDate': uploadDate,
+    };
+  }
+
   /// Helper method to create speakable specification
   static Map<String, dynamic> createSpeakable({
     List<String>? cssSelector,
@@ -363,7 +326,28 @@ class ArticleSchema extends Schema {
       if (xpath != null && xpath.isNotEmpty) 'xpath': xpath,
     };
   }
+
+  /// Helper method to create citation
+  static Map<String, dynamic> createCitation({
+    required String name,
+    required String author,
+    String? publisher,
+    String? datePublished,
+    String? url,
+    String? doi,
+  }) {
+    return {
+      '@type': 'CreativeWork',
+      'name': name,
+      'author': {'@type': 'Person', 'name': author},
+      if (publisher != null) 'publisher': publisher,
+      if (datePublished != null) 'datePublished': datePublished,
+      if (url != null) 'url': url,
+      if (doi != null) 'identifier': {'@type': 'PropertyValue', 'value': doi},
+    };
+  }
 }
 
 // Backward compatibility alias
 typedef ArticleSchemaOrg = ArticleSchema;
+typedef ArticleSchemaData = ArticleSchema;
