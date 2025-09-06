@@ -1,6 +1,6 @@
 name: jaspr_falwind
 description: Tailwind and DaisyUI integration for Jaspr.
-version: 1.0.0
+version: 1.0.1
 
 topics:
   - jaspr
