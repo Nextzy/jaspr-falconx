@@ -41,7 +41,6 @@ class AppleMeta extends Fragment {
              LinkHeader(
                rel: 'apple-touch-icon',
                href: appleIcon ?? iconUrl!,
-               unique: true,
              ),
            script(
              id: pwaScript.hashStr(length: 5),

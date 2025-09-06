@@ -53,7 +53,6 @@ class DefaultOpenGraphMeta extends Fragment {
                rel: 'preload',
                href: imageUrl!,
                as: 'image',
-               unique: true,
              ),
            if ((siteName ?? title).isNotNullOrBlank)
              Meta(
