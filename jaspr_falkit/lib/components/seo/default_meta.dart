@@ -18,7 +18,6 @@ class DefaultMeta extends Fragment {
          children: [
            if (title.isNotNullOrBlank)
              DomComponent(
-               id: title?.hashStr(length: 5),
                tag: 'title',
                child: raw(title!),
              ),
@@ -56,25 +55,22 @@ class DefaultMeta extends Fragment {
              LinkHeader(
                rel: 'canonical',
                href: canonical!,
-               unique: true,
              ),
            if (favicon.isNotNullOrBlank)
              LinkHeader(
                rel: 'icon',
                href: favicon!,
-               attributes: {
+               attributes: const {
                  'sizes': 'any',
                },
-               unique: true,
              ),
            if (faviconSvg.isNotNullOrBlank)
              LinkHeader(
                rel: 'icon',
                href: faviconSvg!,
-               attributes: {
+               attributes: const {
                  'type': 'image/svg+xml',
                },
-               unique: true,
              ),
            if (themeColor.isNotNullOrBlank)
              Meta(
@@ -86,13 +82,11 @@ class DefaultMeta extends Fragment {
              LinkHeader(
                rel: 'manifest',
                href: manifest!,
-               unique: true,
              ),
            if (imageSrc.isNotNullOrBlank)
              LinkHeader(
                rel: 'image_src',
                href: imageSrc!,
-               unique: true,
              ),
          ],
        );

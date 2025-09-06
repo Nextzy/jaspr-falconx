@@ -19,7 +19,6 @@ class AlternateLanguageMeta extends Fragment {
                 rel: 'alternate',
                 href: tag.url ?? '',
                 attributes: {if (tag.locale != null) 'hreflang': tag.locale!},
-                unique: true,
               ),
             )
             .toList(),
