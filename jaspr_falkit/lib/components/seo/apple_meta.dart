@@ -7,7 +7,7 @@ class AppleMeta extends Fragment {
     this.fullscreen,
     this.iconUrl,
     this.color,
-    String appleIcon = '/apple-touch-icon.png',
+    String? appleIcon,
     String pwaScript = 'https://unpkg.com/ios-pwa-splash@1.0.0/cdn.min.js',
   }) : super(
          children: [
@@ -28,24 +28,30 @@ class AppleMeta extends Fragment {
              unique: true,
            ),
            Meta(
+             name: 'mobile-web-app-capable',
+             content: capable ?? 'yes',
+             unique: true,
+           ),
+           Meta(
              name: 'apple-touch-fullscreen',
              content: fullscreen ?? 'yes',
              unique: true,
            ),
-           if (iconUrl.isNotNullOrBlank)
+           if (appleIcon.isNotNullOrBlank || iconUrl.isNotNullOrBlank)
              LinkHeader(
                rel: 'apple-touch-icon',
-               href: iconUrl!,
+               href: appleIcon ?? iconUrl!,
                unique: true,
              ),
            script(
-             id: pwaScript.hashStr(length: 15),
+             id: pwaScript.hashStr(length: 5),
              src: pwaScript,
            ),
            script(
-             id: appleIcon.hashStr(length: 5),
+             id: (appleIcon ?? iconUrl)?.hashStr(length: 5),
              src: '',
-             content: "iosPWASplash('$appleIcon', '${color ?? '#FFFFFF'}');",
+             content:
+                 "iosPWASplash('${appleIcon ?? iconUrl}', '${color ?? '#FFFFFF'}');",
            ),
          ],
        );

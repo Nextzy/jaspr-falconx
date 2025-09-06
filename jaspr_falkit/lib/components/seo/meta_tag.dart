@@ -329,7 +329,7 @@ class LinkHeader extends DomComponent {
          tag: 'link',
          attributes: {
            ...?attributes,
-           if (unique) 'id': 'link_$rel$type$as$href'.hashStr(length: 5),
+           if (unique) 'id': 'link_$rel$type$as'.hashStr(length: 5),
            if (id.isNotNullOrBlank && unique == false) 'id': id!,
            'href': href,
            if (rel != null) 'rel': rel,
