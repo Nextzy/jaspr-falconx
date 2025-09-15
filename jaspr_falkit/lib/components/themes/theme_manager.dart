@@ -46,8 +46,8 @@ class ThemeManagerState extends State<ThemeManager> {
   }
 
   @override
-  Iterable<Component> build(BuildContext context) sync* {
-    yield ThemeProvider(
+  Component build(BuildContext context) {
+    return ThemeProvider(
       currentTheme: _currentTheme,
       isDark: _isDark,
       setTheme: setTheme,
@@ -92,7 +92,9 @@ class ThemeManagerState extends State<ThemeManager> {
   }
 
   void saveTheme(ThemeMode theme) {
-    KeyValueStorage.instance
-        .save(ThemeManager.themeStorageKey, data: theme.name);
+    KeyValueStorage.instance.save(
+      ThemeManager.themeStorageKey,
+      data: theme.name,
+    );
   }
 }
