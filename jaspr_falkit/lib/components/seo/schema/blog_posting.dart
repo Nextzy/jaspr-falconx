@@ -245,19 +245,4 @@ class BlogPostingSchema extends Schema {
       'userInteractionCount': userInteractionCount,
     };
   }
-
-  /// Method to convert to JSON for embedding in other schemas
-  Map<String, dynamic> toJsonForEmbedding() {
-    final json = <String, dynamic>{};
-    final childrenList = children;
-    if (childrenList != null && childrenList.isNotEmpty) {
-      final firstChild = childrenList.first;
-      if (firstChild is RawText) {
-        final content = jsonDecode(firstChild.text) as Map<String, dynamic>
-          ..remove('@context');
-        return content;
-      }
-    }
-    return json;
-  }
 }

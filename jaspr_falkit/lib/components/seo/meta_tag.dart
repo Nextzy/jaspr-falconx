@@ -81,8 +81,8 @@ class SeoMetaTagBuilder {
   }
 }
 
-class SeoMetaTags extends Fragment {
-  SeoMetaTags({
+class SeoMetaTags extends StatelessComponent {
+  const SeoMetaTags({
     //**** Default SEO *****//
     this.favicon,
     this.faviconSvg,
@@ -118,125 +118,7 @@ class SeoMetaTags extends Fragment {
     this.schemaOrganization,
     this.alternateLanguageUrls,
     this.breadcrumbItems,
-  }) : super(
-         children: [
-           DefaultMeta(
-             title: title,
-             description: description,
-             keywords: keywords,
-             author: author,
-             robots: robots,
-             publisher: publisher,
-             favicon: favicon,
-             faviconSvg: faviconSvg,
-             canonical: canonical ?? url,
-             themeColor: color,
-             manifest: manifest,
-             imageSrc: imageSrc ?? imageUrl,
-           ),
-           DefaultOpenGraphMeta(
-             title: openGraph?.title ?? title,
-             type: openGraph?.type ?? type,
-             url: openGraph?.url ?? url,
-             imageUrl: openGraph?.imageUrl ?? imageUrl,
-             description: openGraph?.description ?? description,
-             siteName: openGraph?.siteName ?? title,
-             locale: openGraph?.locale ?? locale,
-             imageAlt: openGraph?.imageAlt ?? imageAlt,
-             video: openGraph?.video ?? video,
-             imageHeight: openGraph?.imageHeight ?? imageHeight,
-             imageWidth: openGraph?.imageWidth ?? imageWidth,
-           ),
-           if (type == OgType.article || openGraph?.type == OgType.article)
-             ArticleOpenGraphMeta(
-               author: openGraphArticle?.author ?? author,
-               section: openGraphArticle?.section,
-               tags: openGraphArticle?.tags,
-               publishedTime: openGraphArticle?.publishedTime,
-               modifiedTime: openGraphArticle?.modifiedTime,
-             ),
-           TwitterMeta(
-             site: twitter?.site,
-             card: twitter?.card,
-             creator: twitter?.creator,
-             title: twitter?.title ?? title,
-             description: twitter?.description ?? description,
-             image: twitter?.image ?? imageUrl,
-             imageAlt: twitter?.imageAlt ?? imageAlt,
-           ),
-           PinterestMeta(
-             pinterestRichPin: pinterest?.pinterestRichPin,
-             author: pinterest?.author ?? author,
-           ),
-           AppleMeta(
-             title: apple?.title ?? title,
-             iconUrl: apple?.iconUrl ?? iconUrl,
-             color: apple?.color ?? color,
-             capable: apple?.capable,
-             fullscreen: apple?.fullscreen,
-           ),
-           MicrosoftMeta(
-             tileColor: microsoft?.tileColor ?? color,
-             tileImageUrl: microsoft?.tileImageUrl ?? iconUrl,
-           ),
-           if (alternateLanguageUrls != null &&
-               (alternateLanguageUrls?.isNotEmpty ?? false))
-             AlternateLanguageMeta(alternateLanguageUrls!),
-           SchemaGroup(
-             id: 'schema-group',
-             schemas: [
-               if (schemaBlog != null) schemaBlog!,
-               if (type == OgType.article ||
-                   openGraph?.type == OgType.article) ...[
-                 BlogPostingSchema(
-                   headline: schemaBlogPosting?.headline ?? title,
-                   description: schemaBlogPosting?.description ?? description,
-                   url: schemaBlogPosting?.url ?? url,
-                   datePublished: schemaBlogPosting?.datePublished,
-                   dateModified: schemaBlogPosting?.dateModified,
-                   author:
-                       schemaBlogPosting?.author ?? author?.toSchemaDataType(),
-                   publisher:
-                       schemaBlogPosting?.publisher ??
-                       publisher?.toSchemaDataType(),
-                   image:
-                       schemaBlogPosting?.image ?? imageUrl?.toSchemaDataType(),
-                   keywords: schemaBlogPosting?.keywords ?? keywords,
-                   articleSection: schemaBlogPosting?.articleSection,
-                   wordCount: schemaBlogPosting?.wordCount,
-                   timeRequired: schemaBlogPosting?.timeRequired,
-                   inLanguage: schemaBlogPosting?.inLanguage ?? locale,
-                   articleBody: schemaBlogPosting?.articleBody,
-                   additionalProperties:
-                       schemaBlogPosting?.additionalProperties,
-                 ),
-               ],
-               if (type == OgType.website || openGraph?.type == OgType.website)
-                 WebSiteSchema(
-                   name: schemaWebSite?.name ?? title,
-                   description: schemaWebSite?.description ?? description,
-                   url: schemaWebSite?.url ?? url,
-                   inLanguage: schemaWebSite?.inLanguage ?? locale,
-                   datePublished: schemaWebSite?.datePublished,
-                   dateModified: schemaWebSite?.dateModified,
-                   author: schemaWebSite?.author ?? author?.toSchemaDataType(),
-                   publisher:
-                       schemaWebSite?.publisher ??
-                       publisher?.toSchemaDataType(),
-                   keywords: schemaWebSite?.keywords ?? keywords,
-                   image: schemaWebSite?.image ?? imageUrl?.toSchemaDataType(),
-                   mainEntity: schemaWebSite?.mainEntity,
-                   additionalProperties: schemaWebSite?.additionalProperties,
-                 ),
-               if (schemaPerson != null) schemaPerson!,
-               if (schemaOrganization != null) schemaOrganization!,
-               if (breadcrumbItems != null &&
-                   (breadcrumbItems?.isNotEmpty ?? false))
-                 BreadcrumbListSchema(items: breadcrumbItems!),
-             ],
-           ),
-         ],
-       );
+  });
 
   final String? favicon;
   final String? faviconSvg;
@@ -272,6 +154,120 @@ class SeoMetaTags extends Fragment {
   final BlogPostingSchema? schemaBlogPosting;
   final PersonSchema? schemaPerson;
   final OrganizationSchema? schemaOrganization;
+
+  @override
+  Component build(BuildContext context) => Document.head(
+    children: [
+      DefaultMeta(
+        title: title,
+        description: description,
+        keywords: keywords,
+        author: author,
+        robots: robots,
+        publisher: publisher,
+        favicon: favicon,
+        faviconSvg: faviconSvg,
+        canonical: canonical ?? url,
+        themeColor: color,
+        manifest: manifest,
+        imageSrc: imageSrc ?? imageUrl,
+      ),
+      DefaultOpenGraphMeta(
+        title: openGraph?.title ?? title,
+        type: openGraph?.type ?? type,
+        url: openGraph?.url ?? url,
+        imageUrl: openGraph?.imageUrl ?? imageUrl,
+        description: openGraph?.description ?? description,
+        siteName: openGraph?.siteName ?? title,
+        locale: openGraph?.locale ?? locale,
+        imageAlt: openGraph?.imageAlt ?? imageAlt,
+        video: openGraph?.video ?? video,
+        imageHeight: openGraph?.imageHeight ?? imageHeight,
+        imageWidth: openGraph?.imageWidth ?? imageWidth,
+      ),
+      if (type == OgType.article || openGraph?.type == OgType.article)
+        ArticleOpenGraphMeta(
+          author: openGraphArticle?.author ?? author,
+          section: openGraphArticle?.section,
+          tags: openGraphArticle?.tags,
+          publishedTime: openGraphArticle?.publishedTime,
+          modifiedTime: openGraphArticle?.modifiedTime,
+        ),
+      TwitterMeta(
+        site: twitter?.site,
+        card: twitter?.card,
+        creator: twitter?.creator,
+        title: twitter?.title ?? title,
+        description: twitter?.description ?? description,
+        image: twitter?.image ?? imageUrl,
+        imageAlt: twitter?.imageAlt ?? imageAlt,
+      ),
+      PinterestMeta(
+        pinterestRichPin: pinterest?.pinterestRichPin,
+        author: pinterest?.author ?? author,
+      ),
+      AppleMeta(
+        title: apple?.title ?? title,
+        iconUrl: apple?.iconUrl ?? iconUrl,
+        color: apple?.color ?? color,
+        capable: apple?.capable,
+        fullscreen: apple?.fullscreen,
+      ),
+      MicrosoftMeta(
+        tileColor: microsoft?.tileColor ?? color,
+        tileImageUrl: microsoft?.tileImageUrl ?? iconUrl,
+      ),
+      if (alternateLanguageUrls != null &&
+          (alternateLanguageUrls?.isNotEmpty ?? false))
+        AlternateLanguageMeta(alternateLanguageUrls!),
+      SchemaGroup(
+        id: 'schema-group',
+        schemas: [
+          if (schemaBlog != null) schemaBlog!,
+          if (type == OgType.article || openGraph?.type == OgType.article) ...[
+            BlogPostingSchema(
+              headline: schemaBlogPosting?.headline ?? title,
+              description: schemaBlogPosting?.description ?? description,
+              url: schemaBlogPosting?.url ?? url,
+              datePublished: schemaBlogPosting?.datePublished,
+              dateModified: schemaBlogPosting?.dateModified,
+              author: schemaBlogPosting?.author ?? author?.toSchemaDataType(),
+              publisher:
+                  schemaBlogPosting?.publisher ?? publisher?.toSchemaDataType(),
+              image: schemaBlogPosting?.image ?? imageUrl?.toSchemaDataType(),
+              keywords: schemaBlogPosting?.keywords ?? keywords,
+              articleSection: schemaBlogPosting?.articleSection,
+              wordCount: schemaBlogPosting?.wordCount,
+              timeRequired: schemaBlogPosting?.timeRequired,
+              inLanguage: schemaBlogPosting?.inLanguage ?? locale,
+              articleBody: schemaBlogPosting?.articleBody,
+              additionalProperties: schemaBlogPosting?.additionalProperties,
+            ),
+          ],
+          if (type == OgType.website || openGraph?.type == OgType.website)
+            WebSiteSchema(
+              name: schemaWebSite?.name ?? title,
+              description: schemaWebSite?.description ?? description,
+              url: schemaWebSite?.url ?? url,
+              inLanguage: schemaWebSite?.inLanguage ?? locale,
+              datePublished: schemaWebSite?.datePublished,
+              dateModified: schemaWebSite?.dateModified,
+              author: schemaWebSite?.author ?? author?.toSchemaDataType(),
+              publisher:
+                  schemaWebSite?.publisher ?? publisher?.toSchemaDataType(),
+              keywords: schemaWebSite?.keywords ?? keywords,
+              image: schemaWebSite?.image ?? imageUrl?.toSchemaDataType(),
+              mainEntity: schemaWebSite?.mainEntity,
+              additionalProperties: schemaWebSite?.additionalProperties,
+            ),
+          if (schemaPerson != null) schemaPerson!,
+          if (schemaOrganization != null) schemaOrganization!,
+          if (breadcrumbItems != null && (breadcrumbItems?.isNotEmpty ?? false))
+            BreadcrumbListSchema(items: breadcrumbItems!),
+        ],
+      ),
+    ],
+  );
 }
 
 class Meta extends StatelessComponent {
@@ -290,16 +286,14 @@ class Meta extends StatelessComponent {
   final bool unique;
 
   @override
-  Iterable<Component> build(BuildContext context) => [
-    meta(
-      id: unique ? 'meta_$id$name$property'.hashStr(length: 5) : id,
-      name: name,
-      content: content,
-      attributes: {
-        if (property.isNotNullOrBlank) 'property': property!,
-      },
-    ),
-  ];
+  Component build(BuildContext context) => meta(
+    id: unique ? 'meta_$id$name$property'.hashStr(length: 5) : id,
+    name: name,
+    content: content,
+    attributes: {
+      if (property.isNotNullOrBlank) 'property': property!,
+    },
+  );
 }
 
 class LinkHeader extends StatelessComponent {
@@ -324,15 +318,13 @@ class LinkHeader extends StatelessComponent {
   final bool unique;
 
   @override
-  Iterable<Component> build(BuildContext context) => [
-    link(
-      href: href,
-      id: unique ? 'link_$id$rel$type$as$attributes'.hashStr(length: 5) : id,
-      rel: rel,
-      type: type,
-      as: as,
-      attributes: attributes,
-      events: events,
-    ),
-  ];
+  Component build(BuildContext context) => link(
+    href: href,
+    id: unique ? 'link_$id$rel$type$as$attributes'.hashStr(length: 5) : id,
+    rel: rel,
+    type: type,
+    as: as,
+    attributes: attributes,
+    events: events,
+  );
 }
