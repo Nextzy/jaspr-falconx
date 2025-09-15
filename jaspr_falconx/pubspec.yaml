@@ -1,6 +1,6 @@
 name: jaspr_falconx
 description: A dart falcon package.
-version: 1.0.2
+version: 1.0.3
 publish_to: none
 
 environment:
@@ -22,12 +22,12 @@ dependencies:
   jaspr_faltool:
     path: ../jaspr_faltool
 
-  jaspr: ^0.20.0
-  jaspr_router: ^0.7.1
-  jaspr_riverpod: ^0.3.21
+  jaspr: ^0.21.1
+  jaspr_router: ^0.7.3
+  jaspr_riverpod: ^0.3.23
   universal_web: ^1.1.1
 
 dev_dependencies:
-  build_runner: ^2.7.0
+  build_runner: ^2.8.0
   test: ^1.26.3
   very_good_analysis: ^9.0.0
