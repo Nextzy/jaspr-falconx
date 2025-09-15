@@ -1,7 +1,7 @@
 import 'package:jaspr_falkit/lib.dart';
 
-class TwitterMeta extends Fragment {
-  TwitterMeta({
+class TwitterMeta extends StatelessComponent {
+  const TwitterMeta({
     // *** Required *** //
     this.card = 'summary_large_image',
     // *** Recommend *** //
@@ -11,50 +11,7 @@ class TwitterMeta extends Fragment {
     this.description,
     this.image,
     this.imageAlt,
-  }) : super(
-         children: [
-           Meta(
-             name: 'twitter:card',
-             content: card,
-             unique: true,
-           ),
-           if (site.isNotNullOrBlank)
-             Meta(
-               name: 'twitter:site',
-               content: site,
-               unique: true,
-             ),
-           if (creator.isNotNullOrBlank)
-             Meta(
-               name: 'twitter:creator',
-               content: creator,
-               unique: true,
-             ),
-           if (title.isNotNullOrBlank)
-             Meta(
-               name: 'twitter:title',
-               content: title,
-               unique: true,
-             ),
-           if (description.isNotNullOrBlank)
-             Meta(
-               name: 'twitter:description',
-               content: description,
-               unique: true,
-             ),
-           if (image.isNotNullOrBlank)
-             Meta(
-               name: 'twitter:image',
-               content: image,
-               unique: true,
-             ),
-           if (imageAlt.isNotNullOrBlank)
-             Meta(
-               name: 'twitter:image:alt',
-               content: imageAlt,
-             ),
-         ],
-       );
+  }) : super();
 
   final String? card;
   final String? site;
@@ -63,4 +20,50 @@ class TwitterMeta extends Fragment {
   final String? description;
   final String? image;
   final String? imageAlt;
+
+  @override
+  Component build(BuildContext context) => Document.head(
+    children: [
+      Meta(
+        name: 'twitter:card',
+        content: card,
+        unique: true,
+      ),
+      if (site.isNotNullOrBlank)
+        Meta(
+          name: 'twitter:site',
+          content: site,
+          unique: true,
+        ),
+      if (creator.isNotNullOrBlank)
+        Meta(
+          name: 'twitter:creator',
+          content: creator,
+          unique: true,
+        ),
+      if (title.isNotNullOrBlank)
+        Meta(
+          name: 'twitter:title',
+          content: title,
+          unique: true,
+        ),
+      if (description.isNotNullOrBlank)
+        Meta(
+          name: 'twitter:description',
+          content: description,
+          unique: true,
+        ),
+      if (image.isNotNullOrBlank)
+        Meta(
+          name: 'twitter:image',
+          content: image,
+          unique: true,
+        ),
+      if (imageAlt.isNotNullOrBlank)
+        Meta(
+          name: 'twitter:image:alt',
+          content: imageAlt,
+        ),
+    ],
+  );
 }

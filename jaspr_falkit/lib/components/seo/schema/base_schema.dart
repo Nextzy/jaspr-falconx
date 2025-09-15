@@ -1,36 +1,16 @@
 import 'package:jaspr_falkit/lib.dart';
 
 /// Base class for all Schema.org components
-abstract class Schema extends DomComponent {
-  Schema({
-    super.id,
-    required Map<String, dynamic> schemaData,
-    Map<String, dynamic>? additionalAttributes,
-  }) : _schemaData = schemaData,
-       super(
-         tag: 'script',
-         attributes: {
-           'type': 'application/ld+json',
-           if (additionalAttributes != null)
-             ...additionalAttributes.map(
-               (key, value) => MapEntry(key, value.toString()),
-             ),
-         },
-         children: [
-           raw(
-             jsonEncode(
-               Map<String, dynamic>.from(
-                 schemaData,
-               )..removeWhere((k, v) => v == null),
-             ),
-           ),
-         ],
-       );
+abstract class Schema extends StatelessComponent {
+  const Schema({
+    this.id,
+    required this.schemaData,
+    this.additionalAttributes,
+  });
 
-  final Map<String, dynamic> _schemaData;
-
-  /// Get the schema data as a Map
-  Map<String, dynamic> get schemaData => _schemaData;
+  final String? id;
+  final Map<String, dynamic>? additionalAttributes;
+  final Map<String, dynamic> schemaData;
 
   /// Helper method to create image object
   static Map<String, dynamic> createImageObject(String url) {
@@ -39,6 +19,27 @@ abstract class Schema extends DomComponent {
       'url': url,
     };
   }
+
+  @override
+  Component build(BuildContext context) => Component.element(
+    tag: 'script',
+    attributes: {
+      'type': 'application/ld+json',
+      if (additionalAttributes != null)
+        ...additionalAttributes!.map(
+          (key, value) => MapEntry(key, value.toString()),
+        ),
+    },
+    children: [
+      raw(
+        jsonEncode(
+          Map<String, dynamic>.from(
+            schemaData,
+          )..removeWhere((k, v) => v == null),
+        ),
+      ),
+    ],
+  );
 }
 
 /// Schema Group component for @graph support
