@@ -1,6 +1,6 @@
 name: jaspr_falconx
 description: A dart falcon package.
-version: 1.0.4
+version: 1.0.5
 publish_to: none
 
 environment:

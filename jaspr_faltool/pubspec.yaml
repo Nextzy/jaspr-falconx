@@ -1,6 +1,6 @@
 name: jaspr_faltool
 description: A tools library for Flutter.
-version: 1.0.4
+version: 1.0.5
 publish_to: none
 
 environment:
