@@ -18,11 +18,11 @@ dependencies:
       ref: fd77887b41c32f305708f8884995c6ca6a323aa6
 #    path: /Users/nonthawit/Data/Github/FalconX/dart-falconx/dart_faltool
 
-  jaspr: ^0.21.1
+  jaspr: ^0.21.2
   universal_web: ^1.1.1
 
 dev_dependencies:
   build_runner: ^2.8.0
   lints: ^6.0.0
   test: ^1.26.3
-  very_good_analysis: ^9.0.0
+  very_good_analysis: ^10.0.0
