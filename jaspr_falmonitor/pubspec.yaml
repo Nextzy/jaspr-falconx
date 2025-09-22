@@ -12,9 +12,9 @@ dependencies:
     path: ../jaspr_faltool
   sentry: ^9.6.0
   universal_web: ^1.1.1
-  jaspr: ^0.21.1
+  jaspr: ^0.21.2
 
 dev_dependencies:
   build_runner: ^2.8.0
   lints: ^6.0.0
-  very_good_analysis: ^9.0.0
+  very_good_analysis: ^10.0.0
