@@ -1,3 +1,4 @@
+
 import 'package:jaspr_falconnect/lib.dart';
 
 class ResultStreamFetcherList {
@@ -36,7 +37,7 @@ class ResultStreamFetcherList {
     } else {
       // Remove and close old fetcher before.
       final fetcher = _fetcherMap.remove(key);
-      fetcher?.close();
+      unawaited(fetcher?.close());
       return true;
     }
   }

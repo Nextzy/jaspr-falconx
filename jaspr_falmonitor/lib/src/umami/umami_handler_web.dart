@@ -39,8 +39,8 @@ class UmamiHandler extends MonitorHandler<UmamiAnalyticOption> {
       if (enabled) {
         // Prepare the data object
         final data = <String, Object>{
-          if (name != null) 'name': name,
-          if (screenName != null) 'screen_name': screenName,
+          'name': ?name,
+          'screen_name': ?screenName,
         }..addAll(eventAttributes ?? {});
 
         // Convert to JS types

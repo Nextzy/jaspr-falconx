@@ -70,9 +70,11 @@ class BlogSchema extends Schema {
            if (publisher != null) 'publisher': publisher.value,
            'inLanguage': ?inLanguage,
            if (blogPost != null && blogPost.isNotEmpty)
-             'blogPost': blogPost.map(
-               (b) => b.schemaData,
-             ).toList(),
+             'blogPost': blogPost
+                 .map(
+                   (blog) => blog.schemaData,
+                 )
+                 .toList(),
            if (author != null) 'author': author.value,
            'dateCreated': ?dateCreated,
            'dateModified': ?dateModified,

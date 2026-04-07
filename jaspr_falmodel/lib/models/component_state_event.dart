@@ -16,7 +16,8 @@ enum FullComponentState {
   success,
   cancel,
   warning,
-  fail;
+  fail
+  ;
 
   bool get isInitial => this == FullComponentState.initial; //
   bool get isNormal => this == FullComponentState.normal; //
@@ -55,27 +56,6 @@ enum FullComponentState {
 
 @immutable
 class ComponentState<DATA> {
-  const ComponentState._(
-    this.state, {
-    this.id,
-    this.event,
-    required this.data,
-    required this.feedback,
-  });
-
-  final FullComponentState state;
-  final String? id;
-
-  /// Purpose to [UserFeedback] for show the message or data on the widgets
-  final UserFeedback feedback;
-
-  /// Purpose of event for communicate BLoC --> Component
-  /// Important: [event] not copy because event must use for one time.
-  /// if you want to send [event] to view, please use [addEvent]
-  final Object? event;
-
-  final DATA data;
-
   factory ComponentState.initial(
     DATA data, {
     String? id,
@@ -251,6 +231,27 @@ class ComponentState<DATA> {
     feedback: feedback ?? const Failure(),
     data: data,
   );
+
+  const ComponentState._(
+    this.state, {
+    this.id,
+    this.event,
+    required this.data,
+    required this.feedback,
+  });
+
+  final FullComponentState state;
+  final String? id;
+
+  /// Purpose to [UserFeedback] for show the message or data on the widgets
+  final UserFeedback feedback;
+
+  /// Purpose of event for communicate BLoC --> Component
+  /// Important: [event] not copy because event must use for one time.
+  /// if you want to send [event] to view, please use [addEvent]
+  final Object? event;
+
+  final DATA data;
 
   bool get isInitial => state.isInitial; //
   bool get isNormal => state.isNormal; //
@@ -546,6 +547,7 @@ class ComponentState<DATA> {
 
   @override
   String toString() {
-    return 'ComponentState{state: $state, id: $id, data: $data, feedback: $feedback, event: $event}';
+    return 'ComponentState{state: $state, id: $id, data: $data, '
+        'feedback: $feedback, event: $event}';
   }
 }

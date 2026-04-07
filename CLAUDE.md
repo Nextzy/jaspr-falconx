@@ -181,6 +181,8 @@ When modifying files with code generation annotations, always run build_runner a
 
 7. **Schema.org SEO**: Comprehensive implementation of structured data schemas for better search engine visibility
 
+8. **Result Codec (not Either)**: Async/stream APIs use `Result<T>` instead of `Either`. Use `ResultStreamFetcher` / `ResultStreamFetcherList` — the `EitherStreamFetcher*` variants have been removed. New code must follow the Result convention.
+
 ## SEO Components
 
 Schema.org schemas and meta-tag implementations live in `jaspr_falkit/lib/components/seo/`.
@@ -201,17 +203,15 @@ The project uses `very_good_analysis` package for strict linting with some rules
 Code generation outputs are configured to generate into `generated/` subdirectories to keep the main source directories clean (see `build.yaml`).
 
 ### Workspace Configuration
-- Dart SDK requirement: >=3.9.0 <4.0.0
+- Dart SDK requirement: >=3.10.0 <4.0.0
 - Workspace-based dependency resolution in root `pubspec.yaml`
 - Melos configuration for monorepo management
 - Each package uses `resolution: workspace` in its pubspec.yaml
 
 ## Development Tips
 
-1. Always run `melos get` or `melos bootstrap` after pulling changes that modify pubspec files
-2. Generated files (`*.g.dart`, `*.freezed.dart`) should not be edited manually
-3. When adding new packages to the workspace, update the root `pubspec.yaml` workspace section
-4. For Jaspr-specific development, use `jaspr serve` for hot reload during development
-5. The project requires Dart SDK >=3.9.0 and uses workspace-based dependency resolution
-6. When working with SEO schemas, use the factory methods and helper classes for consistency
-7. jaspr_falwind requires Node.js for Tailwind CSS compilation during build
+1. Run `melos bootstrap` after pulling changes that modify pubspec files
+2. Never edit generated files (`*.g.dart`, `*.freezed.dart`) manually — rerun build_runner
+3. When adding a new package to the workspace, update the root `pubspec.yaml` workspace section
+4. Use SEO factory methods / helper classes rather than constructing schemas directly
+5. jaspr_falwind requires Node.js for Tailwind CSS compilation during build
