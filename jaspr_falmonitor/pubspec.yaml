@@ -10,11 +10,11 @@ resolution: workspace
 dependencies:
   jaspr_faltool:
     path: ../jaspr_faltool
-  sentry: ^9.6.0
-  universal_web: ^1.1.1
-  jaspr: ^0.21.2
+  sentry: ^9.16.0
+  universal_web: ^1.1.1+1
+  jaspr: ^0.22.4
 
 dev_dependencies:
-  build_runner: ^2.8.0
-  lints: ^6.0.0
-  very_good_analysis: ^10.0.0
+  build_runner: ^2.13.1
+  lints: ^6.1.0
+  very_good_analysis: ^10.2.0
