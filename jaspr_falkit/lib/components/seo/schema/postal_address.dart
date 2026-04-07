@@ -17,16 +17,15 @@ class PostalAddressSchema extends Schema {
          schemaData: {
            '@context': 'https://schema.org',
            '@type': 'PostalAddress',
-           if (streetAddress != null) 'streetAddress': streetAddress,
-           if (addressLocality != null) 'addressLocality': addressLocality,
-           if (addressRegion != null) 'addressRegion': addressRegion,
-           if (postalCode != null) 'postalCode': postalCode,
-           if (addressCountry != null) 'addressCountry': addressCountry,
-           if (postOfficeBoxNumber != null)
-             'postOfficeBoxNumber': postOfficeBoxNumber,
-           if (addressExtended != null) 'addressExtended': addressExtended,
-           if (name != null) 'name': name,
-           if (description != null) 'description': description,
+           'streetAddress': ?streetAddress,
+           'addressLocality': ?addressLocality,
+           'addressRegion': ?addressRegion,
+           'postalCode': ?postalCode,
+           'addressCountry': ?addressCountry,
+           'postOfficeBoxNumber': ?postOfficeBoxNumber,
+           'addressExtended': ?addressExtended,
+           'name': ?name,
+           'description': ?description,
            if (additionalProperties != null) ...additionalProperties,
          },
        );
@@ -112,14 +111,13 @@ class PostalAddressSchema extends Schema {
   }) {
     return {
       '@type': 'PostalAddress',
-      if (streetAddress != null) 'streetAddress': streetAddress,
-      if (addressLocality != null) 'addressLocality': addressLocality,
-      if (addressRegion != null) 'addressRegion': addressRegion,
-      if (postalCode != null) 'postalCode': postalCode,
-      if (addressCountry != null) 'addressCountry': addressCountry,
-      if (postOfficeBoxNumber != null)
-        'postOfficeBoxNumber': postOfficeBoxNumber,
-      if (addressExtended != null) 'addressExtended': addressExtended,
+      'streetAddress': ?streetAddress,
+      'addressLocality': ?addressLocality,
+      'addressRegion': ?addressRegion,
+      'postalCode': ?postalCode,
+      'addressCountry': ?addressCountry,
+      'postOfficeBoxNumber': ?postOfficeBoxNumber,
+      'addressExtended': ?addressExtended,
     };
   }
 

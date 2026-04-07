@@ -23,22 +23,21 @@ class PlaceSchema extends Schema {
          schemaData: {
            '@context': 'https://schema.org',
            '@type': 'Place',
-           if (name != null) 'name': name,
-           if (description != null) 'description': description,
+           'name': ?name,
+           'description': ?description,
            if (address != null) 'address': address.value,
            if (geo != null)
              'geo': {
                '@type': 'GeoCoordinates',
                ...geo,
              },
-           if (telephone != null) 'telephone': telephone,
-           if (url != null) 'url': url,
+           'telephone': ?telephone,
+           'url': ?url,
            if (image != null) 'image': image.value,
-           if (openingHours != null) 'openingHours': openingHours,
-           if (publicAccess != null) 'publicAccess': publicAccess,
-           if (smokingAllowed != null) 'smokingAllowed': smokingAllowed,
-           if (maximumAttendeeCapacity != null)
-             'maximumAttendeeCapacity': maximumAttendeeCapacity,
+           'openingHours': ?openingHours,
+           'publicAccess': ?publicAccess,
+           'smokingAllowed': ?smokingAllowed,
+           'maximumAttendeeCapacity': ?maximumAttendeeCapacity,
            if (containedInPlace != null)
              'containedInPlace': containedInPlace.value,
            if (containsPlace != null) 'containsPlace': containsPlace.value,
@@ -51,8 +50,7 @@ class PlaceSchema extends Schema {
                    },
                  )
                  .toList(),
-           if (isAccessibleForFree != null)
-             'isAccessibleForFree': isAccessibleForFree,
+           'isAccessibleForFree': ?isAccessibleForFree,
            if (additionalProperties != null) ...additionalProperties,
          },
        );
@@ -147,12 +145,12 @@ class PlaceSchema extends Schema {
   }) {
     return {
       '@type': 'Place',
-      if (name != null) 'name': name,
-      if (description != null) 'description': description,
-      if (telephone != null) 'telephone': telephone,
-      if (url != null) 'url': url,
-      if (address != null) 'address': address,
-      if (geo != null) 'geo': geo,
+      'name': ?name,
+      'description': ?description,
+      'telephone': ?telephone,
+      'url': ?url,
+      'address': ?address,
+      'geo': ?geo,
       if (image != null)
         'image': {
           '@type': 'ImageObject',

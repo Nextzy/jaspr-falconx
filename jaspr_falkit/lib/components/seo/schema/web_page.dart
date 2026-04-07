@@ -49,12 +49,12 @@ class WebPageSchema extends Schema {
          schemaData: {
            '@context': 'https://schema.org',
            '@type': 'WebPage',
-           if (name != null) 'name': name,
-           if (description != null) 'description': description,
-           if (url != null) 'url': url,
-           if (inLanguage != null) 'inLanguage': inLanguage,
-           if (datePublished != null) 'datePublished': datePublished,
-           if (dateModified != null) 'dateModified': dateModified,
+           'name': ?name,
+           'description': ?description,
+           'url': ?url,
+           'inLanguage': ?inLanguage,
+           'datePublished': ?datePublished,
+           'dateModified': ?dateModified,
            if (author != null) 'author': author.value,
            if (publisher != null) 'publisher': publisher.value,
            if (keywords != null && keywords.isNotEmpty)
@@ -62,42 +62,39 @@ class WebPageSchema extends Schema {
            if (primaryImageOfPage != null)
              'primaryImageOfPage': primaryImageOfPage.value,
            if (breadcrumb != null) 'breadcrumb': breadcrumb.value,
-           if (mainEntity != null) 'mainEntity': mainEntity,
-           if (mainContentOfPage != null)
-             'mainContentOfPage': mainContentOfPage,
-           if (lastReviewed != null) 'lastReviewed': lastReviewed,
-           if (reviewedBy != null) 'reviewedBy': reviewedBy,
+           'mainEntity': ?mainEntity,
+           'mainContentOfPage': ?mainContentOfPage,
+           'lastReviewed': ?lastReviewed,
+           'reviewedBy': ?reviewedBy,
            if (significantLink != null && significantLink.isNotEmpty)
              'significantLink': significantLink,
-           if (speakable != null) 'speakable': speakable,
+           'speakable': ?speakable,
            if (specialty != null && specialty.isNotEmpty)
              'specialty': specialty,
            if (relatedLink != null && relatedLink.isNotEmpty)
              'relatedLink': relatedLink,
-           if (about != null) 'about': about,
-           if (accessMode != null) 'accessMode': accessMode,
+           'about': ?about,
+           'accessMode': ?accessMode,
            if (accessibilityFeature != null && accessibilityFeature.isNotEmpty)
              'accessibilityFeature': accessibilityFeature,
            if (accessibilityHazard != null && accessibilityHazard.isNotEmpty)
              'accessibilityHazard': accessibilityHazard,
-           if (accessibilitySummary != null)
-             'accessibilitySummary': accessibilitySummary,
-           if (accessibilityAPI != null) 'accessibilityAPI': accessibilityAPI,
-           if (audience != null) 'audience': audience,
-           if (contentRating != null) 'contentRating': contentRating,
-           if (contentLocation != null) 'contentLocation': contentLocation,
-           if (copyrightYear != null) 'copyrightYear': copyrightYear,
-           if (copyrightHolder != null) 'copyrightHolder': copyrightHolder,
-           if (license != null) 'license': license,
-           if (isPartOf != null) 'isPartOf': isPartOf,
-           if (hasPart != null) 'hasPart': hasPart,
-           if (headline != null) 'headline': headline,
-           if (alternativeHeadline != null)
-             'alternativeHeadline': alternativeHeadline,
-           if (thumbnailUrl != null) 'thumbnailUrl': thumbnailUrl,
-           if (video != null) 'video': video,
-           if (audio != null) 'audio': audio,
-           if (mentions != null) 'mentions': mentions,
+           'accessibilitySummary': ?accessibilitySummary,
+           'accessibilityAPI': ?accessibilityAPI,
+           'audience': ?audience,
+           'contentRating': ?contentRating,
+           'contentLocation': ?contentLocation,
+           'copyrightYear': ?copyrightYear,
+           'copyrightHolder': ?copyrightHolder,
+           'license': ?license,
+           'isPartOf': ?isPartOf,
+           'hasPart': ?hasPart,
+           'headline': ?headline,
+           'alternativeHeadline': ?alternativeHeadline,
+           'thumbnailUrl': ?thumbnailUrl,
+           'video': ?video,
+           'audio': ?audio,
+           'mentions': ?mentions,
            if (potentialAction != null && potentialAction.isNotEmpty)
              'potentialAction': potentialAction,
            if (additionalProperties != null) ...additionalProperties,
@@ -188,9 +185,9 @@ class WebPageSchema extends Schema {
       'description': description,
       'thumbnailUrl': thumbnailUrl,
       'uploadDate': uploadDate,
-      if (duration != null) 'duration': duration,
-      if (contentUrl != null) 'contentUrl': contentUrl,
-      if (embedUrl != null) 'embedUrl': embedUrl,
+      'duration': ?duration,
+      'contentUrl': ?contentUrl,
+      'embedUrl': ?embedUrl,
     };
   }
 
@@ -204,8 +201,8 @@ class WebPageSchema extends Schema {
     return {
       '@type': type,
       'name': name,
-      if (url != null) 'url': url,
-      if (description != null) 'description': description,
+      'url': ?url,
+      'description': ?description,
     };
   }
 

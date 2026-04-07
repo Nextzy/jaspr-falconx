@@ -50,12 +50,11 @@ class BlogPostingSchema extends Schema {
          schemaData: {
            '@context': 'https://schema.org',
            '@type': 'BlogPosting',
-           if (headline != null) 'headline': headline,
-           if (alternativeHeadline != null)
-             'alternativeHeadline': alternativeHeadline,
-           if (description != null) 'description': description,
-           if (articleBody != null) 'articleBody': articleBody,
-           if (url != null) 'url': url,
+           'headline': ?headline,
+           'alternativeHeadline': ?alternativeHeadline,
+           'description': ?description,
+           'articleBody': ?articleBody,
+           'url': ?url,
            if (datePublished != null)
              'datePublished': datePublished.toIso8601String(),
            if (dateModified != null)
@@ -65,39 +64,37 @@ class BlogPostingSchema extends Schema {
            if (image != null) 'image': image.value,
            if (keywords != null && keywords.isNotEmpty)
              'keywords': keywords.join(', '),
-           if (articleSection != null) 'articleSection': articleSection,
-           if (wordCount != null) 'wordCount': wordCount,
-           if (timeRequired != null) 'timeRequired': timeRequired,
-           if (inLanguage != null) 'inLanguage': inLanguage,
+           'articleSection': ?articleSection,
+           'wordCount': ?wordCount,
+           'timeRequired': ?timeRequired,
+           'inLanguage': ?inLanguage,
            if (isPartOf != null) 'isPartOf': isPartOf.value,
            if (mainEntityOfPage != null)
              'mainEntityOfPage': mainEntityOfPage.value,
-           if (sharedContent != null) 'sharedContent': sharedContent,
-           if (discussionUrl != null) 'discussionUrl': discussionUrl,
-           if (commentCount != null) 'commentCount': commentCount,
-           if (interactionStatistic != null)
-             'interactionStatistic': interactionStatistic,
-           if (about != null) 'about': about,
-           if (mentions != null) 'mentions': mentions,
-           if (citation != null) 'citation': citation,
-           if (comment != null) 'comment': comment,
+           'sharedContent': ?sharedContent,
+           'discussionUrl': ?discussionUrl,
+           'commentCount': ?commentCount,
+           'interactionStatistic': ?interactionStatistic,
+           'about': ?about,
+           'mentions': ?mentions,
+           'citation': ?citation,
+           'comment': ?comment,
            if (contributor != null) 'contributor': contributor.value,
-           if (copyrightHolder != null) 'copyrightHolder': copyrightHolder,
-           if (copyrightYear != null) 'copyrightYear': copyrightYear,
+           'copyrightHolder': ?copyrightHolder,
+           'copyrightYear': ?copyrightYear,
            if (creator != null) 'creator': creator.value,
            if (editor != null) 'editor': editor.value,
-           if (genre != null) 'genre': genre,
-           if (hasPart != null) 'hasPart': hasPart,
-           if (isAccessibleForFree != null)
-             'isAccessibleForFree': isAccessibleForFree,
-           if (license != null) 'license': license,
-           if (mainEntity != null) 'mainEntity': mainEntity,
-           if (position != null) 'position': position,
-           if (thumbnailUrl != null) 'thumbnailUrl': thumbnailUrl,
-           if (video != null) 'video': video,
-           if (audio != null) 'audio': audio,
-           if (speakable != null) 'speakable': speakable,
-           if (backstory != null) 'backstory': backstory,
+           'genre': ?genre,
+           'hasPart': ?hasPart,
+           'isAccessibleForFree': ?isAccessibleForFree,
+           'license': ?license,
+           'mainEntity': ?mainEntity,
+           'position': ?position,
+           'thumbnailUrl': ?thumbnailUrl,
+           'video': ?video,
+           'audio': ?audio,
+           'speakable': ?speakable,
+           'backstory': ?backstory,
            if (additionalProperties != null) ...additionalProperties,
          },
        );
@@ -211,10 +208,10 @@ class BlogPostingSchema extends Schema {
     return {
       '@type': type,
       'name': name,
-      if (url != null) 'url': url,
-      if (email != null) 'email': email,
-      if (jobTitle != null) 'jobTitle': jobTitle,
-      if (affiliation != null) 'affiliation': affiliation,
+      'url': ?url,
+      'email': ?email,
+      'jobTitle': ?jobTitle,
+      'affiliation': ?affiliation,
     };
   }
 
@@ -227,8 +224,8 @@ class BlogPostingSchema extends Schema {
     return {
       '@type': 'Blog',
       'url': url,
-      if (name != null) 'name': name,
-      if (description != null) 'description': description,
+      'name': ?name,
+      'description': ?description,
     };
   }
 

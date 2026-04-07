@@ -147,9 +147,9 @@ class SchemaGroup extends Schema {
           'url': url,
           'datePublished': datePublished,
           'author': author,
-          if (description != null) 'description': description,
-          if (dateModified != null) 'dateModified': dateModified,
-          if (publisher != null) 'publisher': publisher,
+          'description': ?description,
+          'dateModified': ?dateModified,
+          'publisher': ?publisher,
           if (image != null) 'image': Schema.createImageObject(image),
           if (keywords != null && keywords.isNotEmpty)
             'keywords': keywords.join(', '),
@@ -177,9 +177,9 @@ class SchemaGroup extends Schema {
           '@id': '$blogUrl#blog',
           'url': blogUrl,
           'name': blogName,
-          if (description != null) 'description': description,
+          'description': ?description,
           'publisher': publisher,
-          if (inLanguage != null) 'inLanguage': inLanguage,
+          'inLanguage': ?inLanguage,
           'blogPost': recentPosts
               .map((post) => {'@id': '${post['url']}#article'})
               .toList(),
@@ -207,7 +207,7 @@ class SchemaGroup extends Schema {
 
 /// Generic schema wrapper for arbitrary schema data
 class GenericSchema extends Schema {
-  GenericSchema({
+  const GenericSchema({
     required Map<String, dynamic> data,
   }) : super(schemaData: data);
 }

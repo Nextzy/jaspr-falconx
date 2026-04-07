@@ -35,40 +35,38 @@ class EducationalOrganizationSchema extends Schema {
            '@context': 'https://schema.org',
            '@type': 'EducationalOrganization',
            'name': name,
-           if (url != null) 'url': url,
+           'url': ?url,
            if (logo != null)
              'logo': {
                '@type': 'ImageObject',
                'url': logo,
              },
-           if (description != null) 'description': description,
-           if (email != null) 'email': email,
-           if (telephone != null) 'telephone': telephone,
-           if (address != null) 'address': address,
+           'description': ?description,
+           'email': ?email,
+           'telephone': ?telephone,
+           'address': ?address,
            if (sameAs != null && sameAs.isNotEmpty) 'sameAs': sameAs,
-           if (foundingDate != null) 'foundingDate': foundingDate,
+           'foundingDate': ?foundingDate,
            if (alumni != null && alumni.isNotEmpty) 'alumni': alumni,
-           if (legalName != null) 'legalName': legalName,
-           if (accreditation != null) 'accreditation': accreditation,
+           'legalName': ?legalName,
+           'accreditation': ?accreditation,
            if (educationalCredentialAwarded != null &&
                educationalCredentialAwarded.isNotEmpty)
              'educationalCredentialAwarded': educationalCredentialAwarded,
            if (hasOfferCatalog != null && hasOfferCatalog.isNotEmpty)
              'hasOfferCatalog': hasOfferCatalog,
-           if (contactPoint != null) 'contactPoint': contactPoint,
-           if (areaServed != null) 'areaServed': areaServed,
-           if (numberOfEmployees != null)
-             'numberOfEmployees': numberOfEmployees,
-           if (parentOrganization != null)
-             'parentOrganization': parentOrganization,
+           'contactPoint': ?contactPoint,
+           'areaServed': ?areaServed,
+           'numberOfEmployees': ?numberOfEmployees,
+           'parentOrganization': ?parentOrganization,
            if (subOrganization != null && subOrganization.isNotEmpty)
              'subOrganization': subOrganization,
-           if (department != null) 'department': department,
-           if (slogan != null) 'slogan': slogan,
-           if (taxID != null) 'taxID': taxID,
-           if (vatID != null) 'vatID': vatID,
+           'department': ?department,
+           'slogan': ?slogan,
+           'taxID': ?taxID,
+           'vatID': ?vatID,
            if (review != null && review.isNotEmpty) 'review': review,
-           if (aggregateRating != null) 'aggregateRating': aggregateRating,
+           'aggregateRating': ?aggregateRating,
            if (additionalProperties != null) ...additionalProperties,
          },
        );
@@ -151,16 +149,16 @@ class EducationalOrganizationSchema extends Schema {
     return {
       '@type': 'EducationalOrganization',
       'name': name,
-      if (url != null) 'url': url,
-      if (description != null) 'description': description,
+      'url': ?url,
+      'description': ?description,
       if (logo != null)
         'logo': {
           '@type': 'ImageObject',
           'url': logo,
         },
-      if (address != null) 'address': address,
-      if (legalName != null) 'legalName': legalName,
-      if (accreditation != null) 'accreditation': accreditation,
+      'address': ?address,
+      'legalName': ?legalName,
+      'accreditation': ?accreditation,
     }..removeWhere((key, value) => value == null);
   }
 
@@ -174,9 +172,9 @@ class EducationalOrganizationSchema extends Schema {
     return {
       '@type': 'Person',
       'name': name,
-      if (url != null) 'url': url,
-      if (graduationYear != null) 'graduationYear': graduationYear,
-      if (degree != null) 'hasCredential': degree,
+      'url': ?url,
+      'graduationYear': ?graduationYear,
+      'hasCredential': ?degree,
     };
   }
 
@@ -189,7 +187,7 @@ class EducationalOrganizationSchema extends Schema {
     return {
       '@type': 'OfferCatalog',
       'name': name,
-      if (description != null) 'description': description,
+      'description': ?description,
       if (itemListElement != null && itemListElement.isNotEmpty)
         'itemListElement': itemListElement,
     };
@@ -206,10 +204,10 @@ class EducationalOrganizationSchema extends Schema {
     return {
       '@type': 'Organization',
       'name': name,
-      if (url != null) 'url': url,
-      if (description != null) 'description': description,
-      if (telephone != null) 'telephone': telephone,
-      if (email != null) 'email': email,
+      'url': ?url,
+      'description': ?description,
+      'telephone': ?telephone,
+      'email': ?email,
     };
   }
 }
