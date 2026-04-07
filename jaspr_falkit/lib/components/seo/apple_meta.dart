@@ -54,12 +54,12 @@ class AppleMeta extends StatelessComponent {
           href: appleIcon ?? iconUrl!,
         ),
       script(
-        id: pwaScript.hashStr(length: 5),
+        id: pwaScript.hashSha256(length: 5),
         src: pwaScript,
         defer: true,
       ),
       script(
-        id: (appleIcon ?? iconUrl)?.hashStr(length: 5),
+        id: (appleIcon ?? iconUrl)?.hashSha256(length: 5),
         content:
             "iosPWASplash('${appleIcon ?? iconUrl}', '${color ?? '#FFFFFF'}');",
       ),
