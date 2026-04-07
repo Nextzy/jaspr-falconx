@@ -1,5 +1,4 @@
 import 'package:jaspr/jaspr.dart';
-import 'package:jaspr_falstore/lib.dart';
 import 'package:universal_web/web.dart' as web;
 
 /// A singleton class that provides key-value storage functionality for web
