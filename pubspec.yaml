@@ -3,7 +3,7 @@ description: A dart falcon package.
 version: 1.0.5
 
 environment:
-  sdk: ">=3.9.0 <4.0.0"
+  sdk: ">=3.10.0 <4.0.0"
 
 workspace:
   - jaspr_falconnect
