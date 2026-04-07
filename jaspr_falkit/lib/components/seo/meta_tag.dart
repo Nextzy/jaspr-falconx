@@ -223,7 +223,7 @@ class SeoMetaTags extends StatelessComponent {
       SchemaGroup(
         id: 'schema-group',
         schemas: [
-          if (schemaBlog != null) schemaBlog!,
+          ?schemaBlog,
           if (type == OgType.article || openGraph?.type == OgType.article) ...[
             BlogPostingSchema(
               headline: schemaBlogPosting?.headline ?? title,
@@ -260,8 +260,8 @@ class SeoMetaTags extends StatelessComponent {
               mainEntity: schemaWebSite?.mainEntity,
               additionalProperties: schemaWebSite?.additionalProperties,
             ),
-          if (schemaPerson != null) schemaPerson!,
-          if (schemaOrganization != null) schemaOrganization!,
+          ?schemaPerson,
+          ?schemaOrganization,
           if (breadcrumbItems != null && (breadcrumbItems?.isNotEmpty ?? false))
             BreadcrumbListSchema(items: breadcrumbItems!),
         ],

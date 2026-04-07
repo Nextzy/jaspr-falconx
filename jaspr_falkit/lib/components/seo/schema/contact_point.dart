@@ -24,11 +24,11 @@ class ContactPointSchema extends Schema {
          schemaData: {
            '@context': 'https://schema.org',
            '@type': 'ContactPoint',
-           if (contactType != null) 'contactType': contactType,
-           if (telephone != null) 'telephone': telephone,
-           if (email != null) 'email': email,
-           if (url != null) 'url': url,
-           if (faxNumber != null) 'faxNumber': faxNumber,
+           'contactType': ?contactType,
+           'telephone': ?telephone,
+           'email': ?email,
+           'url': ?url,
+           'faxNumber': ?faxNumber,
            if (areaServed != null) 'areaServed': areaServed.value,
            if (availableLanguage != null)
              'availableLanguage': availableLanguage.value,
@@ -36,10 +36,10 @@ class ContactPointSchema extends Schema {
            if (hoursAvailable != null) 'hoursAvailable': hoursAvailable.value,
            if (productSupported != null)
              'productSupported': productSupported.value,
-           if (name != null) 'name': name,
-           if (description != null) 'description': description,
-           if (alternateName != null) 'alternateName': alternateName,
-           if (identifier != null) 'identifier': identifier,
+           'name': ?name,
+           'description': ?description,
+           'alternateName': ?alternateName,
+           'identifier': ?identifier,
            if (sameAs != null && sameAs.isNotEmpty) 'sameAs': sameAs,
            if (address != null) 'address': address.value,
            if (additionalProperties != null) ...additionalProperties,
@@ -193,16 +193,16 @@ class ContactPointSchema extends Schema {
   }) {
     return {
       '@type': 'ContactPoint',
-      if (contactType != null) 'contactType': contactType,
-      if (telephone != null) 'telephone': telephone,
-      if (email != null) 'email': email,
-      if (url != null) 'url': url,
-      if (faxNumber != null) 'faxNumber': faxNumber,
-      if (areaServed != null) 'areaServed': areaServed,
-      if (availableLanguage != null) 'availableLanguage': availableLanguage,
-      if (contactOption != null) 'contactOption': contactOption,
-      if (hoursAvailable != null) 'hoursAvailable': hoursAvailable,
-      if (productSupported != null) 'productSupported': productSupported,
+      'contactType': ?contactType,
+      'telephone': ?telephone,
+      'email': ?email,
+      'url': ?url,
+      'faxNumber': ?faxNumber,
+      'areaServed': ?areaServed,
+      'availableLanguage': ?availableLanguage,
+      'contactOption': ?contactOption,
+      'hoursAvailable': ?hoursAvailable,
+      'productSupported': ?productSupported,
     };
   }
 
@@ -219,8 +219,8 @@ class ContactPointSchema extends Schema {
       'dayOfWeek': dayOfWeek,
       'opens': opens,
       'closes': closes,
-      if (validFrom != null) 'validFrom': validFrom,
-      if (validThrough != null) 'validThrough': validThrough,
+      'validFrom': ?validFrom,
+      'validThrough': ?validThrough,
     };
   }
 
