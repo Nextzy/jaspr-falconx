@@ -307,17 +307,17 @@ Expected: 0 errors in `page_controller.dart`. (4 errors in `riverpod_codec.dart`
 
 ---
 
-## Task 8: Fix jaspr_falconx riverpod_codec — sync with Failure { message, level }
+## Task 8: Fix jaspr_falconx riverpod_codec — sync with Result-based codec
 
-The new `Failure` from `dart_falmodel` has only `message: String?` and `level: FeedbackLevel` (defaults to `FeedbackLevel.medium`). Drop `code` and `developerMessage`; persist `level` instead.
+The new shipped code uses `Result<T>` with `CommonException` instead of `Either<Failure, T>`. The codec classes are now `RiverpodResultEncoder` and `RiverpodResultDecoder`, handling the new exception shape with `type: ErrorType`, `userMessage: String?`, and `developerMessage: String?`.
 
 **Files:**
-- Modify: `jaspr_falconx/lib/src/states/riverpod_codec.dart:38-77`
+- Modify: `jaspr_falconx/lib/src/states/riverpod_codec.dart:38-89`
 
-- [ ] **Step 8.1: Verify FeedbackLevel is reachable**
+- [ ] **Step 8.1: Verify ErrorType is reachable**
 
-Run: `cd jaspr_falconx && grep -rn "FeedbackLevel" lib/ | head -5`
-If `FeedbackLevel` is not exported from `jaspr_falconx/lib.dart`, add `import 'package:jaspr_falmodel/lib.dart';` to `riverpod_codec.dart` (or whichever file exports falmodel into falconx). Confirm by trying to use `FeedbackLevel.medium` in the editor.
+Run: `cd jaspr_falconx && grep -rn "ErrorType" lib/ | head -5`
+If `ErrorType` is not exported from `jaspr_falconx/lib.dart`, add `import 'package:jaspr_falmodel/lib.dart';` to `riverpod_codec.dart` (or whichever file exports falmodel into falconx). Confirm by trying to use `ErrorType.unknown` in the editor.
 
 - [ ] **Step 8.2: Update encoder**
 
@@ -340,16 +340,20 @@ class RiverpodEitherEncoder<T> extends Converter<Either<Failure, T>, dynamic> {
 ```
 with:
 ```dart
-class RiverpodEitherEncoder<T> extends Converter<Either<Failure, T>, dynamic> {
+class RiverpodResultEncoder<T> extends Converter<Result<T>, Object?> {
   @override
-  dynamic convert(Either<Failure, T> input) {
+  Object? convert(Result<T> input) {
+    final ex = input.exceptionOrNull;
     return jsonEncode({
-      if (input.failureOrNull != null)
-        'failure': {
-          'message': input.failureOrNull?.message,
-          'level': input.failureOrNull?.level.name,
+      if (ex != null)
+        'exception': {
+          'type': ex.type is Enum
+              ? (ex.type as Enum).name
+              : ex.type.toString(),
+          'userMessage': ex.userMessage,
+          'developerMessage': ex.developerMessage,
         },
-      'data': input.dataOrNull,
+      'data': input.valueOrNull,
     });
   }
 }
@@ -387,30 +391,38 @@ class RiverpodEitherDecoder<T> extends Converter<dynamic, Either<Failure, T>> {
 ```
 with:
 ```dart
-class RiverpodEitherDecoder<T> extends Converter<dynamic, Either<Failure, T>> {
-  const RiverpodEitherDecoder(this.fromJson);
+class RiverpodResultDecoder<T> extends Converter<Object?, Result<T>> {
+  const RiverpodResultDecoder(this.fromJson);
 
   final T Function(dynamic json) fromJson;
 
   @override
-  Either<Failure, T> convert(dynamic input) {
+  Result<T> convert(Object? input) {
     final json = jsonDecode(input as String) as Map<String, dynamic>;
-    final failureJson = json['failure'] as Map<String, dynamic>?;
+    final exJson = json['exception'] as Map<String, dynamic>?;
     final dataJson = json['data'];
 
-    if (failureJson != null) {
-      return Left(
-        Failure(
-          message: failureJson['message'] as String?,
-          level: FeedbackLevel.values.byName(
-            failureJson['level'] as String? ?? 'medium',
-          ),
+    if (exJson != null) {
+      return Result.failure(
+        CommonException(
+          type: _parseErrorType(exJson['type'] as String?),
+          userMessage: exJson['userMessage'] as String?,
+          developerMessage: exJson['developerMessage'] as String?,
         ),
       );
     } else if (dataJson != null) {
-      return Right(fromJson(dataJson));
+      return Result.success(fromJson(dataJson));
     }
     throw Exception('Invalid json');
+  }
+
+  ErrorType _parseErrorType(String? name) {
+    if (name == null) return ErrorType.unknown;
+    try {
+      return ErrorType.values.byName(name);
+    } catch (_) {
+      return ErrorType.unknown;
+    }
   }
 }
 ```
