@@ -9,9 +9,9 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
     DATA? initialData,
     required DATA Function(dynamic json) fromJson,
     required String id,
-  })  : _id = id,
-        _codec = riverpodEitherCodec(fromJson),
-        super(initialData) {
+  }) : _id = id,
+       _codec = riverpodEitherCodec(fromJson),
+       super(initialData) {
     _preloadProvider = FutureProvider<Either<Failure, DATA?>>(
       (ref) async => preloadCall(),
       name: id,
@@ -50,8 +50,7 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
 
   /// Returns a [ProviderSync] to register in `ProviderScope(sync: [...])`
   /// so the preload result is hydrated from server to client.
-  ProviderSync syncPreload() =>
-      _preloadProvider!.syncWith(_id, codec: _codec);
+  ProviderSync syncPreload() => _preloadProvider!.syncWith(_id, codec: _codec);
 
   ComponentState<DATA?> readPreload(BuildContext context) {
     //** Preload data on server **//
