@@ -116,9 +116,6 @@ class TailwindBuilder implements Builder {
     final assets = await buildStep.findAssets(Glob('{lib,web}/**.dart')).toList();
     await Future.wait(assets.map((a) => buildStep.canRead(a)));
 
-    final configFile = File('tailwind.config.js');
-    final hasCustomConfig = await configFile.exists();
-
     // Get the actual file paths
     final inputPath = scratchSpace.fileFor(buildStep.inputId).path;
     final outputPath = scratchSpace.fileFor(outputId).path;
