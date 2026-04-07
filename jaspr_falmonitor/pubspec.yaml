@@ -1,4 +1,5 @@
 name: jaspr_falmonitor
+publish_to: none
 description: A monitor library.
 version: 0.0.1
 
