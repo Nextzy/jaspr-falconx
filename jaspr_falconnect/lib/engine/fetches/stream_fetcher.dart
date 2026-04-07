@@ -1,9 +1,9 @@
+
 import 'package:jaspr_falconnect/lib.dart';
 
 class ResultStreamFetcher<T> {
   ResultStreamFetcher([StreamController<ComponentState<T?>>? controller])
-      : _streamController =
-            controller ?? StreamController<ComponentState<T?>>();
+    : _streamController = controller ?? StreamController<ComponentState<T?>>();
 
   final StreamController<ComponentState<T?>> _streamController;
   StreamSubscription? _streamSubscription;
@@ -21,20 +21,20 @@ class ResultStreamFetcher<T> {
     _streamSubscription = call.listen(
       (result) {
         result.when(
-          (T data) {
+          (data) {
             _data = data;
             _streamController.add(ComponentState.success(_data));
           },
           (exception, stackTrace) {
             _streamController.addError(exception, stackTrace);
-            close();
+            unawaited(close());
           },
         );
       },
       onDone: close,
       onError: (Object error, StackTrace? stackTrace) {
         _streamController.addError(error, stackTrace);
-        close();
+        unawaited(close());
       },
     );
     return _streamController.stream;

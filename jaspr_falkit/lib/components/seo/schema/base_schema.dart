@@ -31,7 +31,7 @@ abstract class Schema extends StatelessComponent {
         ),
     },
     children: [
-      raw(
+      RawText(
         jsonEncode(
           Map<String, dynamic>.from(
             schemaData,

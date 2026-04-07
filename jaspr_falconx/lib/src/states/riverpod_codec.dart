@@ -20,7 +20,7 @@ class RiverpodDecoder<T> extends Converter<Object?, T> {
 
   @override
   T convert(Object? input) =>
-      fromJson(jsonDecode(input as String) as Map<String, dynamic>);
+      fromJson(jsonDecode(input! as String) as Map<String, dynamic>);
 }
 
 class RiverpodCodec<T> extends Codec<T, Object?> {

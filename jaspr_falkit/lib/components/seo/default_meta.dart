@@ -36,7 +36,7 @@ class DefaultMeta extends StatelessComponent {
         Component.element(
           tag: 'title',
           children: [
-            raw(title!),
+            RawText(title!),
           ],
         ),
       if (description.isNotNullOrBlank)
