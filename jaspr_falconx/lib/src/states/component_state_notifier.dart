@@ -1,4 +1,5 @@
 import 'package:jaspr_falconx/lib.dart';
+import 'package:jaspr_riverpod/legacy.dart';
 
 abstract class ComponentStateNotifier<T>
     extends StateNotifier<ComponentState<T>> {

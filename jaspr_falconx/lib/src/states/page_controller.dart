@@ -1,5 +1,7 @@
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr_falconx/lib.dart';
+import 'package:jaspr_riverpod/legacy.dart';
+import 'package:jaspr_riverpod/misc.dart';
 
 abstract class PreloadComponentNotifier<DATA, EVENT>
     extends NullableComponentStateNotifier<DATA> {
@@ -7,14 +9,12 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
     DATA? initialData,
     required DATA Function(dynamic json) fromJson,
     required String id,
-  }) : super(initialData) {
-    _preloadProvider = SyncProvider<Either<Failure, DATA?>>(
-      (ref) async {
-        return preloadCall();
-      },
-      id: id,
+  })  : _id = id,
+        _codec = riverpodEitherCodec(fromJson),
+        super(initialData) {
+    _preloadProvider = FutureProvider<Either<Failure, DATA?>>(
+      (ref) async => preloadCall(),
       name: id,
-      codec: riverpodEitherCodec(fromJson),
     );
     _controllerProvider =
         StateNotifierProvider<
@@ -28,7 +28,9 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
         );
   }
 
-  SyncProvider<Either<Failure, DATA?>>? _preloadProvider;
+  final String _id;
+  final Codec<Either<Failure, DATA?>, Object?> _codec;
+  FutureProvider<Either<Failure, DATA?>>? _preloadProvider;
   StateNotifierProvider<
     PreloadComponentNotifier<DATA, EVENT>,
     ComponentState<DATA?>
@@ -38,7 +40,7 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
   Future<Either<Failure, DATA?>> preloadCall();
 
   bool hasPreload(BuildContext context) {
-    return context.read(_preloadProvider!).valueOrNull != null;
+    return context.read(_preloadProvider!).value != null;
   }
 
   Future<void> preload(BuildContext context) async {
@@ -46,9 +48,14 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
     await context.read(_preloadProvider!.future);
   }
 
+  /// Returns a [ProviderSync] to register in `ProviderScope(sync: [...])`
+  /// so the preload result is hydrated from server to client.
+  ProviderSync syncPreload() =>
+      _preloadProvider!.syncWith(_id, codec: _codec);
+
   ComponentState<DATA?> readPreload(BuildContext context) {
     //** Preload data on server **//
-    final either = context.read(_preloadProvider!).valueOrNull;
+    final either = context.read(_preloadProvider!).value;
     if (either?.isFailure ?? false) {
       return ComponentState.fail(null, feedback: either?.failure);
     } else {
@@ -61,7 +68,7 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
 
     if (state.isInitial && state.data == null) {
       //** Preload data on server **//
-      final either = context.read(_preloadProvider!).valueOrNull;
+      final either = context.read(_preloadProvider!).value;
       if (either?.isFailure ?? false) {
         return ComponentState.fail(null, feedback: either?.failure);
       } else {
@@ -77,7 +84,7 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
 
     if (state.isInitial && state.data == null) {
       //** Preload data on server **//
-      final either = context.read(_preloadProvider!).valueOrNull;
+      final either = context.read(_preloadProvider!).value;
       if (either?.isFailure ?? false) {
         return ComponentState.fail(null, feedback: either?.failure);
       } else {
@@ -97,7 +104,7 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
       (previous, value) {
         final event = value.event;
         if (event is EVENT && event != null) {
-          listener(value.event as EVENT);
+          listener(event);
         }
       },
     );
