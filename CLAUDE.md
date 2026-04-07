@@ -34,10 +34,10 @@ melos outdated
 
 ### Code Generation
 ```bash
-# Run build_runner for all packages that need code generation
-melos build_runner
+# Run build_runner across all packages that depend on it
+melos exec --depends-on="build_runner" -- dart run build_runner build --delete-conflicting-outputs
 
-# Run build_runner in a specific package
+# Or in a specific package
 cd jaspr_falconnect
 dart pub run build_runner build --delete-conflicting-outputs
 
@@ -181,24 +181,16 @@ When modifying files with code generation annotations, always run build_runner a
 
 7. **Schema.org SEO**: Comprehensive implementation of structured data schemas for better search engine visibility
 
-## SEO Components Architecture
+## SEO Components
 
-The jaspr_falkit package includes a comprehensive SEO implementation:
+Schema.org schemas and meta-tag implementations live in `jaspr_falkit/lib/components/seo/`.
+Use the factory methods / helper classes rather than constructing schemas directly.
 
-### Schema.org Schemas
-- **WebPageSchema**: Enhanced with backward compatibility for WebPageSchemaData
-- **Organization/Person**: Complete entity schemas with relationships
-- **Article/BlogPosting**: Content schemas with author and publisher support
-- **ContactPoint/PostalAddress**: Contact and location information
-- **EducationalOrganization/Place**: Specialized entity types
-- Helper utilities for creating structured data
+## Git Workflow
 
-### Meta Tags
-- OpenGraph meta tags for social sharing
-- Twitter Card meta tags
-- Apple-specific meta tags (Safari, iOS)
-- Microsoft-specific meta tags (Edge, Windows)
-- Default meta tags for general SEO
+- Active development happens on `develop`
+- Releases cut to `release/x.y.z` → merged to `main` and tagged → merged back to `develop`
+- Don't commit directly to `main`
 
 ## Configuration
 
