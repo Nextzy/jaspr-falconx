@@ -64,3 +64,10 @@ hosting.*
 
 # Java class files
 *.class
+
+# AI
+.serena/
+.claude/worktrees/
+.claude.local.md
+.mcp.json
+.worktrees/
