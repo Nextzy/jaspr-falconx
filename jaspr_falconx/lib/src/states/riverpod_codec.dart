@@ -42,9 +42,7 @@ class RiverpodResultEncoder<T> extends Converter<Result<T>, Object?> {
     return jsonEncode({
       if (ex != null)
         'exception': {
-          'type': ex.type is Enum
-              ? (ex.type as Enum).name
-              : ex.type.toString(),
+          'type': ex.type is Enum ? (ex.type as Enum).name : ex.type.toString(),
           'userMessage': ex.userMessage,
           'developerMessage': ex.developerMessage,
         },
@@ -60,7 +58,7 @@ class RiverpodResultDecoder<T> extends Converter<Object?, Result<T>> {
 
   @override
   Result<T> convert(Object? input) {
-    final json = jsonDecode(input as String) as Map<String, dynamic>;
+    final json = jsonDecode(input! as String) as Map<String, dynamic>;
     final exJson = json['exception'] as Map<String, dynamic>?;
     final dataJson = json['data'];
 
@@ -97,6 +95,5 @@ class RiverpodResultCodec<T> extends Codec<Result<T>, Object?> {
   Converter<Result<T>, Object?> get encoder => RiverpodResultEncoder();
 
   @override
-  Converter<Object?, Result<T>> get decoder =>
-      RiverpodResultDecoder(fromJson);
+  Converter<Object?, Result<T>> get decoder => RiverpodResultDecoder(fromJson);
 }
