@@ -1,62 +1,61 @@
 import 'package:jaspr_falconx/lib.dart';
 
-Codec<T, dynamic> riverpodCodec<T>(
+Codec<T, Object?> riverpodCodec<T>(
   T Function(dynamic json) fromJson,
 ) => RiverpodCodec(fromJson);
 
-Codec<Either<Failure, T>, dynamic> riverpodEitherCodec<T>(
+Codec<Either<Failure, T>, Object?> riverpodEitherCodec<T>(
   T Function(dynamic json) fromJson,
 ) => RiverpodEitherCodec(fromJson);
 
-class RiverpodEncoder<T> extends Converter<T, dynamic> {
+class RiverpodEncoder<T> extends Converter<T, Object?> {
   @override
-  dynamic convert(T input) => jsonEncode(input);
+  Object? convert(T input) => jsonEncode(input);
 }
 
-class RiverpodDecoder<T> extends Converter<dynamic, T> {
+class RiverpodDecoder<T> extends Converter<Object?, T> {
   const RiverpodDecoder(this.fromJson);
 
   final T Function(Map<String, dynamic> json) fromJson;
 
   @override
-  T convert(dynamic input) =>
+  T convert(Object? input) =>
       fromJson(jsonDecode(input as String) as Map<String, dynamic>);
 }
 
-class RiverpodCodec<T> extends Codec<T, dynamic> {
+class RiverpodCodec<T> extends Codec<T, Object?> {
   const RiverpodCodec(this.fromJson);
 
   final T Function(Map<String, dynamic> json) fromJson;
 
   @override
-  Converter<T, dynamic> get encoder => RiverpodEncoder();
+  Converter<T, Object?> get encoder => RiverpodEncoder();
 
   @override
-  Converter<dynamic, T> get decoder => RiverpodDecoder(fromJson);
+  Converter<Object?, T> get decoder => RiverpodDecoder(fromJson);
 }
 
-class RiverpodEitherEncoder<T> extends Converter<Either<Failure, T>, dynamic> {
+class RiverpodEitherEncoder<T> extends Converter<Either<Failure, T>, Object?> {
   @override
-  dynamic convert(Either<Failure, T> input) {
+  Object? convert(Either<Failure, T> input) {
     return jsonEncode({
       if (input.failureOrNull != null)
         'failure': {
-          'code': input.failureOrNull?.code,
           'message': input.failureOrNull?.message,
-          'developerMessage': input.failureOrNull?.developerMessage,
+          'level': input.failureOrNull?.level.name,
         },
       'data': input.dataOrNull,
     });
   }
 }
 
-class RiverpodEitherDecoder<T> extends Converter<dynamic, Either<Failure, T>> {
+class RiverpodEitherDecoder<T> extends Converter<Object?, Either<Failure, T>> {
   const RiverpodEitherDecoder(this.fromJson);
 
   final T Function(dynamic json) fromJson;
 
   @override
-  Either<Failure, T> convert(dynamic input) {
+  Either<Failure, T> convert(Object? input) {
     final json = jsonDecode(input as String) as Map<String, dynamic>;
     final failureJson = json['failure'] as Map<String, dynamic>?;
     final dataJson = json['data'];
@@ -64,9 +63,10 @@ class RiverpodEitherDecoder<T> extends Converter<dynamic, Either<Failure, T>> {
     if (failureJson != null) {
       return Left(
         Failure(
-          code: failureJson['code'] as String?,
           message: failureJson['message'] as String?,
-          developerMessage: failureJson['developerMessage'] as String?,
+          level: FeedbackLevel.values.byName(
+            failureJson['level'] as String? ?? 'medium',
+          ),
         ),
       );
     } else if (dataJson != null) {
@@ -76,15 +76,15 @@ class RiverpodEitherDecoder<T> extends Converter<dynamic, Either<Failure, T>> {
   }
 }
 
-class RiverpodEitherCodec<T> extends Codec<Either<Failure, T>, dynamic> {
+class RiverpodEitherCodec<T> extends Codec<Either<Failure, T>, Object?> {
   const RiverpodEitherCodec(this.fromJson);
 
   final T Function(dynamic json) fromJson;
 
   @override
-  Converter<Either<Failure, T>, dynamic> get encoder => RiverpodEitherEncoder();
+  Converter<Either<Failure, T>, Object?> get encoder => RiverpodEitherEncoder();
 
   @override
-  Converter<dynamic, Either<Failure, T>> get decoder =>
+  Converter<Object?, Either<Failure, T>> get decoder =>
       RiverpodEitherDecoder(fromJson);
 }
