@@ -287,7 +287,7 @@ class Meta extends StatelessComponent {
 
   @override
   Component build(BuildContext context) => meta(
-    id: unique ? 'meta_$id$name$property'.hashStr(length: 5) : id,
+    id: unique ? 'meta_$id$name$property'.hashSha256(length: 5) : id,
     name: name,
     content: content,
     attributes: {
@@ -320,7 +320,7 @@ class LinkHeader extends StatelessComponent {
   @override
   Component build(BuildContext context) => link(
     href: href,
-    id: unique ? 'link_$id$rel$type$as$attributes'.hashStr(length: 5) : id,
+    id: unique ? 'link_$id$rel$type$as$attributes'.hashSha256(length: 5) : id,
     rel: rel,
     type: type,
     as: as,
