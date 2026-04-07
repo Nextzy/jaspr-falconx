@@ -1,26 +1,26 @@
 import 'package:jaspr_falconnect/lib.dart';
 
-class EitherStreamFetcherList {
-  final Map<dynamic, EitherStreamFetcher> _fetcherMap = {};
+class ResultStreamFetcherList {
+  final Map<dynamic, ResultStreamFetcher> _fetcherMap = {};
 
   Stream<ComponentState<T?>> fetchStream<T>({
     required Object key,
-    required Stream<Either<Failure, T>> call,
+    required Stream<Result<T>> call,
     bool debounceFetch = true,
   }) {
     _fetcherMap.removeWhere((key, value) => value.isClose);
     if (_canFetch(key, debounceFetch)) {
-      final fetcher = EitherStreamFetcher<T>();
+      final fetcher = ResultStreamFetcher<T>();
       _fetcherMap[key] = fetcher;
       return fetcher.fetch(call);
     } else {
-      return (_fetcherMap[key]! as EitherStreamFetcher<T>).stream;
+      return (_fetcherMap[key]! as ResultStreamFetcher<T>).stream;
     }
   }
 
   Stream<ComponentState<T?>> fetchFuture<T>({
     required Object key,
-    required Future<Either<Failure, T>> call,
+    required Future<Result<T>> call,
     bool debounceFetch = true,
   }) =>
       fetchStream<T>(
