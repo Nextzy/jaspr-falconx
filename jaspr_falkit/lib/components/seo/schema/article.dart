@@ -33,6 +33,7 @@ class ArticleSchema extends Schema {
     this.isPartOf,
     this.license,
     this.mainEntity,
+    this.mainEntityOfPage,
     this.position,
     this.thumbnailUrl,
     this.video,
@@ -75,6 +76,10 @@ class ArticleSchema extends Schema {
            'isPartOf': ?isPartOf,
            'license': ?license,
            'mainEntity': ?mainEntity,
+           // `mainEntityOfPage` is strongly recommended by Google's Article
+           // rich-result guidance — it tells crawlers that this Article is
+           // the primary subject of the page identified by the given URL/WebPage.
+           'mainEntityOfPage': ?mainEntityOfPage,
            'position': ?position,
            'thumbnailUrl': ?thumbnailUrl,
            'video': ?video,
@@ -223,6 +228,8 @@ class ArticleSchema extends Schema {
   final Map<String, dynamic>? isPartOf;
   final String? license;
   final Map<String, dynamic>? mainEntity;
+  /// Either a URL string (the canonical page URL) or a `WebPage` object map.
+  final dynamic mainEntityOfPage;
   final dynamic position; // Can be String or Number
   final String? thumbnailUrl;
   final Map<String, dynamic>? video;

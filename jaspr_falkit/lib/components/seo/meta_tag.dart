@@ -1,83 +1,85 @@
 import 'package:jaspr_falkit/lib.dart';
 
-class SeoMetaTagBuilder {
-  SeoMetaTagBuilder();
+/// Site-wide SEO defaults provided via [InheritedComponent].
+///
+/// Place near the root of the app. Any [SeoMetaTags] descendant will fall
+/// back to these values for fields it does not specify itself.
+///
+/// Inheritable fields are limited to those that make sense as a site-wide
+/// default. Per-page concerns (title, description, url, canonical, type,
+/// schemaBlogPosting, breadcrumbItems, alternateLanguageUrls, keywords)
+/// are intentionally NOT inheritable and must be set on each [SeoMetaTags].
+class SeoDefaults extends InheritedComponent {
+  const SeoDefaults({
+    required super.child,
+    this.favicon,
+    this.faviconSvg,
+    this.publisher,
+    this.author,
+    this.locale,
+    this.manifest,
+    this.iconUrl,
+    this.color,
+    this.imageUrl,
+    this.imageAlt,
+    this.imageWidth = '1200',
+    this.imageHeight = '630',
+    this.siteName,
+    this.siteUrl,
+    this.robots = 'index,follow',
+    this.twitter,
+    this.pinterest,
+    this.apple,
+    this.microsoft,
+    this.schemaOrganization,
+    this.schemaPerson,
+    super.key,
+  });
 
-  String? favicon;
-  String? faviconSvg;
-  String? publisher;
-  String? title;
-  String? description;
-  List<String>? keywords;
-  String? author;
-  String? robots;
-  String? url;
-  String? imageUrl;
-  String? canonical;
-  OgType type = OgType.website;
-  String? locale;
-  String imageWidth = '1200';
-  String imageHeight = '630';
-  String? imageAlt;
-  String? video;
-  String? iconUrl;
-  String? color;
-  String? manifest;
-  String? imageSrc;
-  DefaultOpenGraphMeta? openGraph;
-  ArticleOpenGraphMeta? openGraphArticle;
-  TwitterMeta? twitter;
-  PinterestMeta? pinterest;
-  AppleMeta? apple;
-  MicrosoftMeta? microsoft;
-  List<AlternateLanguageTag>? alternateLanguageUrls;
-  WebSiteSchemaData? schemaWebSite;
-  BlogSchema? schemaBlog;
-  BlogPostingSchema? schemaBlogPosting;
-  PersonSchema? schemaPerson;
-  OrganizationSchema? schemaOrganization;
-  List<BreadcrumbItem>? breadcrumbItems;
-  SeoMetaTagBuilder? builder;
+  final String? favicon;
+  final String? faviconSvg;
+  final String? publisher;
+  final String? author;
+  final String? locale;
+  final String? manifest;
+  final String? iconUrl;
+  final String? color;
+  final String? imageUrl;
+  final String? imageAlt;
+  final String imageWidth;
+  final String imageHeight;
 
-  SeoMetaTags build() {
-    return SeoMetaTags(
-      favicon: builder?.favicon ?? favicon,
-      faviconSvg: builder?.faviconSvg ?? faviconSvg,
-      publisher: builder?.publisher ?? publisher,
-      title: builder?.title ?? title,
-      description: builder?.description ?? description,
-      keywords: builder?.keywords ?? keywords,
-      author: builder?.author ?? author,
-      robots: builder?.robots ?? robots,
-      url: builder?.url ?? url,
-      imageUrl: builder?.imageUrl ?? imageUrl,
-      canonical: builder?.canonical ?? canonical,
-      type: builder?.type ?? type,
-      locale: builder?.locale ?? locale,
-      imageWidth: builder?.imageWidth ?? imageWidth,
-      imageHeight: builder?.imageHeight ?? imageHeight,
-      imageAlt: builder?.imageAlt ?? imageAlt,
-      video: builder?.video ?? video,
-      iconUrl: builder?.iconUrl ?? iconUrl,
-      color: builder?.color ?? color,
-      manifest: builder?.manifest ?? manifest,
-      imageSrc: builder?.imageSrc ?? imageSrc,
-      openGraph: builder?.openGraph ?? openGraph,
-      openGraphArticle: builder?.openGraphArticle ?? openGraphArticle,
-      twitter: builder?.twitter ?? twitter,
-      pinterest: builder?.pinterest ?? pinterest,
-      apple: builder?.apple ?? apple,
-      microsoft: builder?.microsoft ?? microsoft,
-      alternateLanguageUrls:
-          builder?.alternateLanguageUrls ?? alternateLanguageUrls,
-      // Schema Org
-      schemaWebSite: builder?.schemaWebSite ?? schemaWebSite,
-      schemaBlog: builder?.schemaBlog ?? schemaBlog,
-      schemaBlogPosting: builder?.schemaBlogPosting ?? schemaBlogPosting,
-      schemaPerson: builder?.schemaPerson ?? schemaPerson,
-      schemaOrganization: builder?.schemaOrganization ?? schemaOrganization,
-      breadcrumbItems: builder?.breadcrumbItems ?? breadcrumbItems,
-    );
+  /// Brand / website name (e.g. "FalconX"). Used as `og:site_name`.
+  final String? siteName;
+
+  /// Root URL of the site, used as fallback for [WebSiteSchema.url].
+  final String? siteUrl;
+
+  /// Default robots directive. Defaults to `index,follow`.
+  final String robots;
+
+  final TwitterMeta? twitter;
+  final PinterestMeta? pinterest;
+  final AppleMeta? apple;
+  final MicrosoftMeta? microsoft;
+  final OrganizationSchema? schemaOrganization;
+  final PersonSchema? schemaPerson;
+
+  static SeoDefaults? of(BuildContext context) {
+    return context.dependOnInheritedComponentOfExactType<SeoDefaults>();
+  }
+
+  @override
+  bool updateShouldNotify(SeoDefaults oldComponent) {
+    // Defaults are typically static; only re-render if the brand identity
+    // changes (rare). Cheap reference equality is enough here.
+    return favicon != oldComponent.favicon ||
+        siteName != oldComponent.siteName ||
+        siteUrl != oldComponent.siteUrl ||
+        publisher != oldComponent.publisher ||
+        imageUrl != oldComponent.imageUrl ||
+        color != oldComponent.color ||
+        robots != oldComponent.robots;
   }
 }
 
@@ -156,118 +158,171 @@ class SeoMetaTags extends StatelessComponent {
   final OrganizationSchema? schemaOrganization;
 
   @override
-  Component build(BuildContext context) => Document.head(
-    children: [
-      DefaultMeta(
-        title: title,
-        description: description,
-        keywords: keywords,
-        author: author,
-        robots: robots,
-        publisher: publisher,
-        favicon: favicon,
-        faviconSvg: faviconSvg,
-        canonical: canonical ?? url,
-        themeColor: color,
-        manifest: manifest,
-        imageSrc: imageSrc ?? imageUrl,
-      ),
-      DefaultOpenGraphMeta(
-        title: openGraph?.title ?? title,
-        type: openGraph?.type ?? type,
-        url: openGraph?.url ?? url,
-        imageUrl: openGraph?.imageUrl ?? imageUrl,
-        description: openGraph?.description ?? description,
-        siteName: openGraph?.siteName ?? title,
-        locale: openGraph?.locale ?? locale,
-        imageAlt: openGraph?.imageAlt ?? imageAlt,
-        video: openGraph?.video ?? video,
-        imageHeight: openGraph?.imageHeight ?? imageHeight,
-        imageWidth: openGraph?.imageWidth ?? imageWidth,
-      ),
-      if (type == OgType.article || openGraph?.type == OgType.article)
-        ArticleOpenGraphMeta(
-          author: openGraphArticle?.author ?? author,
-          section: openGraphArticle?.section,
-          tags: openGraphArticle?.tags,
-          publishedTime: openGraphArticle?.publishedTime,
-          modifiedTime: openGraphArticle?.modifiedTime,
+  Component build(BuildContext context) {
+    final defaults = SeoDefaults.of(context);
+
+    // Resolve every inheritable field once: per-page value wins, then
+    // site-wide default, then null. This keeps the JSX-style tree below
+    // readable and avoids the old `builder?.x ?? x` repetition.
+    final resolvedFavicon = favicon ?? defaults?.favicon;
+    final resolvedFaviconSvg = faviconSvg ?? defaults?.faviconSvg;
+    final resolvedPublisher = publisher ?? defaults?.publisher;
+    final resolvedAuthor = author ?? defaults?.author;
+    final resolvedLocale = locale ?? defaults?.locale;
+    final resolvedManifest = manifest ?? defaults?.manifest;
+    final resolvedIconUrl = iconUrl ?? defaults?.iconUrl;
+    final resolvedColor = color ?? defaults?.color;
+    final resolvedImageUrl = imageUrl ?? defaults?.imageUrl;
+    final resolvedImageAlt = imageAlt ?? defaults?.imageAlt;
+    final resolvedImageWidth =
+        imageWidth.isNotEmpty ? imageWidth : (defaults?.imageWidth ?? '1200');
+    final resolvedImageHeight =
+        imageHeight.isNotEmpty ? imageHeight : (defaults?.imageHeight ?? '630');
+    final resolvedRobots = robots ?? defaults?.robots ?? 'index,follow';
+    final resolvedSiteName = defaults?.siteName;
+    final resolvedSiteUrl = defaults?.siteUrl;
+
+    final defaultTwitter = defaults?.twitter;
+    final defaultPinterest = defaults?.pinterest;
+    final defaultApple = defaults?.apple;
+    final defaultMicrosoft = defaults?.microsoft;
+
+    final isArticle =
+        type == OgType.article || openGraph?.type == OgType.article;
+
+    // Default Twitter card to summary_large_image when an image is present
+    // — otherwise Twitter falls back to a tiny preview even though we ship
+    // a 1200x630 image.
+    final twitterImage = twitter?.image ?? resolvedImageUrl;
+    final resolvedTwitterCard = twitter?.card ??
+        defaultTwitter?.card ??
+        (twitterImage != null ? 'summary_large_image' : null);
+
+    return Document.head(
+      children: [
+        DefaultMeta(
+          title: title,
+          description: description,
+          keywords: keywords,
+          author: resolvedAuthor,
+          robots: resolvedRobots,
+          publisher: resolvedPublisher,
+          favicon: resolvedFavicon,
+          faviconSvg: resolvedFaviconSvg,
+          canonical: canonical ?? url,
+          themeColor: resolvedColor,
+          manifest: resolvedManifest,
+          imageSrc: imageSrc ?? resolvedImageUrl,
         ),
-      TwitterMeta(
-        site: twitter?.site,
-        card: twitter?.card,
-        creator: twitter?.creator,
-        title: twitter?.title ?? title,
-        description: twitter?.description ?? description,
-        image: twitter?.image ?? imageUrl,
-        imageAlt: twitter?.imageAlt ?? imageAlt,
-      ),
-      PinterestMeta(
-        pinterestRichPin: pinterest?.pinterestRichPin,
-        author: pinterest?.author ?? author,
-      ),
-      AppleMeta(
-        title: apple?.title ?? title,
-        iconUrl: apple?.iconUrl ?? iconUrl,
-        color: apple?.color ?? color,
-        capable: apple?.capable,
-        fullscreen: apple?.fullscreen,
-      ),
-      MicrosoftMeta(
-        tileColor: microsoft?.tileColor ?? color,
-        tileImageUrl: microsoft?.tileImageUrl ?? iconUrl,
-      ),
-      if (alternateLanguageUrls != null &&
-          (alternateLanguageUrls?.isNotEmpty ?? false))
-        AlternateLanguageMeta(alternateLanguageUrls!),
-      SchemaGroup(
-        id: 'schema-group',
-        schemas: [
-          ?schemaBlog,
-          if (type == OgType.article || openGraph?.type == OgType.article) ...[
-            BlogPostingSchema(
-              headline: schemaBlogPosting?.headline ?? title,
-              description: schemaBlogPosting?.description ?? description,
-              url: schemaBlogPosting?.url ?? url,
-              datePublished: schemaBlogPosting?.datePublished,
-              dateModified: schemaBlogPosting?.dateModified,
-              author: schemaBlogPosting?.author ?? author?.toSchemaDataType(),
-              publisher:
-                  schemaBlogPosting?.publisher ?? publisher?.toSchemaDataType(),
-              image: schemaBlogPosting?.image ?? imageUrl?.toSchemaDataType(),
-              keywords: schemaBlogPosting?.keywords ?? keywords,
-              articleSection: schemaBlogPosting?.articleSection,
-              wordCount: schemaBlogPosting?.wordCount,
-              timeRequired: schemaBlogPosting?.timeRequired,
-              inLanguage: schemaBlogPosting?.inLanguage ?? locale,
-              articleBody: schemaBlogPosting?.articleBody,
-              additionalProperties: schemaBlogPosting?.additionalProperties,
-            ),
-          ],
-          if (type == OgType.website || openGraph?.type == OgType.website)
+        DefaultOpenGraphMeta(
+          title: openGraph?.title ?? title,
+          type: openGraph?.type ?? type,
+          url: openGraph?.url ?? url,
+          imageUrl: openGraph?.imageUrl ?? resolvedImageUrl,
+          description: openGraph?.description ?? description,
+          // og:site_name should be the brand, NOT the page title.
+          siteName: openGraph?.siteName ?? resolvedSiteName,
+          locale: openGraph?.locale ?? resolvedLocale,
+          imageAlt: openGraph?.imageAlt ?? resolvedImageAlt,
+          video: openGraph?.video ?? video,
+          imageHeight: openGraph?.imageHeight ?? resolvedImageHeight,
+          imageWidth: openGraph?.imageWidth ?? resolvedImageWidth,
+        ),
+        if (isArticle)
+          ArticleOpenGraphMeta(
+            author: openGraphArticle?.author ?? resolvedAuthor,
+            section: openGraphArticle?.section,
+            tags: openGraphArticle?.tags,
+            publishedTime: openGraphArticle?.publishedTime,
+            modifiedTime: openGraphArticle?.modifiedTime,
+          ),
+        TwitterMeta(
+          site: twitter?.site ?? defaultTwitter?.site,
+          card: resolvedTwitterCard,
+          creator: twitter?.creator ?? defaultTwitter?.creator,
+          title: twitter?.title ?? title,
+          description: twitter?.description ?? description,
+          image: twitterImage,
+          imageAlt: twitter?.imageAlt ?? resolvedImageAlt,
+        ),
+        PinterestMeta(
+          pinterestRichPin:
+              pinterest?.pinterestRichPin ?? defaultPinterest?.pinterestRichPin,
+          author: pinterest?.author ??
+              defaultPinterest?.author ??
+              resolvedAuthor,
+        ),
+        AppleMeta(
+          title: apple?.title ?? defaultApple?.title ?? title,
+          iconUrl: apple?.iconUrl ?? defaultApple?.iconUrl ?? resolvedIconUrl,
+          color: apple?.color ?? defaultApple?.color ?? resolvedColor,
+          capable: apple?.capable ?? defaultApple?.capable,
+          fullscreen: apple?.fullscreen ?? defaultApple?.fullscreen,
+        ),
+        MicrosoftMeta(
+          tileColor: microsoft?.tileColor ??
+              defaultMicrosoft?.tileColor ??
+              resolvedColor,
+          tileImageUrl: microsoft?.tileImageUrl ??
+              defaultMicrosoft?.tileImageUrl ??
+              resolvedIconUrl,
+        ),
+        if (alternateLanguageUrls?.isNotEmpty ?? false)
+          AlternateLanguageMeta(alternateLanguageUrls!),
+        SchemaGroup(
+          id: 'schema-group',
+          schemas: [
+            ?schemaBlog,
+            // WebSite schema is rendered on EVERY page (Google recommends this
+            // for sitelinks searchbox + brand entity). BlogPosting is added
+            // additionally on article pages — they are NOT mutually exclusive.
             WebSiteSchema(
-              name: schemaWebSite?.name ?? title,
+              name: schemaWebSite?.name ?? resolvedSiteName ?? title,
               description: schemaWebSite?.description ?? description,
-              url: schemaWebSite?.url ?? url,
-              inLanguage: schemaWebSite?.inLanguage ?? locale,
+              url: schemaWebSite?.url ?? resolvedSiteUrl ?? url,
+              inLanguage: schemaWebSite?.inLanguage ?? resolvedLocale,
               datePublished: schemaWebSite?.datePublished,
               dateModified: schemaWebSite?.dateModified,
-              author: schemaWebSite?.author ?? author?.toSchemaDataType(),
-              publisher:
-                  schemaWebSite?.publisher ?? publisher?.toSchemaDataType(),
+              author:
+                  schemaWebSite?.author ?? resolvedAuthor?.toSchemaDataType(),
+              publisher: schemaWebSite?.publisher ??
+                  resolvedPublisher?.toSchemaDataType(),
               keywords: schemaWebSite?.keywords ?? keywords,
-              image: schemaWebSite?.image ?? imageUrl?.toSchemaDataType(),
+              image:
+                  schemaWebSite?.image ?? resolvedImageUrl?.toSchemaDataType(),
               mainEntity: schemaWebSite?.mainEntity,
               additionalProperties: schemaWebSite?.additionalProperties,
             ),
-          ?schemaPerson,
-          ?schemaOrganization,
-          if (breadcrumbItems != null && (breadcrumbItems?.isNotEmpty ?? false))
-            BreadcrumbListSchema(items: breadcrumbItems!),
-        ],
-      ),
-    ],
-  );
+            if (isArticle)
+              BlogPostingSchema(
+                headline: schemaBlogPosting?.headline ?? title,
+                description: schemaBlogPosting?.description ?? description,
+                url: schemaBlogPosting?.url ?? url,
+                datePublished: schemaBlogPosting?.datePublished,
+                dateModified: schemaBlogPosting?.dateModified,
+                author: schemaBlogPosting?.author ??
+                    resolvedAuthor?.toSchemaDataType(),
+                publisher: schemaBlogPosting?.publisher ??
+                    resolvedPublisher?.toSchemaDataType(),
+                image: schemaBlogPosting?.image ??
+                    resolvedImageUrl?.toSchemaDataType(),
+                keywords: schemaBlogPosting?.keywords ?? keywords,
+                articleSection: schemaBlogPosting?.articleSection,
+                wordCount: schemaBlogPosting?.wordCount,
+                timeRequired: schemaBlogPosting?.timeRequired,
+                inLanguage: schemaBlogPosting?.inLanguage ?? resolvedLocale,
+                articleBody: schemaBlogPosting?.articleBody,
+                additionalProperties: schemaBlogPosting?.additionalProperties,
+              ),
+            ?schemaPerson ?? defaults?.schemaPerson,
+            ?schemaOrganization ?? defaults?.schemaOrganization,
+            if (breadcrumbItems?.isNotEmpty ?? false)
+              BreadcrumbListSchema(items: breadcrumbItems!),
+          ],
+        ),
+      ],
+    );
+  }
 }
 
 class Meta extends StatelessComponent {

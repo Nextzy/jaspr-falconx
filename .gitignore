@@ -70,4 +70,7 @@ hosting.*
 .claude/worktrees/
 .claude.local.md
 .mcp.json
+.playwright-mcp/
+
+# Worktrees
 .worktrees/

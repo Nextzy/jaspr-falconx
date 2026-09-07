@@ -76,12 +76,12 @@ class RiverpodResultDecoder<T> extends Converter<Object?, Result<T>> {
     throw Exception('Invalid json');
   }
 
-  ErrorType _parseErrorType(String? name) {
-    if (name == null) return ErrorType.unknown;
+  DefaultErrorType _parseErrorType(String? name) {
+    if (name == null) return DefaultErrorType.unknown;
     try {
-      return ErrorType.values.byName(name);
+      return DefaultErrorType.values.byName(name);
     } catch (_) {
-      return ErrorType.unknown;
+      return DefaultErrorType.unknown;
     }
   }
 }

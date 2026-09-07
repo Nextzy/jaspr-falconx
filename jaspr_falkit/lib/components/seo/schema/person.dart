@@ -99,8 +99,9 @@ class PersonSchema extends Schema {
            if (colleague != null && colleague.value != null)
              'colleague': colleague.value,
            if (spouse != null) 'spouse': spouse.value,
+           // schema.org Person uses `child` (repeatable), not `children`.
            if (personChildren != null && personChildren.value != null)
-             'children': personChildren.value,
+             'child': personChildren.value,
            if (parent != null && parent.value != null) 'parent': parent.value,
            if (sibling != null && sibling.value != null)
              'sibling': sibling.value,

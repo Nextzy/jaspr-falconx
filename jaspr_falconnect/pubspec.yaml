@@ -13,7 +13,7 @@ dependencies:
     git:
       url: https://github.com/Nextzy/dart-falconx.git
       path: dart_falconnect
-      ref: d12f48822fc8527a9df2436191d824133541be79
+      ref: 72e44f5153c5926ef7c6840658e87a24b7851eb1
 #    path: /Users/nonthawit/Data/Github/FalconX/dart-falconx/dart_falconnect
 
   jaspr_falmodel:

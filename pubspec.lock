@@ -229,8 +229,8 @@ packages:
     dependency: transitive
     description:
       path: dart_falconnect
-      ref: d12f48822fc8527a9df2436191d824133541be79
-      resolved-ref: d12f48822fc8527a9df2436191d824133541be79
+      ref: "72e44f5153c5926ef7c6840658e87a24b7851eb1"
+      resolved-ref: "72e44f5153c5926ef7c6840658e87a24b7851eb1"
       url: "https://github.com/Nextzy/dart-falconx.git"
     source: git
     version: "1.0.1"
@@ -238,8 +238,8 @@ packages:
     dependency: transitive
     description:
       path: dart_falmodel
-      ref: d12f48822fc8527a9df2436191d824133541be79
-      resolved-ref: d12f48822fc8527a9df2436191d824133541be79
+      ref: "72e44f5153c5926ef7c6840658e87a24b7851eb1"
+      resolved-ref: "72e44f5153c5926ef7c6840658e87a24b7851eb1"
       url: "https://github.com/Nextzy/dart-falconx.git"
     source: git
     version: "1.0.1"
@@ -247,8 +247,8 @@ packages:
     dependency: transitive
     description:
       path: dart_faltool
-      ref: d12f48822fc8527a9df2436191d824133541be79
-      resolved-ref: d12f48822fc8527a9df2436191d824133541be79
+      ref: "72e44f5153c5926ef7c6840658e87a24b7851eb1"
+      resolved-ref: "72e44f5153c5926ef7c6840658e87a24b7851eb1"
       url: "https://github.com/Nextzy/dart-falconx.git"
     source: git
     version: "1.0.1"
@@ -688,10 +688,10 @@ packages:
     dependency: transitive
     description:
       name: sentry
-      sha256: "288aee3d35f252ac0dc3a4b0accbbe7212fa2867604027f2cc5bc65334afd743"
+      sha256: "682360642a7b14b36daef3b5574b7269164e7763512ac92cdafd55b695bd2183"
       url: "https://pub.dev"
     source: hosted
-    version: "9.16.0"
+    version: "9.16.1"
   shelf:
     dependency: transitive
     description:
