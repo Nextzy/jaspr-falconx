@@ -24,7 +24,7 @@ void main() {
       final encoded = codec.encode(
         Result<_Data>.failure(
           CommonException(
-            type: ErrorType.notFound,
+            type: DefaultErrorType.notFound,
             userMessage: 'missing',
             developerMessage: 'dev',
           ),
@@ -32,23 +32,23 @@ void main() {
       );
       final decoded = codec.decode(encoded);
       expect(decoded.isFailure, true);
-      expect(decoded.exception.type, ErrorType.notFound);
+      expect(decoded.exception.type, DefaultErrorType.notFound);
       expect(decoded.exception.userMessage, 'missing');
       expect(decoded.exception.developerMessage, 'dev');
     });
 
-    test('decoder falls back to ErrorType.unknown for unknown type name', () {
+    test('decoder falls back to DefaultErrorType.unknown for unknown type name', () {
       const bad = '{"exception":{"type":"nope","userMessage":"x"}}';
       final decoded = codec.decoder.convert(bad);
       expect(decoded.isFailure, true);
-      expect(decoded.exception.type, ErrorType.unknown);
+      expect(decoded.exception.type, DefaultErrorType.unknown);
       expect(decoded.exception.userMessage, 'x');
     });
 
-    test('decoder falls back to ErrorType.unknown for missing type', () {
+    test('decoder falls back to DefaultErrorType.unknown for missing type', () {
       const bad = '{"exception":{"userMessage":"x"}}';
       final decoded = codec.decoder.convert(bad);
-      expect(decoded.exception.type, ErrorType.unknown);
+      expect(decoded.exception.type, DefaultErrorType.unknown);
     });
   });
 }

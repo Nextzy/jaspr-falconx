@@ -60,8 +60,13 @@ class AppleMeta extends StatelessComponent {
       ),
       script(
         id: (appleIcon ?? iconUrl)?.hashSha256(length: 5),
+        // `pwaScript` above is loaded with `defer`, so it's not yet available
+        // when this inline script executes. Wait for `window.load` (which
+        // fires after all deferred scripts have run) before calling into it.
         content:
-            "iosPWASplash('${appleIcon ?? iconUrl}', '${color ?? '#FFFFFF'}');",
+            "window.addEventListener('load',function(){"
+            "iosPWASplash('${appleIcon ?? iconUrl}','${color ?? '#FFFFFF'}');"
+            '});',
       ),
     ],
   );

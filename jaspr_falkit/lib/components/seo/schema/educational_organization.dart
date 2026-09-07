@@ -162,18 +162,33 @@ class EducationalOrganizationSchema extends Schema {
     }..removeWhere((key, value) => value == null);
   }
 
-  /// Helper method to create an alumni person
+  /// Helper method to create an alumni person.
+  ///
+  /// Note: schema.org `Person` has no `graduationYear` property. The closest
+  /// valid representation is an `alumniOf` reference to an
+  /// `EducationalOrganization` with `startDate`/`endDate`, optionally combined
+  /// with `hasCredential` for the awarded degree.
   static Map<String, dynamic> createAlumni({
     required String name,
     String? url,
-    String? graduationYear,
+    String? alumniOfName,
+    String? alumniOfUrl,
+    String? startDate,
+    String? endDate,
     String? degree,
   }) {
     return {
       '@type': 'Person',
       'name': name,
       'url': ?url,
-      'graduationYear': ?graduationYear,
+      if (alumniOfName != null)
+        'alumniOf': {
+          '@type': 'EducationalOrganization',
+          'name': alumniOfName,
+          'url': ?alumniOfUrl,
+          'startDate': ?startDate,
+          'endDate': ?endDate,
+        },
       'hasCredential': ?degree,
     };
   }

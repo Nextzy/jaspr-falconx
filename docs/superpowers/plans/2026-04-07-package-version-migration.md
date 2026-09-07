@@ -314,10 +314,10 @@ The new shipped code uses `Result<T>` with `CommonException` instead of `Either<
 **Files:**
 - Modify: `jaspr_falconx/lib/src/states/riverpod_codec.dart:38-89`
 
-- [ ] **Step 8.1: Verify ErrorType is reachable**
+- [ ] **Step 8.1: Verify DefaultErrorType is reachable**
 
 Run: `cd jaspr_falconx && grep -rn "ErrorType" lib/ | head -5`
-If `ErrorType` is not exported from `jaspr_falconx/lib.dart`, add `import 'package:jaspr_falmodel/lib.dart';` to `riverpod_codec.dart` (or whichever file exports falmodel into falconx). Confirm by trying to use `ErrorType.unknown` in the editor.
+If `ErrorType` is not exported from `jaspr_falconx/lib.dart`, add `import 'package:jaspr_falmodel/lib.dart';` to `riverpod_codec.dart` (or whichever file exports falmodel into falconx). Confirm by trying to use `DefaultErrorType.unknown` in the editor.
 
 - [ ] **Step 8.2: Update encoder**
 
@@ -416,12 +416,12 @@ class RiverpodResultDecoder<T> extends Converter<Object?, Result<T>> {
     throw Exception('Invalid json');
   }
 
-  ErrorType _parseErrorType(String? name) {
-    if (name == null) return ErrorType.unknown;
+  DefaultErrorType _parseErrorType(String? name) {
+    if (name == null) return DefaultErrorType.unknown;
     try {
-      return ErrorType.values.byName(name);
+      return DefaultErrorType.values.byName(name);
     } catch (_) {
-      return ErrorType.unknown;
+      return DefaultErrorType.unknown;
     }
   }
 }

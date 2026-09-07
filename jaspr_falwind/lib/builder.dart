@@ -50,6 +50,14 @@ class TailwindBuilder implements Builder {
       return;
     }
 
+    // Make `@plugin "daisyui"` (and any other bare-module @plugins) resolvable.
+    // build_runner uses a hermetic scratch space that contains no node_modules,
+    // so Tailwind v4's module resolution (which walks up from the CSS file's
+    // directory) will fail with `Can't resolve 'daisyui'`. Symlink the
+    // project's node_modules into the scratch root so resolution succeeds
+    // without copying hundreds of megabytes.
+    _bridgeNodeModulesIntoScratch(inputPath);
+
     final commandArgs = <String>[
       ...leadingArgs,
       '--input',
@@ -129,6 +137,39 @@ class TailwindBuilder implements Builder {
   }
 
   return (null, <String>[]);
+}
+
+/// Symlinks `<project>/node_modules` into the scratch space root so that
+/// Tailwind v4's `@plugin "<bare-module>"` resolution succeeds.
+///
+/// The scratch space layout for an input at `web/styles.tw.css` looks like
+/// `<scratch>/web/styles.tw.css`, so the symlink target is `<scratch>/node_modules`.
+///
+/// Skips silently if:
+///   • the project has no `node_modules` (nothing to bridge)
+///   • a node_modules entry already exists at the target (idempotent)
+///   • symlink creation fails (e.g. Windows without dev mode) — logged as a
+///     warning so users see why bare-module @plugins still fail.
+void _bridgeNodeModulesIntoScratch(String inputPath) {
+  final realNodeModules = Directory('${Directory.current.path}/node_modules');
+  if (!realNodeModules.existsSync()) return;
+
+  // <scratch>/web/styles.tw.css → parent.parent = <scratch>
+  final scratchRoot = File(inputPath).parent.parent;
+  final linkPath = '${scratchRoot.path}/node_modules';
+
+  if (Link(linkPath).existsSync() || Directory(linkPath).existsSync()) return;
+
+  try {
+    Link(linkPath).createSync(realNodeModules.absolute.path);
+  } catch (e) {
+    log.warning(
+      'jaspr_falwind: failed to symlink node_modules into scratch space '
+      '($linkPath -> ${realNodeModules.absolute.path}): $e\n'
+      'Bare-module `@plugin "<name>"` directives will fail to resolve. '
+      'On Windows, enable Developer Mode or run as Administrator.',
+    );
+  }
 }
 
 bool _which(String binary) {

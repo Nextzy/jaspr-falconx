@@ -69,7 +69,7 @@ extension CommonExceptionFeedbackX on CommonException {
 | Old | New |
 | --- | --- |
 | `Either<Failure, T>` | `Result<T>` |
-| `Left(Failure(message: m))` | `Result.failure(CommonException(type: ErrorType.unknown, userMessage: m))` |
+| `Left(Failure(message: m))` | `Result.failure(CommonException(type: DefaultErrorType.unknown, userMessage: m))` |
 | `Right(v)` | `Result.success(v)` |
 | `either.fold(l, r)` | `result.resolve(r, (e, _) => l(e))` |
 | `either.isFailure` | `result.isFailure` |
@@ -94,15 +94,15 @@ Encoder serializes `type` via `(type as Enum?)?.name ?? type.toString()`.
 (runtime-only state, not meaningful after hydration).
 
 **Decoder fallback:** If `type` field is missing or unknown,
-fall back to `ErrorType.unknown`:
+fall back to `DefaultErrorType.unknown`:
 
 ```dart
 Object _parseErrorType(String? name) {
-  if (name == null) return ErrorType.unknown;
+  if (name == null) return DefaultErrorType.unknown;
   try {
-    return ErrorType.values.byName(name);
+    return DefaultErrorType.values.byName(name);
   } catch (_) {
-    return ErrorType.unknown;
+    return DefaultErrorType.unknown;
   }
 }
 ```
@@ -157,7 +157,7 @@ snippets to the new `Result`-based names to keep the doc coherent.
 ## Decisions (confirmed)
 
 1. **Adapter location:** `jaspr_falconx` (local), not upstreamed.
-2. **Decoder fallback type:** `ErrorType.unknown` for missing/unknown `type`.
+2. **Decoder fallback type:** `DefaultErrorType.unknown` for missing/unknown `type`.
 3. **JSON shape is breaking:** Accepted — SSR builds always matched.
 4. **No external subclasses** of `PreloadComponentNotifier` — breaking
    `preloadCall()` signature is contained to this repo.

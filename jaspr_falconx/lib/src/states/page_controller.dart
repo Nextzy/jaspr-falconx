@@ -15,13 +15,13 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
     _preloadProvider = FutureProvider<Result<DATA?>>(
       (ref) async => preloadCall(),
       name: id,
+      dependencies: const [],
     );
     _controllerProvider =
         StateNotifierProvider<
           PreloadComponentNotifier<DATA, EVENT>,
           ComponentState<DATA?>
         >(
-          name: id,
           (ref) {
             return this;
           },
@@ -50,10 +50,13 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
 
   /// Returns a [ProviderSync] to register in `ProviderScope(sync: [...])`
   /// so the preload result is hydrated from server to client.
+  ///
+  /// Per jaspr_riverpod docs, synced providers should be registered on the
+  /// root `ProviderScope`. The underlying `_preloadProvider` is created with
+  /// `dependencies: const []` so nested-scope overrides also work if needed.
   ProviderSync syncPreload() => _preloadProvider!.syncWith(_id, codec: _codec);
 
   ComponentState<DATA?> readPreload(BuildContext context) {
-    //** Preload data on server **//
     final result = context.read(_preloadProvider!).value;
     if (result?.isFailure ?? false) {
       return ComponentState.fail(
@@ -66,37 +69,17 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
 
   ComponentState<DATA?> watch(BuildContext context) {
     final state = context.watch(_controllerProvider!);
-
     if (state.isInitial && state.data == null) {
-      //** Preload data on server **//
-      final result = context.read(_preloadProvider!).value;
-      if (result?.isFailure ?? false) {
-        return ComponentState.fail(
-          null,
-          feedback: result!.exception.toFailure(),
-        );
-      }
-      return ComponentState.initial(result?.valueOrNull);
+      return readPreload(context);
     }
-
     return state;
   }
 
   ComponentState<DATA?> read(BuildContext context) {
     final state = context.read(_controllerProvider!);
-
     if (state.isInitial && state.data == null) {
-      //** Preload data on server **//
-      final result = context.read(_preloadProvider!).value;
-      if (result?.isFailure ?? false) {
-        return ComponentState.fail(
-          null,
-          feedback: result!.exception.toFailure(),
-        );
-      }
-      return ComponentState.initial(result?.valueOrNull);
+      return readPreload(context);
     }
-
     return state;
   }
 

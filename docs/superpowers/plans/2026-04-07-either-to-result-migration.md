@@ -50,7 +50,7 @@ void main() {
   group('CommonExceptionFeedbackX.toFailure', () {
     test('uses userMessage when available, default level medium', () {
       final ex = CommonException(
-        type: ErrorType.notFound,
+        type: DefaultErrorType.notFound,
         userMessage: 'not found',
         developerMessage: 'dev msg',
       );
@@ -61,20 +61,20 @@ void main() {
 
     test('falls back to developerMessage when userMessage is null', () {
       final ex = CommonException(
-        type: ErrorType.unknown,
+        type: DefaultErrorType.unknown,
         developerMessage: 'dev only',
       );
       expect(ex.toFailure().message, 'dev only');
     });
 
     test('message is null when both messages are null', () {
-      final ex = CommonException(type: ErrorType.unknown);
+      final ex = CommonException(type: DefaultErrorType.unknown);
       expect(ex.toFailure().message, isNull);
     });
 
     test('accepts custom level', () {
       final ex = CommonException(
-        type: ErrorType.permission,
+        type: DefaultErrorType.permission,
         userMessage: 'denied',
       );
       final f = ex.toFailure(level: FeedbackLevel.high);
@@ -167,7 +167,7 @@ void main() {
       final encoded = codec.encode(
         Result<_Data>.failure(
           CommonException(
-            type: ErrorType.notFound,
+            type: DefaultErrorType.notFound,
             userMessage: 'missing',
             developerMessage: 'dev',
           ),
@@ -175,23 +175,23 @@ void main() {
       );
       final decoded = codec.decode(encoded);
       expect(decoded.isFailure, true);
-      expect(decoded.exception.type, ErrorType.notFound);
+      expect(decoded.exception.type, DefaultErrorType.notFound);
       expect(decoded.exception.userMessage, 'missing');
       expect(decoded.exception.developerMessage, 'dev');
     });
 
-    test('decoder falls back to ErrorType.unknown for unknown type name', () {
+    test('decoder falls back to DefaultErrorType.unknown for unknown type name', () {
       const bad = '{"exception":{"type":"nope","userMessage":"x"}}';
       final decoded = codec.decoder.convert(bad);
       expect(decoded.isFailure, true);
-      expect(decoded.exception.type, ErrorType.unknown);
+      expect(decoded.exception.type, DefaultErrorType.unknown);
       expect(decoded.exception.userMessage, 'x');
     });
 
-    test('decoder falls back to ErrorType.unknown for missing type', () {
+    test('decoder falls back to DefaultErrorType.unknown for missing type', () {
       const bad = '{"exception":{"userMessage":"x"}}';
       final decoded = codec.decoder.convert(bad);
-      expect(decoded.exception.type, ErrorType.unknown);
+      expect(decoded.exception.type, DefaultErrorType.unknown);
     });
   });
 }
@@ -287,12 +287,12 @@ class RiverpodResultDecoder<T> extends Converter<Object?, Result<T>> {
     throw Exception('Invalid json');
   }
 
-  ErrorType _parseErrorType(String? name) {
-    if (name == null) return ErrorType.unknown;
+  DefaultErrorType _parseErrorType(String? name) {
+    if (name == null) return DefaultErrorType.unknown;
     try {
-      return ErrorType.values.byName(name);
+      return DefaultErrorType.values.byName(name);
     } catch (_) {
-      return ErrorType.unknown;
+      return DefaultErrorType.unknown;
     }
   }
 }

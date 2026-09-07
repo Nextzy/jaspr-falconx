@@ -47,8 +47,13 @@ class BreadcrumbListSchema extends Schema {
           (entry) => {
             '@type': 'ListItem',
             'position': entry.key + 1,
+            // Per schema.org BreadcrumbList, every ListItem must expose the
+            // crumb as a Thing (with @type/@id/name). Using a Thing object
+            // — instead of a bare URL — keeps the door open for richer
+            // metadata (image, additional ids) without breaking consumers.
             if (entry.value.url != null)
               'item': {
+                '@type': 'Thing',
                 '@id': entry.value.url,
                 'name': entry.value.name,
               }

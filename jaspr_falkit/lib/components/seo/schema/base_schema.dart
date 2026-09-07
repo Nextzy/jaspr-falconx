@@ -133,7 +133,12 @@ class SchemaGroup extends Schema {
                   '@type': 'ListItem',
                   'position': entry.key + 1,
                   'name': entry.value.name,
-                  'item': entry.value.url,
+                  if (entry.value.url != null)
+                    'item': {
+                      '@type': 'Thing',
+                      '@id': entry.value.url,
+                      'name': entry.value.name,
+                    },
                 },
               )
               .toList(),
