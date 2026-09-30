@@ -99,6 +99,9 @@ dart format .
 # Fail on an export name collision with a dart: library or jaspr that the
 # allowlist in tool/export_check/bin/check.dart does not settle (about 15 s)
 melos run check:exports
+
+# Analyze and test tool/export_check itself; melos analyze and test skip it
+melos run check:exports:test
 ```
 
 - `jaspr_faltool/lib/jaspr_faltool.dart`, the one file that re-exports `dart_faltool`, hides fpdart's `Unit` and `option` so jaspr's CSS `Unit` and `<option>` element win; write `Option.of(...)` or `some(...)` for fpdart's option.
