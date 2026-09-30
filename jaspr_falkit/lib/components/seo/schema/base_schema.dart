@@ -2,11 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// Base class for all Schema.org components
 abstract class Schema extends StatelessComponent {
-  const Schema({
-    this.id,
-    required this.schemaData,
-    this.additionalAttributes,
-  });
+  const new({this.id, required this.schemaData, this.additionalAttributes});
 
   final String? id;
   final Map<String, dynamic>? additionalAttributes;
@@ -14,10 +10,7 @@ abstract class Schema extends StatelessComponent {
 
   /// Helper method to create image object
   static Map<String, dynamic> createImageObject(String url) {
-    return {
-      '@type': 'ImageObject',
-      'url': url,
-    };
+    return {'@type': 'ImageObject', 'url': url};
   }
 
   @override
@@ -33,9 +26,8 @@ abstract class Schema extends StatelessComponent {
     children: [
       RawText(
         jsonEncode(
-          Map<String, dynamic>.from(
-            schemaData,
-          )..removeWhere((k, v) => v == null),
+          Map<String, dynamic>.from(schemaData)
+            ..removeWhere((k, v) => v == null),
         ),
       ),
     ],
@@ -44,7 +36,7 @@ abstract class Schema extends StatelessComponent {
 
 /// Schema Group component for @graph support
 class SchemaGroup extends Schema {
-  SchemaGroup({
+  new({
     super.id,
     required List<Schema> schemas,
     String context = 'https://schema.org',
@@ -58,7 +50,7 @@ class SchemaGroup extends Schema {
        );
 
   /// Factory for common website + organization combo
-  factory SchemaGroup.websiteWithOrganization({
+  factory websiteWithOrganization({
     required String websiteName,
     required String websiteUrl,
     required String organizationName,
@@ -88,9 +80,7 @@ class SchemaGroup extends Schema {
           '@id': '$websiteUrl#website',
           'url': websiteUrl,
           'name': websiteName,
-          'publisher': {
-            '@id': '${organizationUrl ?? websiteUrl}#organization',
-          },
+          'publisher': {'@id': '${organizationUrl ?? websiteUrl}#organization'},
           if (searchUrlTemplate != null)
             'potentialAction': {
               '@type': 'SearchAction',
@@ -108,7 +98,7 @@ class SchemaGroup extends Schema {
   }
 
   /// Factory for article with breadcrumb
-  factory SchemaGroup.articleWithBreadcrumb({
+  factory articleWithBreadcrumb({
     required String headline,
     required String url,
     required String datePublished,
@@ -166,7 +156,7 @@ class SchemaGroup extends Schema {
   }
 
   /// Factory for blog with recent posts
-  factory SchemaGroup.blogWithPosts({
+  factory blogWithPosts({
     required String blogName,
     required String blogUrl,
     required Map<String, dynamic> publisher,
@@ -212,7 +202,5 @@ class SchemaGroup extends Schema {
 
 /// Generic schema wrapper for arbitrary schema data
 class GenericSchema extends Schema {
-  const GenericSchema({
-    required Map<String, dynamic> data,
-  }) : super(schemaData: data);
+  const new({required Map<String, dynamic> data}) : super(schemaData: data);
 }

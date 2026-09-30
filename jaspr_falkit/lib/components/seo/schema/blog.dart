@@ -3,7 +3,7 @@ import 'package:jaspr_falkit/lib.dart';
 /// Blog schema component with full schema.org support
 /// Implements https://schema.org/Blog specification
 class BlogSchema extends Schema {
-  BlogSchema({
+  new({
     this.name,
     this.description,
     this.url,
@@ -70,11 +70,7 @@ class BlogSchema extends Schema {
            if (publisher != null) 'publisher': publisher.value,
            'inLanguage': ?inLanguage,
            if (blogPost != null && blogPost.isNotEmpty)
-             'blogPost': blogPost
-                 .map(
-                   (blog) => blog.schemaData,
-                 )
-                 .toList(),
+             'blogPost': blogPost.map((blog) => blog.schemaData).toList(),
            if (author != null) 'author': author.value,
            'dateCreated': ?dateCreated,
            'dateModified': ?dateModified,
@@ -122,12 +118,12 @@ class BlogSchema extends Schema {
            'version': ?version,
            'video': ?video,
            'workExample': ?workExample,
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Factory constructor for personal blogs
-  factory BlogSchema.personal({
+  factory personal({
     required String name,
     required String url,
     required SchemaDataType<PersonSchema> author,
@@ -148,7 +144,7 @@ class BlogSchema extends Schema {
   }
 
   /// Factory constructor for corporate blogs
-  factory BlogSchema.corporate({
+  factory corporate({
     required String name,
     required String url,
     required SchemaDataType<OrganizationSchema> publisher,
@@ -272,10 +268,7 @@ class BlogSchema extends Schema {
       '@type': 'Review',
       'reviewBody': reviewBody,
       'author': author,
-      'reviewRating': {
-        '@type': 'Rating',
-        'ratingValue': ratingValue,
-      },
+      'reviewRating': {'@type': 'Rating', 'ratingValue': ratingValue},
       'datePublished': ?datePublished,
     };
   }

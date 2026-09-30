@@ -1,10 +1,7 @@
 import 'package:jaspr_falkit/lib.dart';
 
 class PinterestMeta extends StatelessComponent {
-  const PinterestMeta({
-    this.pinterestRichPin,
-    this.author,
-  });
+  const new({this.pinterestRichPin, this.author});
 
   final String? pinterestRichPin;
   final String? author;
@@ -18,11 +15,7 @@ class PinterestMeta extends StatelessComponent {
         unique: true,
       ),
       if (author.isNotNullOrBlank)
-        Meta(
-          property: 'article:author',
-          content: author,
-          unique: true,
-        ),
+        Meta(property: 'article:author', content: author, unique: true),
     ],
   );
 }

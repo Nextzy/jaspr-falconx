@@ -3,7 +3,7 @@ import 'package:jaspr_falkit/lib.dart';
 /// EducationalOrganization schema for schools, universities,
 /// and educational institutions
 class EducationalOrganizationSchema extends Schema {
-  EducationalOrganizationSchema({
+  new({
     required String name,
     String? url,
     String? logo,
@@ -36,11 +36,7 @@ class EducationalOrganizationSchema extends Schema {
            '@type': 'EducationalOrganization',
            'name': name,
            'url': ?url,
-           if (logo != null)
-             'logo': {
-               '@type': 'ImageObject',
-               'url': logo,
-             },
+           if (logo != null) 'logo': {'@type': 'ImageObject', 'url': logo},
            'description': ?description,
            'email': ?email,
            'telephone': ?telephone,
@@ -67,12 +63,12 @@ class EducationalOrganizationSchema extends Schema {
            'vatID': ?vatID,
            if (review != null && review.isNotEmpty) 'review': review,
            'aggregateRating': ?aggregateRating,
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Creates a basic educational organization schema
-  factory EducationalOrganizationSchema.basic({
+  factory basic({
     required String name,
     required String url,
     String? description,
@@ -89,7 +85,7 @@ class EducationalOrganizationSchema extends Schema {
   }
 
   /// Creates a university schema
-  factory EducationalOrganizationSchema.university({
+  factory university({
     required String name,
     required String url,
     String? description,
@@ -114,7 +110,7 @@ class EducationalOrganizationSchema extends Schema {
   }
 
   /// Creates a school schema
-  factory EducationalOrganizationSchema.school({
+  factory school({
     required String name,
     required String url,
     String? description,
@@ -151,11 +147,7 @@ class EducationalOrganizationSchema extends Schema {
       'name': name,
       'url': ?url,
       'description': ?description,
-      if (logo != null)
-        'logo': {
-          '@type': 'ImageObject',
-          'url': logo,
-        },
+      if (logo != null) 'logo': {'@type': 'ImageObject', 'url': logo},
       'address': ?address,
       'legalName': ?legalName,
       'accreditation': ?accreditation,

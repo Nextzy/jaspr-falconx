@@ -1,7 +1,7 @@
 import 'package:jaspr_falkit/lib.dart';
 
 class AppleMeta extends StatelessComponent {
-  const AppleMeta({
+  const new({
     this.title,
     this.capable,
     this.fullscreen,
@@ -28,11 +28,7 @@ class AppleMeta extends StatelessComponent {
         unique: true,
       ),
       if (title.isNotNullOrBlank)
-        Meta(
-          name: 'apple-mobile-web-app-title',
-          content: title,
-          unique: true,
-        ),
+        Meta(name: 'apple-mobile-web-app-title', content: title, unique: true),
       Meta(
         name: 'apple-mobile-web-app-capable',
         content: capable ?? 'yes',
@@ -49,15 +45,8 @@ class AppleMeta extends StatelessComponent {
         unique: true,
       ),
       if (appleIcon.isNotNullOrBlank || iconUrl.isNotNullOrBlank)
-        LinkHeader(
-          rel: 'apple-touch-icon',
-          href: appleIcon ?? iconUrl!,
-        ),
-      script(
-        id: pwaScript.hashSha256(length: 5),
-        src: pwaScript,
-        defer: true,
-      ),
+        LinkHeader(rel: 'apple-touch-icon', href: appleIcon ?? iconUrl!),
+      script(id: pwaScript.hashSha256(length: 5), src: pwaScript, defer: true),
       script(
         id: (appleIcon ?? iconUrl)?.hashSha256(length: 5),
         // `pwaScript` above is loaded with `defer`, so it's not yet available

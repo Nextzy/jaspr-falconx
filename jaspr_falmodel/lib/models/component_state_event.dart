@@ -56,7 +56,7 @@ enum FullComponentState {
 
 @immutable
 class ComponentState<DATA> {
-  factory ComponentState.initial(
+  factory initial(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -67,7 +67,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  factory ComponentState.normal(
+  factory normal(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -78,7 +78,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  factory ComponentState.empty(
+  factory empty(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -89,7 +89,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  factory ComponentState.hovered(
+  factory hovered(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -100,7 +100,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  factory ComponentState.focused(
+  factory focused(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -111,7 +111,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  factory ComponentState.focusedVisible(
+  factory focusedVisible(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -122,7 +122,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  factory ComponentState.pressed(
+  factory pressed(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -133,7 +133,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  factory ComponentState.dragged(
+  factory dragged(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -144,7 +144,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  factory ComponentState.selected(
+  factory selected(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -155,7 +155,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  factory ComponentState.scrolledUnder(
+  factory scrolledUnder(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -166,7 +166,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  factory ComponentState.disabled(
+  factory disabled(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -177,7 +177,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  factory ComponentState.loading(
+  factory loading(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -188,7 +188,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  factory ComponentState.success(
+  factory success(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -199,7 +199,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  factory ComponentState.cancel(
+  factory cancel(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -210,7 +210,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  factory ComponentState.warning(
+  factory warning(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -221,7 +221,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  factory ComponentState.fail(
+  factory fail(
     DATA data, {
     String? id,
     UserFeedback? feedback,
@@ -232,7 +232,7 @@ class ComponentState<DATA> {
     data: data,
   );
 
-  const ComponentState._(
+  const new _(
     this.state, {
     this.id,
     this.event,

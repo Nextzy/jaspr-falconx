@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// SoftwareApplication schema component with full schema.org support
 class SoftwareApplicationSchema extends Schema {
-  SoftwareApplicationSchema({
+  new({
     required this.name,
     this.url,
     this.description,
@@ -91,10 +91,7 @@ class SoftwareApplicationSchema extends Schema {
            if (aggregateRating != null)
              'aggregateRating': aggregateRating.value,
            if (screenshot != null)
-             'screenshot': {
-               '@type': 'ImageObject',
-               'url': screenshot,
-             },
+             'screenshot': {'@type': 'ImageObject', 'url': screenshot},
            if (featureList != null && featureList.isNotEmpty)
              'featureList': featureList,
            'datePublished': ?datePublished,
@@ -136,11 +133,7 @@ class SoftwareApplicationSchema extends Schema {
            'genre': ?genre,
            if (hasPart != null) 'hasPart': hasPart.value,
            'headline': ?headline,
-           if (image != null)
-             'image': {
-               '@type': 'ImageObject',
-               'url': image,
-             },
+           if (image != null) 'image': {'@type': 'ImageObject', 'url': image},
            if (interactionStatistic != null)
              'interactionStatistic': interactionStatistic.value,
            'isAccessibleForFree': ?isAccessibleForFree,
@@ -166,12 +159,12 @@ class SoftwareApplicationSchema extends Schema {
            'timeRequired': ?timeRequired,
            'version': ?version,
            if (video != null) 'video': video.value,
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Factory constructor for mobile applications
-  factory SoftwareApplicationSchema.mobileApp({
+  factory mobileApp({
     required String name,
     required List<String> operatingSystem,
     String? url,
@@ -204,7 +197,7 @@ class SoftwareApplicationSchema extends Schema {
   }
 
   /// Factory constructor for desktop applications
-  factory SoftwareApplicationSchema.desktopApp({
+  factory desktopApp({
     required String name,
     required List<String> operatingSystem,
     String? url,
@@ -357,10 +350,7 @@ class SoftwareApplicationSchema extends Schema {
     return {
       'reviewBody': reviewBody,
       'author': author,
-      'reviewRating': {
-        '@type': 'Rating',
-        'ratingValue': ratingValue,
-      },
+      'reviewRating': {'@type': 'Rating', 'ratingValue': ratingValue},
       'datePublished': ?datePublished,
     };
   }
@@ -371,7 +361,7 @@ typedef SoftwareApplicationSchemaData = SoftwareApplicationSchema;
 
 /// WebApplication extends SoftwareApplication for web-specific applications
 class WebApplicationSchema extends Schema {
-  WebApplicationSchema({
+  new({
     this.name,
     this.url,
     this.description,
@@ -408,10 +398,7 @@ class WebApplicationSchema extends Schema {
            if (aggregateRating != null)
              'aggregateRating': aggregateRating.value,
            if (screenshot != null)
-             'screenshot': {
-               '@type': 'ImageObject',
-               'url': screenshot,
-             },
+             'screenshot': {'@type': 'ImageObject', 'url': screenshot},
            if (featureList != null && featureList.isNotEmpty)
              'featureList': featureList,
            'datePublished': ?datePublished,
@@ -420,12 +407,12 @@ class WebApplicationSchema extends Schema {
            if (publisher != null) 'publisher': publisher.value,
            if (availableLanguage != null && availableLanguage.isNotEmpty)
              'availableLanguage': availableLanguage,
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Factory constructor for SaaS applications
-  factory WebApplicationSchema.saas({
+  factory saas({
     required String name,
     required String url,
     String? description,
@@ -452,7 +439,7 @@ class WebApplicationSchema extends Schema {
   }
 
   /// Factory constructor for progressive web apps
-  factory WebApplicationSchema.pwa({
+  factory pwa({
     required String name,
     required String url,
     String? description,

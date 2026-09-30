@@ -1,7 +1,5 @@
 abstract class AnalyticOption {
-  const AnalyticOption({
-    this.enabled = true,
-  });
+  const new({this.enabled = true});
 
   final bool enabled;
 }

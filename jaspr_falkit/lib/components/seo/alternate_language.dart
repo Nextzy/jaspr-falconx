@@ -1,17 +1,14 @@
 import 'package:jaspr_falkit/lib.dart';
 
 class AlternateLanguageTag {
-  const AlternateLanguageTag({
-    this.locale,
-    this.url,
-  });
+  const new({this.locale, this.url});
 
   final String? locale;
   final String? url;
 }
 
 class AlternateLanguageMeta extends StatelessComponent {
-  const AlternateLanguageMeta(this.tags);
+  const new(this.tags);
 
   final List<AlternateLanguageTag> tags;
 

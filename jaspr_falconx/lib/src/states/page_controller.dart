@@ -5,7 +5,7 @@ import 'package:jaspr_riverpod/misc.dart';
 
 abstract class PreloadComponentNotifier<DATA, EVENT>
     extends NullableComponentStateNotifier<DATA> {
-  PreloadComponentNotifier({
+  new({
     DATA? initialData,
     required DATA Function(dynamic json) fromJson,
     required String id,
@@ -21,11 +21,9 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
         StateNotifierProvider<
           PreloadComponentNotifier<DATA, EVENT>,
           ComponentState<DATA?>
-        >(
-          (ref) {
-            return this;
-          },
-        );
+        >((ref) {
+          return this;
+        });
   }
 
   final String _id;
@@ -59,10 +57,7 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
   ComponentState<DATA?> readPreload(BuildContext context) {
     final result = context.read(_preloadProvider!).value;
     if (result?.isFailure ?? false) {
-      return ComponentState.fail(
-        null,
-        feedback: result!.exception.toFailure(),
-      );
+      return ComponentState.fail(null, feedback: result!.exception.toFailure());
     }
     return ComponentState.initial(result?.valueOrNull);
   }
@@ -83,19 +78,13 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
     return state;
   }
 
-  void listenEvent(
-    BuildContext context,
-    void Function(EVENT event) listener,
-  ) {
-    context.listen(
-      _controllerProvider!,
-      (previous, value) {
-        final event = value.event;
-        if (event is EVENT && event != null) {
-          listener(event);
-        }
-      },
-    );
+  void listenEvent(BuildContext context, void Function(EVENT event) listener) {
+    context.listen(_controllerProvider!, (previous, value) {
+      final event = value.event;
+      if (event is EVENT && event != null) {
+        listener(event);
+      }
+    });
   }
 
   void emitEvent(EVENT event) {

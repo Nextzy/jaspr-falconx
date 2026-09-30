@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// Organization schema component with full schema.org support
 class OrganizationSchema extends Schema {
-  OrganizationSchema({
+  new({
     this.name,
     this.url,
     this.logo,
@@ -132,12 +132,12 @@ class OrganizationSchema extends Schema {
            'ownershipFundingInfo': ?ownershipFundingInfo,
            'unnamedSourcesPolicy': ?unnamedSourcesPolicy,
            'verificationFactCheckingPolicy': ?verificationFactCheckingPolicy,
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Factory constructor for corporations
-  factory OrganizationSchema.corporation({
+  factory corporation({
     required String name,
     required String url,
     SchemaDataType<ImageSchema>? logo,
@@ -164,7 +164,7 @@ class OrganizationSchema extends Schema {
   }
 
   /// Factory constructor for non-profit organizations
-  factory OrganizationSchema.nonProfit({
+  factory nonProfit({
     required String name,
     required String url,
     SchemaDataType<ImageSchema>? logo,
@@ -292,12 +292,7 @@ class OrganizationSchema extends Schema {
     String? url,
     String? logo,
   }) {
-    return {
-      '@type': 'Organization',
-      'name': name,
-      'url': ?url,
-      'logo': ?logo,
-    };
+    return {'@type': 'Organization', 'name': name, 'url': ?url, 'logo': ?logo};
   }
 }
 

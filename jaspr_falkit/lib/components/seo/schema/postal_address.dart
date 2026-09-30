@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// PostalAddress schema for representing physical addresses
 class PostalAddressSchema extends Schema {
-  PostalAddressSchema({
+  new({
     String? streetAddress,
     String? addressLocality,
     String? addressRegion,
@@ -26,12 +26,12 @@ class PostalAddressSchema extends Schema {
            'addressExtended': ?addressExtended,
            'name': ?name,
            'description': ?description,
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Creates a US address schema
-  factory PostalAddressSchema.usAddress({
+  factory usAddress({
     required String streetAddress,
     required String addressLocality,
     required String addressRegion,
@@ -51,7 +51,7 @@ class PostalAddressSchema extends Schema {
   }
 
   /// Creates an international address schema
-  factory PostalAddressSchema.international({
+  factory international({
     required String streetAddress,
     required String addressLocality,
     required String addressCountry,
@@ -70,7 +70,7 @@ class PostalAddressSchema extends Schema {
   }
 
   /// Creates a simple address schema
-  factory PostalAddressSchema.simple({
+  factory simple({
     required String streetAddress,
     required String city,
     required String country,
@@ -83,7 +83,7 @@ class PostalAddressSchema extends Schema {
   }
 
   /// Creates a European address schema
-  factory PostalAddressSchema.european({
+  factory european({
     required String streetAddress,
     required String city,
     required String postalCode,
