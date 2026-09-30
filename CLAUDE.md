@@ -94,6 +94,17 @@ dart fix --apply
 dart format .
 ```
 
+### Export conflicts
+```bash
+# Fail on an export name collision with a dart: library or jaspr that the
+# allowlist in tool/export_check/bin/check.dart does not settle (about 15 s)
+melos run check:exports
+```
+
+- `jaspr_faltool/lib/jaspr_faltool.dart`, the one file that re-exports `dart_faltool`, hides fpdart's `Unit` and `option` so jaspr's CSS `Unit` and `<option>` element win; write `Option.of(...)` or `some(...)` for fpdart's option.
+- `jaspr_falconx.dart` hides `AsyncError` on its `jaspr_faltool` export so riverpod's `AsyncError` wins over `dart:async`'s.
+- Since 2.0.0, `dart-falconx` 2.4.0 no longer exports `dart:math`'s `log` or dartx's `IterableFilter`, and renames `SocketException`, `RefreshCallback`, and `RemoteError` to `SocketClientException`, `TokenRefreshCallback`, and `RemoteErrorBody`.
+
 ## Architecture Overview
 
 ### Package Dependencies

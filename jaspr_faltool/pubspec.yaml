@@ -15,7 +15,7 @@ dependencies:
     git:
       url: https://github.com/Nextzy/dart-falconx
       path: dart_faltool
-      ref: 2.3.1
+      ref: 2.4.0
 #   path: /Users/nonthawit/Data/Github/FalconX/dart-falconx/dart_faltool
 
   jaspr: ^0.23.5
