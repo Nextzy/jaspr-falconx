@@ -1,6 +1,6 @@
 
 class Locale {
-  const Locale({
+  const new({
     required this.languageCode,
     this.scriptCode,
     this.countryCode,

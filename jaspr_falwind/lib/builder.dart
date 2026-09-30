@@ -1,10 +1,18 @@
 import 'dart:io';
 
 import 'package:build/build.dart';
-import 'package:build_modules/build_modules.dart';
 import 'package:glob/glob.dart';
+import 'package:scratch_space/scratch_space.dart';
 
 Builder buildStylesheet(BuilderOptions options) => TailwindBuilder(options);
+
+/// One scratch space per build, shared across build steps and deleted when the
+/// build ends. Replaces `scratchSpaceResource` from the discontinued
+/// `build_modules` package; Tailwind needs no `package_config.json` in it.
+final _scratchSpaceResource = Resource<ScratchSpace>(
+  ScratchSpace.new,
+  dispose: (scratchSpace) => scratchSpace.delete(),
+);
 
 /// Builds CSS from `web/*.tw.css` entrypoints using Tailwind CSS v4 + daisyUI v5.
 ///
@@ -16,13 +24,13 @@ Builder buildStylesheet(BuilderOptions options) => TailwindBuilder(options);
 ///   3. run the CLI
 ///   4. copy the generated CSS back as a build output
 class TailwindBuilder implements Builder {
-  TailwindBuilder(this.options);
+  new(this.options);
 
   final BuilderOptions options;
 
   @override
   Future<void> build(BuildStep buildStep) async {
-    final scratchSpace = await buildStep.fetchResource(scratchSpaceResource);
+    final scratchSpace = await buildStep.fetchResource(_scratchSpaceResource);
     await scratchSpace.ensureAssets({buildStep.inputId}, buildStep);
 
     final outputId = buildStep.inputId.changeExtension('').changeExtension('.css');
@@ -184,7 +192,7 @@ bool _which(String binary) {
 extension POSIXPath on String {
   String toPosix([bool quoted = false]) {
     if (Platform.isWindows) {
-      final result = replaceAll('\\', '/');
+      final result = replaceAll(r'\', '/');
       return quoted ? "'$result'" : result;
     }
     return this;

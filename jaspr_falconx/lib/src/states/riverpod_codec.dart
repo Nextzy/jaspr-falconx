@@ -1,8 +1,7 @@
 import 'package:jaspr_falconx/lib.dart';
 
-Codec<T, Object?> riverpodCodec<T>(
-  T Function(dynamic json) fromJson,
-) => RiverpodCodec(fromJson);
+Codec<T, Object?> riverpodCodec<T>(T Function(dynamic json) fromJson) =>
+    RiverpodCodec(fromJson);
 
 Codec<Result<T>, Object?> riverpodResultCodec<T>(
   T Function(dynamic json) fromJson,
@@ -14,7 +13,7 @@ class RiverpodEncoder<T> extends Converter<T, Object?> {
 }
 
 class RiverpodDecoder<T> extends Converter<Object?, T> {
-  const RiverpodDecoder(this.fromJson);
+  const new(this.fromJson);
 
   final T Function(Map<String, dynamic> json) fromJson;
 
@@ -24,7 +23,7 @@ class RiverpodDecoder<T> extends Converter<Object?, T> {
 }
 
 class RiverpodCodec<T> extends Codec<T, Object?> {
-  const RiverpodCodec(this.fromJson);
+  const new(this.fromJson);
 
   final T Function(Map<String, dynamic> json) fromJson;
 
@@ -52,7 +51,7 @@ class RiverpodResultEncoder<T> extends Converter<Result<T>, Object?> {
 }
 
 class RiverpodResultDecoder<T> extends Converter<Object?, Result<T>> {
-  const RiverpodResultDecoder(this.fromJson);
+  const new(this.fromJson);
 
   final T Function(dynamic json) fromJson;
 
@@ -76,18 +75,27 @@ class RiverpodResultDecoder<T> extends Converter<Object?, Result<T>> {
     throw Exception('Invalid json');
   }
 
-  DefaultErrorType _parseErrorType(String? name) {
-    if (name == null) return DefaultErrorType.unknown;
-    try {
-      return DefaultErrorType.values.byName(name);
-    } catch (_) {
-      return DefaultErrorType.unknown;
-    }
-  }
+  /// Every [DefaultErrorType] implementation, keyed by enum name. The type is
+  /// sealed, so this list is exhaustive for the pinned dart_falmodel version;
+  /// names are unique across these enums.
+  static final _errorTypesByName = <String, DefaultErrorType>{
+    ...SystemErrorType.values.asNameMap(),
+    ...InputErrorType.values.asNameMap(),
+    ...TimeoutErrorType.values.asNameMap(),
+    ...StorageErrorType.values.asNameMap(),
+    ...ConnectivityErrorType.values.asNameMap(),
+    ...AsyncErrorType.values.asNameMap(),
+    ...AccessErrorType.values.asNameMap(),
+    ...ExternalErrorType.values.asNameMap(),
+    ...BusinessErrorType.values.asNameMap(),
+  };
+
+  DefaultErrorType _parseErrorType(String? name) =>
+      _errorTypesByName[name] ?? SystemErrorType.unknown;
 }
 
 class RiverpodResultCodec<T> extends Codec<Result<T>, Object?> {
-  const RiverpodResultCodec(this.fromJson);
+  const new(this.fromJson);
 
   final T Function(dynamic json) fromJson;
 

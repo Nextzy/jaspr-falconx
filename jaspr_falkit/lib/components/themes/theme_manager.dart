@@ -2,11 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 import 'package:universal_web/web.dart' as web;
 
 class ThemeManager extends StatefulComponent {
-  const ThemeManager({
-    required this.builder,
-    this.initialTheme,
-    super.key,
-  });
+  const new({required this.builder, this.initialTheme, super.key});
 
   static const themeStorageKey = 'jaspr_theme_preference';
 

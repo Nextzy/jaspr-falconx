@@ -3,7 +3,7 @@ import 'package:jaspr_falkit/lib.dart';
 /// WebPage schema with all schema.org properties
 class WebPageSchema extends Schema {
   /// Main constructor with all schema.org properties
-  WebPageSchema({
+  new({
     this.name,
     this.description,
     this.url,
@@ -97,12 +97,12 @@ class WebPageSchema extends Schema {
            'mentions': ?mentions,
            if (potentialAction != null && potentialAction.isNotEmpty)
              'potentialAction': potentialAction,
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Creates a basic WebPage schema with essential SEO properties
-  factory WebPageSchema.basic({
+  factory basic({
     required String name,
     required String url,
     String? description,
@@ -125,7 +125,7 @@ class WebPageSchema extends Schema {
   }
 
   /// Creates a WebPage schema for article-like content
-  factory WebPageSchema.article({
+  factory article({
     required String headline,
     required String url,
     required String datePublished,

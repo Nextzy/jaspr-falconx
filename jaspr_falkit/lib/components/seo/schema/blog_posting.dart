@@ -3,7 +3,7 @@ import 'package:jaspr_falkit/lib.dart';
 /// BlogPosting schema component with full schema.org support
 /// Implements https://schema.org/BlogPosting specification
 class BlogPostingSchema extends Schema {
-  BlogPostingSchema({
+  new({
     this.headline,
     this.alternativeHeadline,
     this.description,
@@ -95,12 +95,12 @@ class BlogPostingSchema extends Schema {
            'audio': ?audio,
            'speakable': ?speakable,
            'backstory': ?backstory,
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Factory constructor for personal blog posts
-  factory BlogPostingSchema.personal({
+  factory personal({
     required String headline,
     required DateTime datePublished,
     required SchemaDataType<PersonSchema> author,
@@ -125,7 +125,7 @@ class BlogPostingSchema extends Schema {
   }
 
   /// Factory constructor for corporate blog posts
-  factory BlogPostingSchema.corporate({
+  factory corporate({
     required String headline,
     required DateTime datePublished,
     required SchemaDataType<PersonSchema> author,
@@ -236,9 +236,7 @@ class BlogPostingSchema extends Schema {
   }) {
     return {
       '@type': 'InteractionCounter',
-      'interactionType': {
-        '@type': interactionType,
-      },
+      'interactionType': {'@type': interactionType},
       'userInteractionCount': userInteractionCount,
     };
   }

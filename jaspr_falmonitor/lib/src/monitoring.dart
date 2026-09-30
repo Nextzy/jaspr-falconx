@@ -5,7 +5,7 @@ import 'package:jaspr_falmonitor/src/src.dart';
 import 'package:universal_web/web.dart' as web;
 
 class Monitoring {
-  const Monitoring._();
+  const new _();
 
   static String? _userDeviceId; //
   static String get userDeviceId => _userDeviceId!; //
@@ -19,10 +19,7 @@ class Monitoring {
   }) async {
     _userDeviceId = await getDeviceId();
     _deviceInfo = await _getDeviceInfo();
-    await _initial(
-      sentry: sentry,
-      umami: umami,
-    );
+    await _initial(sentry: sentry, umami: umami);
     await _setupUserIdentifier(userId: userDeviceId, attributes: deviceInfo);
   }
 
@@ -58,40 +55,27 @@ class Monitoring {
     String? screenName,
     Map<String, Object>? eventAttributes,
   }) async {
-    await Future.wait(
-      [
-        SentryHandler.instance.captureEvent(
-          type: type,
-          name: name,
-          screenName: screenName,
-          eventAttributes: eventAttributes,
-        ),
-        UmamiHandler.instance.captureEvent(
-          type: type,
-          name: name,
-          screenName: screenName,
-          eventAttributes: eventAttributes,
-        ),
-      ],
-    );
+    await Future.wait([
+      SentryHandler.instance.captureEvent(
+        type: type,
+        name: name,
+        screenName: screenName,
+        eventAttributes: eventAttributes,
+      ),
+      UmamiHandler.instance.captureEvent(
+        type: type,
+        name: name,
+        screenName: screenName,
+        eventAttributes: eventAttributes,
+      ),
+    ]);
   }
 
-  static Future<void> captureScreenView(
-    String path, {
-    String? referrer,
-  }) async {
-    await Future.wait(
-      [
-        SentryHandler.instance.captureScreenView(
-          path,
-          referrer: referrer,
-        ),
-        UmamiHandler.instance.captureScreenView(
-          path,
-          referrer: referrer,
-        ),
-      ],
-    );
+  static Future<void> captureScreenView(String path, {String? referrer}) async {
+    await Future.wait([
+      SentryHandler.instance.captureScreenView(path, referrer: referrer),
+      UmamiHandler.instance.captureScreenView(path, referrer: referrer),
+    ]);
   }
 
   static Future<void> captureError(
@@ -99,20 +83,18 @@ class Monitoring {
     StackTrace? stackTrace,
     Map<String, Object>? attributes,
   }) async {
-    await Future.wait(
-      [
-        SentryHandler.instance.captureError(
-          error,
-          stackTrace: stackTrace,
-          attributes: attributes,
-        ),
-        UmamiHandler.instance.captureError(
-          error,
-          stackTrace: stackTrace,
-          attributes: attributes,
-        ),
-      ],
-    );
+    await Future.wait([
+      SentryHandler.instance.captureError(
+        error,
+        stackTrace: stackTrace,
+        attributes: attributes,
+      ),
+      UmamiHandler.instance.captureError(
+        error,
+        stackTrace: stackTrace,
+        attributes: attributes,
+      ),
+    ]);
   }
 
   static Future<Map<String, Object>> _getDeviceInfo() async {

@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// ImageObject schema for representing images
 class ImageSchema extends Schema {
-  ImageSchema({
+  new({
     required this.url,
     this.caption,
     this.width,
@@ -61,12 +61,12 @@ class ImageSchema extends Schema {
            'inLanguage': ?inLanguage,
            if (keywords != null && keywords.isNotEmpty)
              'keywords': keywords.join(', '),
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Factory constructor for basic image
-  factory ImageSchema.basic({
+  factory basic({
     required String url,
     String? caption,
     int? width,
@@ -81,7 +81,7 @@ class ImageSchema extends Schema {
   }
 
   /// Factory constructor for photo with metadata
-  factory ImageSchema.photo({
+  factory photo({
     required String url,
     required String name,
     String? caption,
@@ -108,20 +108,12 @@ class ImageSchema extends Schema {
   }
 
   /// Factory constructor for thumbnail image
-  factory ImageSchema.thumbnail({
-    required String url,
-    int width = 150,
-    int height = 150,
-  }) {
-    return ImageSchema(
-      url: url,
-      width: width,
-      height: height,
-    );
+  factory thumbnail({required String url, int width = 150, int height = 150}) {
+    return ImageSchema(url: url, width: width, height: height);
   }
 
   /// Factory constructor for hero/banner image
-  factory ImageSchema.hero({
+  factory hero({
     required String url,
     required String name,
     String? caption,

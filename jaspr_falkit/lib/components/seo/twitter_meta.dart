@@ -1,7 +1,7 @@
 import 'package:jaspr_falkit/lib.dart';
 
 class TwitterMeta extends StatelessComponent {
-  const TwitterMeta({
+  const new({
     // *** Required *** //
     this.card = 'summary_large_image',
     // *** Recommend *** //
@@ -24,46 +24,19 @@ class TwitterMeta extends StatelessComponent {
   @override
   Component build(BuildContext context) => Document.head(
     children: [
-      Meta(
-        name: 'twitter:card',
-        content: card,
-        unique: true,
-      ),
+      Meta(name: 'twitter:card', content: card, unique: true),
       if (site.isNotNullOrBlank)
-        Meta(
-          name: 'twitter:site',
-          content: site,
-          unique: true,
-        ),
+        Meta(name: 'twitter:site', content: site, unique: true),
       if (creator.isNotNullOrBlank)
-        Meta(
-          name: 'twitter:creator',
-          content: creator,
-          unique: true,
-        ),
+        Meta(name: 'twitter:creator', content: creator, unique: true),
       if (title.isNotNullOrBlank)
-        Meta(
-          name: 'twitter:title',
-          content: title,
-          unique: true,
-        ),
+        Meta(name: 'twitter:title', content: title, unique: true),
       if (description.isNotNullOrBlank)
-        Meta(
-          name: 'twitter:description',
-          content: description,
-          unique: true,
-        ),
+        Meta(name: 'twitter:description', content: description, unique: true),
       if (image.isNotNullOrBlank)
-        Meta(
-          name: 'twitter:image',
-          content: image,
-          unique: true,
-        ),
+        Meta(name: 'twitter:image', content: image, unique: true),
       if (imageAlt.isNotNullOrBlank)
-        Meta(
-          name: 'twitter:image:alt',
-          content: imageAlt,
-        ),
+        Meta(name: 'twitter:image:alt', content: imageAlt),
     ],
   );
 }

@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// Person schema for representing individuals
 class PersonSchema extends Schema {
-  PersonSchema({
+  new({
     this.name,
     this.givenName,
     this.familyName,
@@ -78,15 +78,9 @@ class PersonSchema extends Schema {
            'honorificSuffix': ?honorificSuffix,
            if (address != null) 'address': address.value,
            if (birthPlace != null)
-             'birthPlace': {
-               '@type': 'Place',
-               ...birthPlace,
-             },
+             'birthPlace': {'@type': 'Place', ...birthPlace},
            if (deathPlace != null)
-             'deathPlace': {
-               '@type': 'Place',
-               ...deathPlace,
-             },
+             'deathPlace': {'@type': 'Place', ...deathPlace},
            'nationality': ?nationality,
            if (worksFor != null) 'worksFor': worksFor.value,
            if (affiliation != null) 'affiliation': affiliation.value,
@@ -125,12 +119,12 @@ class PersonSchema extends Schema {
            'taxID': ?taxID,
            'vatID': ?vatID,
            'workLocation': ?workLocation,
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Factory constructor for basic person
-  factory PersonSchema.basic({
+  factory basic({
     required String name,
     String? url,
     String? email,
@@ -149,7 +143,7 @@ class PersonSchema extends Schema {
   }
 
   /// Factory constructor for author
-  factory PersonSchema.author({
+  factory author({
     required String name,
     String? url,
     String? email,
@@ -170,7 +164,7 @@ class PersonSchema extends Schema {
   }
 
   /// Factory constructor for team member
-  factory PersonSchema.teamMember({
+  factory teamMember({
     required String name,
     required String givenName,
     required String familyName,
@@ -195,7 +189,7 @@ class PersonSchema extends Schema {
   }
 
   /// Factory constructor for professional profile
-  factory PersonSchema.professional({
+  factory professional({
     required String name,
     required String givenName,
     required String familyName,
@@ -228,7 +222,7 @@ class PersonSchema extends Schema {
   }
 
   /// Factory constructor for creative person
-  factory PersonSchema.creative({
+  factory creative({
     required String name,
     String? givenName,
     String? familyName,
@@ -257,7 +251,7 @@ class PersonSchema extends Schema {
   }
 
   /// Factory constructor for executive
-  factory PersonSchema.executive({
+  factory executive({
     required String name,
     required String givenName,
     required String familyName,
@@ -362,11 +356,7 @@ class PersonSchema extends Schema {
       'familyName': ?familyName,
       'url': ?url,
       'email': ?email,
-      if (image != null)
-        'image': {
-          '@type': 'ImageObject',
-          'url': image,
-        },
+      if (image != null) 'image': {'@type': 'ImageObject', 'url': image},
       'jobTitle': ?jobTitle,
       'worksFor': ?worksFor,
       if (sameAs != null && sameAs.isNotEmpty) 'sameAs': sameAs,
@@ -400,9 +390,7 @@ class PersonSchema extends Schema {
     String? startDate,
     String? endDate,
   }) {
-    final map = <String, dynamic>{
-      'name': name,
-    };
+    final map = <String, dynamic>{'name': name};
     if (url != null) map['url'] = url;
     return map;
   }

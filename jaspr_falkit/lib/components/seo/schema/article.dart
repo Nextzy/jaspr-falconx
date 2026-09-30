@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// Article schema component with full schema.org support
 class ArticleSchema extends Schema {
-  ArticleSchema({
+  new({
     this.headline,
     this.alternativeHeadline,
     this.description,
@@ -86,12 +86,12 @@ class ArticleSchema extends Schema {
            'audio': ?audio,
            'speakable': ?speakable,
            'backstory': ?backstory,
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Factory constructor for news articles
-  factory ArticleSchema.newsArticle({
+  factory newsArticle({
     required String headline,
     required String datePublished,
     required SchemaDataType<OrganizationSchema> publisher,
@@ -116,7 +116,7 @@ class ArticleSchema extends Schema {
   }
 
   /// Factory constructor for tech articles
-  factory ArticleSchema.techArticle({
+  factory techArticle({
     required String headline,
     required String datePublished,
     required SchemaDataType<PersonSchema> author,
@@ -143,7 +143,7 @@ class ArticleSchema extends Schema {
   }
 
   /// Factory constructor for blog posts
-  factory ArticleSchema.blogPost({
+  factory blogPost({
     required String headline,
     required String datePublished,
     required SchemaDataType<PersonSchema> author,
@@ -170,7 +170,7 @@ class ArticleSchema extends Schema {
   }
 
   /// Factory constructor for scholarly articles
-  factory ArticleSchema.scholarlyArticle({
+  factory scholarlyArticle({
     required String headline,
     required String datePublished,
     required SchemaDataType<PersonSchema> author,

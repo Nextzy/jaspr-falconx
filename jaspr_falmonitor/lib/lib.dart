@@ -1,5 +1,6 @@
 export 'dart:async';
 
+export 'package:jaspr_faltool/jaspr_faltool.dart';
 export 'package:sentry/sentry.dart'
     hide
         AddAllAbsentX,
@@ -32,6 +33,5 @@ export 'package:sentry/sentry.dart'
         getBreadcrumbLogLevelFromHttpStatusCode,
         getUtcDateTime,
         jsonSerializationFallback;
-export 'package:jaspr_faltool/jaspr_faltool.dart';
 
 export 'jaspr_falmonitor.dart';

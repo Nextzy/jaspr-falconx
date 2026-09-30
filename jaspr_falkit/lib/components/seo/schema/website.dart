@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// WebSite schema for representing entire websites
 class WebSiteSchema extends Schema {
-  WebSiteSchema({
+  new({
     this.name,
     this.url,
     this.description,
@@ -134,12 +134,12 @@ class WebSiteSchema extends Schema {
            'version': ?version,
            'video': ?video,
            'workExample': ?workExample,
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Creates a WebSite schema with search action for site search functionality
-  factory WebSiteSchema.withSearch({
+  factory withSearch({
     required String name,
     required String url,
     required String searchUrlTemplate,
@@ -158,10 +158,7 @@ class WebSiteSchema extends Schema {
       sameAs: sameAs,
       potentialAction: {
         '@type': 'SearchAction',
-        'target': {
-          '@type': 'EntryPoint',
-          'urlTemplate': searchUrlTemplate,
-        },
+        'target': {'@type': 'EntryPoint', 'urlTemplate': searchUrlTemplate},
         'query-input': 'required name=search_term_string',
       },
       additionalProperties: additionalProperties,
@@ -169,7 +166,7 @@ class WebSiteSchema extends Schema {
   }
 
   /// Creates a basic website schema
-  factory WebSiteSchema.basic({
+  factory basic({
     required String name,
     required String url,
     String? description,
@@ -186,7 +183,7 @@ class WebSiteSchema extends Schema {
   }
 
   /// Creates a blog website schema
-  factory WebSiteSchema.blog({
+  factory blog({
     required String name,
     required String url,
     String? description,
@@ -207,7 +204,7 @@ class WebSiteSchema extends Schema {
   }
 
   /// Factory constructor for e-commerce websites
-  factory WebSiteSchema.ecommerce({
+  factory ecommerce({
     required String name,
     required String url,
     String? description,
@@ -228,7 +225,7 @@ class WebSiteSchema extends Schema {
   }
 
   /// Factory constructor for educational websites
-  factory WebSiteSchema.educational({
+  factory educational({
     required String name,
     required String url,
     String? description,
@@ -321,10 +318,7 @@ class WebSiteSchema extends Schema {
   }) {
     return {
       '@type': 'SearchAction',
-      'target': {
-        '@type': 'EntryPoint',
-        'urlTemplate': searchUrlTemplate,
-      },
+      'target': {'@type': 'EntryPoint', 'urlTemplate': searchUrlTemplate},
       'query-input': 'required name=$inputName',
     };
   }
@@ -340,11 +334,7 @@ class WebSiteSchema extends Schema {
       '@type': 'Organization',
       'name': name,
       'url': ?url,
-      if (logo != null)
-        'logo': {
-          '@type': 'ImageObject',
-          'url': logo,
-        },
+      if (logo != null) 'logo': {'@type': 'ImageObject', 'url': logo},
       'description': ?description,
     }..removeWhere((key, value) => value == null);
   }
@@ -363,10 +353,7 @@ class WebSiteSchema extends Schema {
               '@type': 'ListItem',
               'position': entry.key + 1,
               'name': entry.value.name,
-              'item': {
-                '@id': entry.value.url,
-                'name': entry.value.name,
-              },
+              'item': {'@id': entry.value.url, 'name': entry.value.name},
             },
           )
           .toList(),

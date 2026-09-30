@@ -11,7 +11,7 @@ import 'package:universal_web/web.dart' as web;
 /// Note: This storage is only available in web environments (when kIsWeb is
 /// true).
 class KeyValueStorage {
-  const KeyValueStorage._singleton();
+  const new _singleton();
 
   static const KeyValueStorage instance = KeyValueStorage._singleton();
 
