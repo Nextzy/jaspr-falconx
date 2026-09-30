@@ -1,6 +1,6 @@
 name: jaspr_falconx_core
 description: A jaspr falcon package.
-version: 1.0.5
+version: 2.0.0
 
 environment:
   sdk: ">=3.13.0 <4.0.0"
