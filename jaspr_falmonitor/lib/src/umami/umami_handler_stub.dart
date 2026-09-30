@@ -1,7 +1,7 @@
 import 'package:jaspr_falmonitor/lib.dart';
 
 class UmamiHandler extends MonitorHandler<UmamiAnalyticOption> {
-  UmamiHandler._();
+  new _();
 
   static final UmamiHandler instance = UmamiHandler._();
 
@@ -38,10 +38,7 @@ class UmamiHandler extends MonitorHandler<UmamiAnalyticOption> {
   }
 
   @override
-  Future<void> captureScreenView(
-    String path, {
-    String? referrer,
-  }) async {
+  Future<void> captureScreenView(String path, {String? referrer}) async {
     // Stub: Do nothing on server.
   }
 }

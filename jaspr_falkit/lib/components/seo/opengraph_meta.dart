@@ -1,7 +1,7 @@
 import 'package:jaspr_falkit/lib.dart';
 
 class DefaultOpenGraphMeta extends StatelessComponent {
-  const DefaultOpenGraphMeta({
+  const new({
     // *** Required *** //
     this.title,
     this.type,
@@ -108,7 +108,7 @@ class DefaultOpenGraphMeta extends StatelessComponent {
 }
 
 class ArticleOpenGraphMeta extends StatelessComponent {
-  const ArticleOpenGraphMeta({
+  const new({
     this.author,
     this.section,
     this.tags,

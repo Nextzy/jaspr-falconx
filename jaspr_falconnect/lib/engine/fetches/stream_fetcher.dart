@@ -1,9 +1,9 @@
+
 import 'package:jaspr_falconnect/lib.dart';
 
-class EitherStreamFetcher<T> {
-  EitherStreamFetcher([StreamController<ComponentState<T?>>? controller])
-      : _streamController =
-            controller ?? StreamController<ComponentState<T?>>();
+class ResultStreamFetcher<T> {
+  new([StreamController<ComponentState<T?>>? controller])
+    : _streamController = controller ?? StreamController<ComponentState<T?>>();
 
   final StreamController<ComponentState<T?>> _streamController;
   StreamSubscription? _streamSubscription;
@@ -15,26 +15,26 @@ class EitherStreamFetcher<T> {
   T? _data;
 
   Stream<ComponentState<T?>> fetch(
-    Stream<Either<Failure, T>> call,
+    Stream<Result<T>> call,
   ) {
     _streamController.add(ComponentState.loading(_data));
     _streamSubscription = call.listen(
-      (data) {
-        data.fold(
-          (failure) {
-            _streamController.addError(failure);
-            close();
-          },
-          (T data) {
+      (result) {
+        result.when(
+          (data) {
             _data = data;
             _streamController.add(ComponentState.success(_data));
+          },
+          (exception, stackTrace) {
+            _streamController.addError(exception, stackTrace);
+            unawaited(close());
           },
         );
       },
       onDone: close,
       onError: (Object error, StackTrace? stackTrace) {
         _streamController.addError(error, stackTrace);
-        close();
+        unawaited(close());
       },
     );
     return _streamController.stream;

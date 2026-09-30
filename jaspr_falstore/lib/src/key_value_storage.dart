@@ -1,5 +1,4 @@
 import 'package:jaspr/jaspr.dart';
-import 'package:jaspr_falstore/lib.dart';
 import 'package:universal_web/web.dart' as web;
 
 /// A singleton class that provides key-value storage functionality for web
@@ -12,7 +11,7 @@ import 'package:universal_web/web.dart' as web;
 /// Note: This storage is only available in web environments (when kIsWeb is
 /// true).
 class KeyValueStorage {
-  const KeyValueStorage._singleton();
+  const new _singleton();
 
   static const KeyValueStorage instance = KeyValueStorage._singleton();
 

@@ -34,10 +34,10 @@ melos outdated
 
 ### Code Generation
 ```bash
-# Run build_runner for all packages that need code generation
-melos build_runner
+# Run build_runner across all packages that depend on it
+melos exec --depends-on="build_runner" -- dart run build_runner build --delete-conflicting-outputs
 
-# Run build_runner in a specific package
+# Or in a specific package
 cd jaspr_falconnect
 dart pub run build_runner build --delete-conflicting-outputs
 
@@ -93,6 +93,17 @@ dart fix --apply
 # Format code
 dart format .
 ```
+
+### Export conflicts
+```bash
+# Fail on an export name collision with a dart: library or jaspr that the
+# allowlist in tool/export_check/bin/check.dart does not settle (about 15 s)
+melos run check:exports
+```
+
+- `jaspr_faltool/lib/jaspr_faltool.dart`, the one file that re-exports `dart_faltool`, hides fpdart's `Unit` and `option` so jaspr's CSS `Unit` and `<option>` element win; write `Option.of(...)` or `some(...)` for fpdart's option.
+- `jaspr_falconx.dart` hides `AsyncError` on its `jaspr_faltool` export so riverpod's `AsyncError` wins over `dart:async`'s.
+- Since 2.0.0, `dart-falconx` 2.4.0 no longer exports `dart:math`'s `log` or dartx's `IterableFilter`, and renames `SocketException`, `RefreshCallback`, and `RemoteError` to `SocketClientException`, `TokenRefreshCallback`, and `RemoteErrorBody`.
 
 ## Architecture Overview
 
@@ -181,24 +192,18 @@ When modifying files with code generation annotations, always run build_runner a
 
 7. **Schema.org SEO**: Comprehensive implementation of structured data schemas for better search engine visibility
 
-## SEO Components Architecture
+8. **Result Codec (not Either)**: Async/stream APIs use `Result<T>` instead of `Either`. Use `ResultStreamFetcher` / `ResultStreamFetcherList` — the `EitherStreamFetcher*` variants have been removed. New code must follow the Result convention.
 
-The jaspr_falkit package includes a comprehensive SEO implementation:
+## SEO Components
 
-### Schema.org Schemas
-- **WebPageSchema**: Enhanced with backward compatibility for WebPageSchemaData
-- **Organization/Person**: Complete entity schemas with relationships
-- **Article/BlogPosting**: Content schemas with author and publisher support
-- **ContactPoint/PostalAddress**: Contact and location information
-- **EducationalOrganization/Place**: Specialized entity types
-- Helper utilities for creating structured data
+Schema.org schemas and meta-tag implementations live in `jaspr_falkit/lib/components/seo/`.
+Use the factory methods / helper classes rather than constructing schemas directly.
 
-### Meta Tags
-- OpenGraph meta tags for social sharing
-- Twitter Card meta tags
-- Apple-specific meta tags (Safari, iOS)
-- Microsoft-specific meta tags (Edge, Windows)
-- Default meta tags for general SEO
+## Git Workflow
+
+- Active development happens on `develop`
+- Releases cut to `release/x.y.z` → merged to `main` and tagged → merged back to `develop`
+- Don't commit directly to `main`
 
 ## Configuration
 
@@ -209,17 +214,15 @@ The project uses `very_good_analysis` package for strict linting with some rules
 Code generation outputs are configured to generate into `generated/` subdirectories to keep the main source directories clean (see `build.yaml`).
 
 ### Workspace Configuration
-- Dart SDK requirement: >=3.9.0 <4.0.0
+- Dart SDK requirement: >=3.10.0 <4.0.0
 - Workspace-based dependency resolution in root `pubspec.yaml`
 - Melos configuration for monorepo management
 - Each package uses `resolution: workspace` in its pubspec.yaml
 
 ## Development Tips
 
-1. Always run `melos get` or `melos bootstrap` after pulling changes that modify pubspec files
-2. Generated files (`*.g.dart`, `*.freezed.dart`) should not be edited manually
-3. When adding new packages to the workspace, update the root `pubspec.yaml` workspace section
-4. For Jaspr-specific development, use `jaspr serve` for hot reload during development
-5. The project requires Dart SDK >=3.9.0 and uses workspace-based dependency resolution
-6. When working with SEO schemas, use the factory methods and helper classes for consistency
-7. jaspr_falwind requires Node.js for Tailwind CSS compilation during build
+1. Run `melos bootstrap` after pulling changes that modify pubspec files
+2. Never edit generated files (`*.g.dart`, `*.freezed.dart`) manually — rerun build_runner
+3. When adding a new package to the workspace, update the root `pubspec.yaml` workspace section
+4. Use SEO factory methods / helper classes rather than constructing schemas directly
+5. jaspr_falwind requires Node.js for Tailwind CSS compilation during build

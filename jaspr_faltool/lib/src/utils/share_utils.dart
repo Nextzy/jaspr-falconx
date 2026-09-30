@@ -26,7 +26,7 @@ class ShareUtils {
     final fullUrl = _getFullUrl(url);
     final params = <String, String>{
       'url': fullUrl,
-      if (message != null) 'text': message,
+      'text': ?message,
     };
     final queryString = params.entries
         .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
@@ -38,10 +38,11 @@ class ShareUtils {
   static Future<void> shareToLinkedIn(String url, {String? message}) async {
     final fullUrl = _getFullUrl(url);
     // LinkedIn uses Open Graph tags for title and description
-    // Custom message can be added through summary parameter (deprecated but sometimes works)
+    // Custom message can be added through summary parameter
+    // (deprecated but sometimes works)
     final params = <String, String>{
       'url': fullUrl,
-      if (message != null) 'summary': message,
+      'summary': ?message,
     };
     final queryString = params.entries
         .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')

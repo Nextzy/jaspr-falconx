@@ -3,7 +3,7 @@ import 'package:jaspr_falkit/lib.dart';
 /// Blog schema component with full schema.org support
 /// Implements https://schema.org/Blog specification
 class BlogSchema extends Schema {
-  BlogSchema({
+  new({
     this.name,
     this.description,
     this.url,
@@ -64,72 +64,66 @@ class BlogSchema extends Schema {
          schemaData: {
            '@context': 'https://schema.org',
            '@type': 'Blog',
-           if (name != null) 'name': name,
-           if (description != null) 'description': description,
-           if (url != null) 'url': url,
+           'name': ?name,
+           'description': ?description,
+           'url': ?url,
            if (publisher != null) 'publisher': publisher.value,
-           if (inLanguage != null) 'inLanguage': inLanguage,
+           'inLanguage': ?inLanguage,
            if (blogPost != null && blogPost.isNotEmpty)
-             'blogPost': blogPost.map(
-               (b) => b.schemaData,
-             ).toList(),
+             'blogPost': blogPost.map((blog) => blog.schemaData).toList(),
            if (author != null) 'author': author.value,
-           if (dateCreated != null) 'dateCreated': dateCreated,
-           if (dateModified != null) 'dateModified': dateModified,
+           'dateCreated': ?dateCreated,
+           'dateModified': ?dateModified,
            if (keywords != null && keywords.isNotEmpty)
              'keywords': keywords.join(', '),
            if (image != null) 'image': image.value,
-           if (about != null) 'about': about,
-           if (accountablePerson != null)
-             'accountablePerson': accountablePerson,
-           if (aggregateRating != null) 'aggregateRating': aggregateRating,
-           if (audience != null) 'audience': audience,
-           if (award != null) 'award': award,
-           if (copyrightHolder != null) 'copyrightHolder': copyrightHolder,
-           if (copyrightYear != null) 'copyrightYear': copyrightYear,
-           if (creator != null) 'creator': creator,
-           if (discussionUrl != null) 'discussionUrl': discussionUrl,
-           if (editor != null) 'editor': editor,
-           if (encoding != null) 'encoding': encoding,
-           if (funder != null) 'funder': funder,
-           if (genre != null) 'genre': genre,
-           if (hasPart != null) 'hasPart': hasPart,
-           if (headline != null) 'headline': headline,
-           if (interactionStatistic != null)
-             'interactionStatistic': interactionStatistic,
-           if (isAccessibleForFree != null)
-             'isAccessibleForFree': isAccessibleForFree,
-           if (isBasedOn != null) 'isBasedOn': isBasedOn,
-           if (isFamilyFriendly != null) 'isFamilyFriendly': isFamilyFriendly,
-           if (isPartOf != null) 'isPartOf': isPartOf,
-           if (issn != null) 'issn': issn,
-           if (license != null) 'license': license,
-           if (mainEntity != null) 'mainEntity': mainEntity,
-           if (mainEntityOfPage != null) 'mainEntityOfPage': mainEntityOfPage,
-           if (mentions != null) 'mentions': mentions,
-           if (offers != null) 'offers': offers,
+           'about': ?about,
+           'accountablePerson': ?accountablePerson,
+           'aggregateRating': ?aggregateRating,
+           'audience': ?audience,
+           'award': ?award,
+           'copyrightHolder': ?copyrightHolder,
+           'copyrightYear': ?copyrightYear,
+           'creator': ?creator,
+           'discussionUrl': ?discussionUrl,
+           'editor': ?editor,
+           'encoding': ?encoding,
+           'funder': ?funder,
+           'genre': ?genre,
+           'hasPart': ?hasPart,
+           'headline': ?headline,
+           'interactionStatistic': ?interactionStatistic,
+           'isAccessibleForFree': ?isAccessibleForFree,
+           'isBasedOn': ?isBasedOn,
+           'isFamilyFriendly': ?isFamilyFriendly,
+           'isPartOf': ?isPartOf,
+           'issn': ?issn,
+           'license': ?license,
+           'mainEntity': ?mainEntity,
+           'mainEntityOfPage': ?mainEntityOfPage,
+           'mentions': ?mentions,
+           'offers': ?offers,
            if (position != null) 'position': position.value,
-           if (potentialAction != null) 'potentialAction': potentialAction,
-           if (provider != null) 'provider': provider,
-           if (publication != null) 'publication': publication,
-           if (review != null) 'review': review,
-           if (schemaVersion != null) 'schemaVersion': schemaVersion,
-           if (sourceOrganization != null)
-             'sourceOrganization': sourceOrganization,
-           if (sponsor != null) 'sponsor': sponsor,
-           if (thumbnailUrl != null) 'thumbnailUrl': thumbnailUrl,
-           if (timeRequired != null) 'timeRequired': timeRequired,
-           if (translator != null) 'translator': translator,
-           if (typicalAgeRange != null) 'typicalAgeRange': typicalAgeRange,
-           if (version != null) 'version': version,
-           if (video != null) 'video': video,
-           if (workExample != null) 'workExample': workExample,
-           if (additionalProperties != null) ...additionalProperties,
+           'potentialAction': ?potentialAction,
+           'provider': ?provider,
+           'publication': ?publication,
+           'review': ?review,
+           'schemaVersion': ?schemaVersion,
+           'sourceOrganization': ?sourceOrganization,
+           'sponsor': ?sponsor,
+           'thumbnailUrl': ?thumbnailUrl,
+           'timeRequired': ?timeRequired,
+           'translator': ?translator,
+           'typicalAgeRange': ?typicalAgeRange,
+           'version': ?version,
+           'video': ?video,
+           'workExample': ?workExample,
+           ...?additionalProperties,
          },
        );
 
   /// Factory constructor for personal blogs
-  factory BlogSchema.personal({
+  factory personal({
     required String name,
     required String url,
     required SchemaDataType<PersonSchema> author,
@@ -150,7 +144,7 @@ class BlogSchema extends Schema {
   }
 
   /// Factory constructor for corporate blogs
-  factory BlogSchema.corporate({
+  factory corporate({
     required String name,
     required String url,
     required SchemaDataType<OrganizationSchema> publisher,
@@ -241,9 +235,9 @@ class BlogSchema extends Schema {
       '@type': 'BlogPosting',
       'headline': headline,
       'url': url,
-      if (datePublished != null) 'datePublished': datePublished,
-      if (author != null) 'author': author,
-      if (description != null) 'description': description,
+      'datePublished': ?datePublished,
+      'author': ?author,
+      'description': ?description,
     };
   }
 
@@ -258,8 +252,8 @@ class BlogSchema extends Schema {
       '@type': 'AggregateRating',
       'ratingValue': ratingValue,
       'reviewCount': reviewCount,
-      if (bestRating != null) 'bestRating': bestRating,
-      if (worstRating != null) 'worstRating': worstRating,
+      'bestRating': ?bestRating,
+      'worstRating': ?worstRating,
     };
   }
 
@@ -274,11 +268,8 @@ class BlogSchema extends Schema {
       '@type': 'Review',
       'reviewBody': reviewBody,
       'author': author,
-      'reviewRating': {
-        '@type': 'Rating',
-        'ratingValue': ratingValue,
-      },
-      if (datePublished != null) 'datePublished': datePublished,
+      'reviewRating': {'@type': 'Rating', 'ratingValue': ratingValue},
+      'datePublished': ?datePublished,
     };
   }
 }

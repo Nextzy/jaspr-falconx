@@ -16,7 +16,8 @@ enum FullComponentState {
   success,
   cancel,
   warning,
-  fail;
+  fail
+  ;
 
   bool get isInitial => this == FullComponentState.initial; //
   bool get isNormal => this == FullComponentState.normal; //
@@ -55,7 +56,183 @@ enum FullComponentState {
 
 @immutable
 class ComponentState<DATA> {
-  const ComponentState._(
+  factory initial(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.initial,
+    id: id,
+    feedback: feedback ?? const Information(),
+    data: data,
+  );
+
+  factory normal(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.normal,
+    id: id,
+    feedback: feedback ?? const Information(),
+    data: data,
+  );
+
+  factory empty(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.empty,
+    id: id,
+    feedback: feedback ?? const Information(),
+    data: data,
+  );
+
+  factory hovered(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.hovered,
+    id: id,
+    feedback: feedback ?? const Information(),
+    data: data,
+  );
+
+  factory focused(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.focused,
+    id: id,
+    feedback: feedback ?? const Information(),
+    data: data,
+  );
+
+  factory focusedVisible(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.focusedVisible,
+    id: id,
+    feedback: feedback ?? const Information(),
+    data: data,
+  );
+
+  factory pressed(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.pressed,
+    id: id,
+    feedback: feedback ?? const Information(),
+    data: data,
+  );
+
+  factory dragged(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.dragged,
+    id: id,
+    feedback: feedback ?? const Information(),
+    data: data,
+  );
+
+  factory selected(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.selected,
+    id: id,
+    feedback: feedback ?? const Information(),
+    data: data,
+  );
+
+  factory scrolledUnder(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.scrolledUnder,
+    id: id,
+    feedback: feedback ?? const Information(),
+    data: data,
+  );
+
+  factory disabled(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.disabled,
+    id: id,
+    feedback: feedback ?? const Information(),
+    data: data,
+  );
+
+  factory loading(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.loading,
+    id: id,
+    feedback: feedback ?? const Information(),
+    data: data,
+  );
+
+  factory success(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.success,
+    id: id,
+    feedback: feedback ?? const Information(),
+    data: data,
+  );
+
+  factory cancel(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.cancel,
+    id: id,
+    feedback: feedback ?? const Information(),
+    data: data,
+  );
+
+  factory warning(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.warning,
+    id: id,
+    feedback: feedback ?? const Warning(),
+    data: data,
+  );
+
+  factory fail(
+    DATA data, {
+    String? id,
+    UserFeedback? feedback,
+  }) => ComponentState._(
+    FullComponentState.fail,
+    id: id,
+    feedback: feedback ?? const Failure(),
+    data: data,
+  );
+
+  const new _(
     this.state, {
     this.id,
     this.event,
@@ -75,182 +252,6 @@ class ComponentState<DATA> {
   final Object? event;
 
   final DATA data;
-
-  factory ComponentState.initial(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.initial,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
-
-  factory ComponentState.normal(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.normal,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
-
-  factory ComponentState.empty(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.empty,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
-
-  factory ComponentState.hovered(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.hovered,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
-
-  factory ComponentState.focused(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.focused,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
-
-  factory ComponentState.focusedVisible(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.focusedVisible,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
-
-  factory ComponentState.pressed(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.pressed,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
-
-  factory ComponentState.dragged(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.dragged,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
-
-  factory ComponentState.selected(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.selected,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
-
-  factory ComponentState.scrolledUnder(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.scrolledUnder,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
-
-  factory ComponentState.disabled(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.disabled,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
-
-  factory ComponentState.loading(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.loading,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
-
-  factory ComponentState.success(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.success,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
-
-  factory ComponentState.cancel(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.cancel,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
-
-  factory ComponentState.warning(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.warning,
-    id: id,
-    feedback: feedback ?? const Warning(),
-    data: data,
-  );
-
-  factory ComponentState.fail(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.fail,
-    id: id,
-    feedback: feedback ?? const Failure(),
-    data: data,
-  );
 
   bool get isInitial => state.isInitial; //
   bool get isNormal => state.isNormal; //
@@ -546,6 +547,7 @@ class ComponentState<DATA> {
 
   @override
   String toString() {
-    return 'ComponentState{state: $state, id: $id, data: $data, feedback: $feedback, event: $event}';
+    return 'ComponentState{state: $state, id: $id, data: $data, '
+        'feedback: $feedback, event: $event}';
   }
 }

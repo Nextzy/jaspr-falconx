@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// SoftwareApplication schema component with full schema.org support
 class SoftwareApplicationSchema extends Schema {
-  SoftwareApplicationSchema({
+  new({
     required this.name,
     this.url,
     this.description,
@@ -80,81 +80,65 @@ class SoftwareApplicationSchema extends Schema {
            '@context': 'https://schema.org',
            '@type': 'SoftwareApplication',
            'name': name,
-           if (url != null) 'url': url,
-           if (description != null) 'description': description,
-           if (applicationCategory != null)
-             'applicationCategory': applicationCategory,
-           if (applicationSubCategory != null)
-             'applicationSubCategory': applicationSubCategory,
+           'url': ?url,
+           'description': ?description,
+           'applicationCategory': ?applicationCategory,
+           'applicationSubCategory': ?applicationSubCategory,
            if (operatingSystem != null && operatingSystem.isNotEmpty)
              'operatingSystem': operatingSystem,
-           if (softwareVersion != null) 'softwareVersion': softwareVersion,
+           'softwareVersion': ?softwareVersion,
            if (offers != null) 'offers': offers.value,
            if (aggregateRating != null)
              'aggregateRating': aggregateRating.value,
            if (screenshot != null)
-             'screenshot': {
-               '@type': 'ImageObject',
-               'url': screenshot,
-             },
+             'screenshot': {'@type': 'ImageObject', 'url': screenshot},
            if (featureList != null && featureList.isNotEmpty)
              'featureList': featureList,
-           if (datePublished != null) 'datePublished': datePublished,
-           if (dateModified != null) 'dateModified': dateModified,
-           if (downloadUrl != null) 'downloadUrl': downloadUrl,
-           if (installUrl != null) 'installUrl': installUrl,
-           if (releaseNotes != null) 'releaseNotes': releaseNotes,
+           'datePublished': ?datePublished,
+           'dateModified': ?dateModified,
+           'downloadUrl': ?downloadUrl,
+           'installUrl': ?installUrl,
+           'releaseNotes': ?releaseNotes,
            if (author != null) 'author': author.value,
            if (publisher != null) 'publisher': publisher.value,
-           if (license != null) 'license': license,
+           'license': ?license,
            if (availableLanguage != null && availableLanguage.isNotEmpty)
              'availableLanguage': availableLanguage,
-           if (softwareRequirements != null)
-             'softwareRequirements': softwareRequirements,
-           if (fileSize != null) 'fileSize': fileSize,
+           'softwareRequirements': ?softwareRequirements,
+           'fileSize': ?fileSize,
            if (review != null) 'review': review.value,
-           if (applicationSuite != null) 'applicationSuite': applicationSuite,
-           if (countriesNotSupported != null)
-             'countriesNotSupported': countriesNotSupported,
-           if (countriesSupported != null)
-             'countriesSupported': countriesSupported,
-           if (device != null) 'device': device,
-           if (inLanguage != null) 'inLanguage': inLanguage,
-           if (memoryRequirements != null)
-             'memoryRequirements': memoryRequirements,
-           if (permissions != null) 'permissions': permissions,
-           if (processorRequirements != null)
-             'processorRequirements': processorRequirements,
+           'applicationSuite': ?applicationSuite,
+           'countriesNotSupported': ?countriesNotSupported,
+           'countriesSupported': ?countriesSupported,
+           'device': ?device,
+           'inLanguage': ?inLanguage,
+           'memoryRequirements': ?memoryRequirements,
+           'permissions': ?permissions,
+           'processorRequirements': ?processorRequirements,
            if (softwareAddOn != null) 'softwareAddOn': softwareAddOn.value,
            if (softwareHelp != null) 'softwareHelp': softwareHelp.value,
-           if (storageRequirements != null)
-             'storageRequirements': storageRequirements,
+           'storageRequirements': ?storageRequirements,
            if (supportingData != null) 'supportingData': supportingData.value,
            if (about != null) 'about': about.value,
-           if (alternateName != null) 'alternateName': alternateName,
-           if (award != null) 'award': award,
+           'alternateName': ?alternateName,
+           'award': ?award,
            if (citation != null) 'citation': citation.value,
            if (comment != null) 'comment': comment.value,
-           if (copyrightHolder != null) 'copyrightHolder': copyrightHolder,
-           if (copyrightYear != null) 'copyrightYear': copyrightYear,
+           'copyrightHolder': ?copyrightHolder,
+           'copyrightYear': ?copyrightYear,
            if (creator != null) 'creator': creator.value,
-           if (discussionUrl != null) 'discussionUrl': discussionUrl,
+           'discussionUrl': ?discussionUrl,
            if (editor != null) 'editor': editor.value,
            if (funder != null) 'funder': funder.value,
-           if (genre != null) 'genre': genre,
+           'genre': ?genre,
            if (hasPart != null) 'hasPart': hasPart.value,
-           if (headline != null) 'headline': headline,
-           if (image != null)
-             'image': {
-               '@type': 'ImageObject',
-               'url': image,
-             },
+           'headline': ?headline,
+           if (image != null) 'image': {'@type': 'ImageObject', 'url': image},
            if (interactionStatistic != null)
              'interactionStatistic': interactionStatistic.value,
-           if (isAccessibleForFree != null)
-             'isAccessibleForFree': isAccessibleForFree,
+           'isAccessibleForFree': ?isAccessibleForFree,
            if (isBasedOn != null) 'isBasedOn': isBasedOn.value,
-           if (isFamilyFriendly != null) 'isFamilyFriendly': isFamilyFriendly,
+           'isFamilyFriendly': ?isFamilyFriendly,
            if (isPartOf != null) 'isPartOf': isPartOf.value,
            if (keywords != null && keywords.isNotEmpty)
              'keywords': keywords.join(', '),
@@ -167,20 +151,20 @@ class SoftwareApplicationSchema extends Schema {
            if (provider != null) 'provider': provider.value,
            if (publication != null) 'publication': publication.value,
            if (sameAs != null && sameAs.isNotEmpty) 'sameAs': sameAs,
-           if (schemaVersion != null) 'schemaVersion': schemaVersion,
+           'schemaVersion': ?schemaVersion,
            if (sourceOrganization != null)
              'sourceOrganization': sourceOrganization.value,
            if (sponsor != null) 'sponsor': sponsor.value,
-           if (thumbnailUrl != null) 'thumbnailUrl': thumbnailUrl,
-           if (timeRequired != null) 'timeRequired': timeRequired,
-           if (version != null) 'version': version,
+           'thumbnailUrl': ?thumbnailUrl,
+           'timeRequired': ?timeRequired,
+           'version': ?version,
            if (video != null) 'video': video.value,
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Factory constructor for mobile applications
-  factory SoftwareApplicationSchema.mobileApp({
+  factory mobileApp({
     required String name,
     required List<String> operatingSystem,
     String? url,
@@ -213,7 +197,7 @@ class SoftwareApplicationSchema extends Schema {
   }
 
   /// Factory constructor for desktop applications
-  factory SoftwareApplicationSchema.desktopApp({
+  factory desktopApp({
     required String name,
     required List<String> operatingSystem,
     String? url,
@@ -335,9 +319,9 @@ class SoftwareApplicationSchema extends Schema {
     return {
       'price': price,
       'priceCurrency': priceCurrency,
-      if (availability != null) 'availability': availability,
-      if (priceValidUntil != null) 'priceValidUntil': priceValidUntil,
-      if (seller != null) 'seller': seller,
+      'availability': ?availability,
+      'priceValidUntil': ?priceValidUntil,
+      'seller': ?seller,
     };
   }
 
@@ -351,8 +335,8 @@ class SoftwareApplicationSchema extends Schema {
     return {
       'ratingValue': ratingValue,
       'ratingCount': ratingCount,
-      if (bestRating != null) 'bestRating': bestRating,
-      if (worstRating != null) 'worstRating': worstRating,
+      'bestRating': ?bestRating,
+      'worstRating': ?worstRating,
     };
   }
 
@@ -366,11 +350,8 @@ class SoftwareApplicationSchema extends Schema {
     return {
       'reviewBody': reviewBody,
       'author': author,
-      'reviewRating': {
-        '@type': 'Rating',
-        'ratingValue': ratingValue,
-      },
-      if (datePublished != null) 'datePublished': datePublished,
+      'reviewRating': {'@type': 'Rating', 'ratingValue': ratingValue},
+      'datePublished': ?datePublished,
     };
   }
 }
@@ -380,7 +361,7 @@ typedef SoftwareApplicationSchemaData = SoftwareApplicationSchema;
 
 /// WebApplication extends SoftwareApplication for web-specific applications
 class WebApplicationSchema extends Schema {
-  WebApplicationSchema({
+  new({
     this.name,
     this.url,
     this.description,
@@ -403,39 +384,35 @@ class WebApplicationSchema extends Schema {
          schemaData: {
            '@context': 'https://schema.org',
            '@type': 'WebApplication',
-           if (name != null) 'name': name,
-           if (url != null) 'url': url,
-           if (description != null) 'description': description,
+           'name': ?name,
+           'url': ?url,
+           'description': ?description,
            if (sameAs != null && sameAs.isNotEmpty) 'sameAs': sameAs,
-           if (applicationCategory != null)
-             'applicationCategory': applicationCategory,
+           'applicationCategory': ?applicationCategory,
            if (browserRequirements != null && browserRequirements.isNotEmpty)
              'browserRequirements': browserRequirements.join(', '),
            if (permissions != null && permissions.isNotEmpty)
              'permissions': permissions.join(', '),
-           if (softwareVersion != null) 'softwareVersion': softwareVersion,
+           'softwareVersion': ?softwareVersion,
            if (offers != null) 'offers': offers.value,
            if (aggregateRating != null)
              'aggregateRating': aggregateRating.value,
            if (screenshot != null)
-             'screenshot': {
-               '@type': 'ImageObject',
-               'url': screenshot,
-             },
+             'screenshot': {'@type': 'ImageObject', 'url': screenshot},
            if (featureList != null && featureList.isNotEmpty)
              'featureList': featureList,
-           if (datePublished != null) 'datePublished': datePublished,
-           if (dateModified != null) 'dateModified': dateModified,
+           'datePublished': ?datePublished,
+           'dateModified': ?dateModified,
            if (author != null) 'author': author.value,
            if (publisher != null) 'publisher': publisher.value,
            if (availableLanguage != null && availableLanguage.isNotEmpty)
              'availableLanguage': availableLanguage,
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Factory constructor for SaaS applications
-  factory WebApplicationSchema.saas({
+  factory saas({
     required String name,
     required String url,
     String? description,
@@ -462,7 +439,7 @@ class WebApplicationSchema extends Schema {
   }
 
   /// Factory constructor for progressive web apps
-  factory WebApplicationSchema.pwa({
+  factory pwa({
     required String name,
     required String url,
     String? description,

@@ -1,44 +1,44 @@
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr_falconx/lib.dart';
+import 'package:jaspr_riverpod/legacy.dart';
+import 'package:jaspr_riverpod/misc.dart';
 
 abstract class PreloadComponentNotifier<DATA, EVENT>
     extends NullableComponentStateNotifier<DATA> {
-  PreloadComponentNotifier({
+  new({
     DATA? initialData,
     required DATA Function(dynamic json) fromJson,
     required String id,
-  }) : super(initialData) {
-    _preloadProvider = SyncProvider<Either<Failure, DATA?>>(
-      (ref) async {
-        return preloadCall();
-      },
-      id: id,
+  }) : _id = id,
+       _codec = riverpodResultCodec(fromJson),
+       super(initialData) {
+    _preloadProvider = FutureProvider<Result<DATA?>>(
+      (ref) async => preloadCall(),
       name: id,
-      codec: riverpodEitherCodec(fromJson),
+      dependencies: const [],
     );
     _controllerProvider =
         StateNotifierProvider<
           PreloadComponentNotifier<DATA, EVENT>,
           ComponentState<DATA?>
-        >(
-          name: id,
-          (ref) {
-            return this;
-          },
-        );
+        >((ref) {
+          return this;
+        });
   }
 
-  SyncProvider<Either<Failure, DATA?>>? _preloadProvider;
+  final String _id;
+  final Codec<Result<DATA?>, Object?> _codec;
+  FutureProvider<Result<DATA?>>? _preloadProvider;
   StateNotifierProvider<
     PreloadComponentNotifier<DATA, EVENT>,
     ComponentState<DATA?>
   >?
   _controllerProvider;
 
-  Future<Either<Failure, DATA?>> preloadCall();
+  Future<Result<DATA?>> preloadCall();
 
   bool hasPreload(BuildContext context) {
-    return context.read(_preloadProvider!).valueOrNull != null;
+    return context.read(_preloadProvider!).value != null;
   }
 
   Future<void> preload(BuildContext context) async {
@@ -46,61 +46,45 @@ abstract class PreloadComponentNotifier<DATA, EVENT>
     await context.read(_preloadProvider!.future);
   }
 
+  /// Returns a [ProviderSync] to register in `ProviderScope(sync: [...])`
+  /// so the preload result is hydrated from server to client.
+  ///
+  /// Per jaspr_riverpod docs, synced providers should be registered on the
+  /// root `ProviderScope`. The underlying `_preloadProvider` is created with
+  /// `dependencies: const []` so nested-scope overrides also work if needed.
+  ProviderSync syncPreload() => _preloadProvider!.syncWith(_id, codec: _codec);
+
   ComponentState<DATA?> readPreload(BuildContext context) {
-    //** Preload data on server **//
-    final either = context.read(_preloadProvider!).valueOrNull;
-    if (either?.isFailure ?? false) {
-      return ComponentState.fail(null, feedback: either?.failure);
-    } else {
-      return ComponentState.initial(either?.data);
+    final result = context.read(_preloadProvider!).value;
+    if (result?.isFailure ?? false) {
+      return ComponentState.fail(null, feedback: result!.exception.toFailure());
     }
+    return ComponentState.initial(result?.valueOrNull);
   }
 
   ComponentState<DATA?> watch(BuildContext context) {
     final state = context.watch(_controllerProvider!);
-
     if (state.isInitial && state.data == null) {
-      //** Preload data on server **//
-      final either = context.read(_preloadProvider!).valueOrNull;
-      if (either?.isFailure ?? false) {
-        return ComponentState.fail(null, feedback: either?.failure);
-      } else {
-        return ComponentState.initial(either?.data);
-      }
+      return readPreload(context);
     }
-
     return state;
   }
 
   ComponentState<DATA?> read(BuildContext context) {
     final state = context.read(_controllerProvider!);
-
     if (state.isInitial && state.data == null) {
-      //** Preload data on server **//
-      final either = context.read(_preloadProvider!).valueOrNull;
-      if (either?.isFailure ?? false) {
-        return ComponentState.fail(null, feedback: either?.failure);
-      } else {
-        return ComponentState.initial(either?.data);
-      }
+      return readPreload(context);
     }
-
     return state;
   }
 
-  void listenEvent(
-    BuildContext context,
-    void Function(EVENT event) listener,
-  ) {
-    context.listen(
-      _controllerProvider!,
-      (previous, value) {
-        final event = value.event;
-        if (event is EVENT && event != null) {
-          listener(value.event as EVENT);
-        }
-      },
-    );
+  void listenEvent(BuildContext context, void Function(EVENT event) listener) {
+    context.listen(_controllerProvider!, (previous, value) {
+      final event = value.event;
+      if (event is EVENT && event != null) {
+        listener(event);
+      }
+    });
   }
 
   void emitEvent(EVENT event) {

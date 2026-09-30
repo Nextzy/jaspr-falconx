@@ -1,9 +1,9 @@
 name: jaspr_falconx_core
-description: A dart falcon package.
-version: 1.0.5
+description: A jaspr falcon package.
+version: 2.0.0
 
 environment:
-  sdk: ">=3.9.0 <4.0.0"
+  sdk: ">=3.13.0 <4.0.0"
 
 workspace:
   - jaspr_falconnect
@@ -15,31 +15,75 @@ workspace:
   - jaspr_faltool
 
 dev_dependencies:
-  melos: ^7.1.1
+  melos: ^8.9.0
 
 melos:
   scripts:
-    get:
-      description: Get dependencies for all packages
-      run: dart pub get
+    analyze:
+      description: Run dart analyze across all packages.
       exec:
-        concurrency: 1
+        command: flutter analyze
+        concurrency: 4
 
-    upgrade:
-      description: Upgrade dependencies in all packages
-      run: dart pub upgrade
+    format:
+      description: Run dart format across all packages.
       exec:
-        concurrency: 1
+        command: dart format --set-exit-if-changed .
+        concurrency: 4
 
-    outdated:
-      description: Check outdated dependencies
-      run: dart pub outdated
+    test:
+      description: Run tests across all packages.
       exec:
-        concurrency: 1
+        command: flutter test
+        concurrency: 4
+        failFast: true
+      packageFilters:
+        dirExists: test
 
     build_runner:
-      description: Run build_runner in all packages
-      run: dart pub run build_runner build --delete-conflicting-outputs
+      description: Run build_runner for code generation in all packages.
       exec:
+        command: dart run build_runner build
         concurrency: 1
+        failFast: false
+      packageFilters:
+        dependsOn: build_runner
 
+    build_runner:check:
+      description: Fail when any committed generated file differs from what build_runner would write; writes nothing.
+      exec:
+        command: dart run build_runner build --only-check
+        concurrency: 1
+        failFast: false
+      packageFilters:
+        dependsOn: build_runner
+
+    build_runner:watch:
+      description: Run build_runner watch for code generation.
+      exec:
+        command: dart run build_runner watch
+        concurrency: 1
+      packageFilters:
+        dependsOn: build_runner
+
+    get:
+      description: Get the current package's dependencies.
+      exec:
+        command: flutter pub get
+        concurrency: 5
+
+    upgrade:
+      description: Upgrade the current package's dependencies to latest versions.
+      exec:
+        command: flutter pub upgrade
+        concurrency: 5
+
+    outdated:
+      description: Analyze your dependencies to find which ones can be upgraded.
+      exec:
+        command: flutter pub outdated
+        concurrency: 5
+
+    check:exports:
+      description: Fail when a barrel exports a name that collides with a dart library or jaspr and tool/export_check/bin/check.dart does not allowlist it.
+      run: cd tool/export_check && dart pub get && dart run bin/check.dart

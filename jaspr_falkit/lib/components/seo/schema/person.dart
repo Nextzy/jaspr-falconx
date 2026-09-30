@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// Person schema for representing individuals
 class PersonSchema extends Schema {
-  PersonSchema({
+  new({
     this.name,
     this.givenName,
     this.familyName,
@@ -60,37 +60,31 @@ class PersonSchema extends Schema {
          schemaData: {
            '@context': 'https://schema.org',
            '@type': 'Person',
-           if (name != null) 'name': name,
-           if (givenName != null) 'givenName': givenName,
-           if (familyName != null) 'familyName': familyName,
-           if (additionalName != null) 'additionalName': additionalName,
-           if (alternateName != null) 'alternateName': alternateName,
-           if (description != null) 'description': description,
-           if (url != null) 'url': url,
+           'name': ?name,
+           'givenName': ?givenName,
+           'familyName': ?familyName,
+           'additionalName': ?additionalName,
+           'alternateName': ?alternateName,
+           'description': ?description,
+           'url': ?url,
            if (image != null) 'image': image.value,
-           if (email != null) 'email': email,
-           if (telephone != null) 'telephone': telephone,
-           if (birthDate != null) 'birthDate': birthDate,
-           if (deathDate != null) 'deathDate': deathDate,
-           if (gender != null) 'gender': gender,
-           if (jobTitle != null) 'jobTitle': jobTitle,
-           if (honorificPrefix != null) 'honorificPrefix': honorificPrefix,
-           if (honorificSuffix != null) 'honorificSuffix': honorificSuffix,
+           'email': ?email,
+           'telephone': ?telephone,
+           'birthDate': ?birthDate,
+           'deathDate': ?deathDate,
+           'gender': ?gender,
+           'jobTitle': ?jobTitle,
+           'honorificPrefix': ?honorificPrefix,
+           'honorificSuffix': ?honorificSuffix,
            if (address != null) 'address': address.value,
            if (birthPlace != null)
-             'birthPlace': {
-               '@type': 'Place',
-               ...birthPlace,
-             },
+             'birthPlace': {'@type': 'Place', ...birthPlace},
            if (deathPlace != null)
-             'deathPlace': {
-               '@type': 'Place',
-               ...deathPlace,
-             },
-           if (nationality != null) 'nationality': nationality,
+             'deathPlace': {'@type': 'Place', ...deathPlace},
+           'nationality': ?nationality,
            if (worksFor != null) 'worksFor': worksFor.value,
            if (affiliation != null) 'affiliation': affiliation.value,
-           if (alumniOf != null) 'alumniOf': alumniOf,
+           'alumniOf': ?alumniOf,
            if (memberOf != null) 'memberOf': memberOf.value,
            if (sponsor != null) 'sponsor': sponsor.value,
            if (knows != null && knows.value != null) 'knows': knows.value,
@@ -99,39 +93,38 @@ class PersonSchema extends Schema {
            if (colleague != null && colleague.value != null)
              'colleague': colleague.value,
            if (spouse != null) 'spouse': spouse.value,
+           // schema.org Person uses `child` (repeatable), not `children`.
            if (personChildren != null && personChildren.value != null)
-             'children': personChildren.value,
+             'child': personChildren.value,
            if (parent != null && parent.value != null) 'parent': parent.value,
            if (sibling != null && sibling.value != null)
              'sibling': sibling.value,
            if (sameAs != null && sameAs.isNotEmpty) 'sameAs': sameAs,
-           if (award != null) 'award': award,
-           if (brand != null) 'brand': brand,
+           'award': ?award,
+           'brand': ?brand,
            if (contactPoint != null) 'contactPoint': contactPoint.value,
-           if (duns != null) 'duns': duns,
-           if (faxNumber != null) 'faxNumber': faxNumber,
-           if (globalLocationNumber != null)
-             'globalLocationNumber': globalLocationNumber,
-           if (height != null) 'height': height,
-           if (weight != null) 'weight': weight,
-           if (homeLocation != null) 'homeLocation': homeLocation,
-           if (isicV4 != null) 'isicV4': isicV4,
-           if (naics != null) 'naics': naics,
-           if (netWorth != null) 'netWorth': netWorth,
-           if (owns != null) 'owns': owns,
-           if (performerIn != null) 'performerIn': performerIn,
-           if (publishingPrinciples != null)
-             'publishingPrinciples': publishingPrinciples,
-           if (seeks != null) 'seeks': seeks,
-           if (taxID != null) 'taxID': taxID,
-           if (vatID != null) 'vatID': vatID,
-           if (workLocation != null) 'workLocation': workLocation,
-           if (additionalProperties != null) ...additionalProperties,
+           'duns': ?duns,
+           'faxNumber': ?faxNumber,
+           'globalLocationNumber': ?globalLocationNumber,
+           'height': ?height,
+           'weight': ?weight,
+           'homeLocation': ?homeLocation,
+           'isicV4': ?isicV4,
+           'naics': ?naics,
+           'netWorth': ?netWorth,
+           'owns': ?owns,
+           'performerIn': ?performerIn,
+           'publishingPrinciples': ?publishingPrinciples,
+           'seeks': ?seeks,
+           'taxID': ?taxID,
+           'vatID': ?vatID,
+           'workLocation': ?workLocation,
+           ...?additionalProperties,
          },
        );
 
   /// Factory constructor for basic person
-  factory PersonSchema.basic({
+  factory basic({
     required String name,
     String? url,
     String? email,
@@ -150,7 +143,7 @@ class PersonSchema extends Schema {
   }
 
   /// Factory constructor for author
-  factory PersonSchema.author({
+  factory author({
     required String name,
     String? url,
     String? email,
@@ -171,7 +164,7 @@ class PersonSchema extends Schema {
   }
 
   /// Factory constructor for team member
-  factory PersonSchema.teamMember({
+  factory teamMember({
     required String name,
     required String givenName,
     required String familyName,
@@ -196,7 +189,7 @@ class PersonSchema extends Schema {
   }
 
   /// Factory constructor for professional profile
-  factory PersonSchema.professional({
+  factory professional({
     required String name,
     required String givenName,
     required String familyName,
@@ -229,7 +222,7 @@ class PersonSchema extends Schema {
   }
 
   /// Factory constructor for creative person
-  factory PersonSchema.creative({
+  factory creative({
     required String name,
     String? givenName,
     String? familyName,
@@ -258,7 +251,7 @@ class PersonSchema extends Schema {
   }
 
   /// Factory constructor for executive
-  factory PersonSchema.executive({
+  factory executive({
     required String name,
     required String givenName,
     required String familyName,
@@ -359,17 +352,13 @@ class PersonSchema extends Schema {
     return {
       '@type': 'Person',
       'name': name,
-      if (givenName != null) 'givenName': givenName,
-      if (familyName != null) 'familyName': familyName,
-      if (url != null) 'url': url,
-      if (email != null) 'email': email,
-      if (image != null)
-        'image': {
-          '@type': 'ImageObject',
-          'url': image,
-        },
-      if (jobTitle != null) 'jobTitle': jobTitle,
-      if (worksFor != null) 'worksFor': worksFor,
+      'givenName': ?givenName,
+      'familyName': ?familyName,
+      'url': ?url,
+      'email': ?email,
+      if (image != null) 'image': {'@type': 'ImageObject', 'url': image},
+      'jobTitle': ?jobTitle,
+      'worksFor': ?worksFor,
       if (sameAs != null && sameAs.isNotEmpty) 'sameAs': sameAs,
     };
   }
@@ -401,9 +390,7 @@ class PersonSchema extends Schema {
     String? startDate,
     String? endDate,
   }) {
-    final map = <String, dynamic>{
-      'name': name,
-    };
+    final map = <String, dynamic>{'name': name};
     if (url != null) map['url'] = url;
     return map;
   }

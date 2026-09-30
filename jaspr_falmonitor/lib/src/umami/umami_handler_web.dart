@@ -5,7 +5,7 @@ import 'package:jaspr_falmonitor/lib.dart';
 import 'package:universal_web/web.dart' as web;
 
 class UmamiHandler extends MonitorHandler<UmamiAnalyticOption> {
-  UmamiHandler._();
+  new _();
 
   static final UmamiHandler instance = UmamiHandler._();
 
@@ -38,10 +38,8 @@ class UmamiHandler extends MonitorHandler<UmamiAnalyticOption> {
     try {
       if (enabled) {
         // Prepare the data object
-        final data = <String, Object>{
-          if (name != null) 'name': name,
-          if (screenName != null) 'screen_name': screenName,
-        }..addAll(eventAttributes ?? {});
+        final data = <String, Object>{'name': ?name, 'screen_name': ?screenName}
+          ..addAll(eventAttributes ?? {});
 
         // Convert to JS types
         final jsEventType = type.toJS;
@@ -55,10 +53,7 @@ class UmamiHandler extends MonitorHandler<UmamiAnalyticOption> {
   }
 
   @override
-  Future<void> captureScreenView(
-    String path, {
-    String? referrer,
-  }) async {
+  Future<void> captureScreenView(String path, {String? referrer}) async {
     try {
       if (enabled) {
         _umami.callMethod('track'.toJS);

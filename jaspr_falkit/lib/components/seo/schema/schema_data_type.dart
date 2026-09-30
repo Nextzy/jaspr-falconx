@@ -2,11 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// Base class for all Schema.org components
 class SchemaDataType<T extends Schema> {
-  const SchemaDataType({
-    this.str,
-    this.map,
-    this.schema,
-  });
+  const new({this.str, this.map, this.schema});
 
   final String? str;
   final Map<String, dynamic>? map;
@@ -35,11 +31,7 @@ class SchemaDataType<T extends Schema> {
 }
 
 class SchemaListDataType<T extends Schema> {
-  const SchemaListDataType({
-    this.strList,
-    this.mapList,
-    this.schemaList,
-  });
+  const new({this.strList, this.mapList, this.schemaList});
 
   final List<String>? strList;
   final List<Map<String, dynamic>>? mapList;

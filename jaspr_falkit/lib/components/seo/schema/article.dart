@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// Article schema component with full schema.org support
 class ArticleSchema extends Schema {
-  ArticleSchema({
+  new({
     this.headline,
     this.alternativeHeadline,
     this.description,
@@ -33,6 +33,7 @@ class ArticleSchema extends Schema {
     this.isPartOf,
     this.license,
     this.mainEntity,
+    this.mainEntityOfPage,
     this.position,
     this.thumbnailUrl,
     this.video,
@@ -44,51 +45,53 @@ class ArticleSchema extends Schema {
          schemaData: {
            '@context': 'https://schema.org',
            '@type': 'Article',
-           if (headline != null) 'headline': headline,
-           if (alternativeHeadline != null)
-             'alternativeHeadline': alternativeHeadline,
-           if (description != null) 'description': description,
-           if (datePublished != null) 'datePublished': datePublished,
-           if (dateModified != null) 'dateModified': dateModified,
+           'headline': ?headline,
+           'alternativeHeadline': ?alternativeHeadline,
+           'description': ?description,
+           'datePublished': ?datePublished,
+           'dateModified': ?dateModified,
            if (author != null) 'author': author.value,
            if (publisher != null) 'publisher': publisher.value,
-           if (url != null) 'url': url,
+           'url': ?url,
            if (image != null) 'image': image.value,
            if (keywords != null && keywords.isNotEmpty)
              'keywords': keywords.join(', '),
-           if (articleSection != null) 'articleSection': articleSection,
-           if (articleBody != null) 'articleBody': articleBody,
-           if (wordCount != null) 'wordCount': wordCount,
-           if (timeRequired != null) 'timeRequired': timeRequired,
-           if (inLanguage != null) 'inLanguage': inLanguage,
-           if (about != null) 'about': about,
-           if (mentions != null) 'mentions': mentions,
-           if (citation != null) 'citation': citation,
-           if (comment != null) 'comment': comment,
+           'articleSection': ?articleSection,
+           'articleBody': ?articleBody,
+           'wordCount': ?wordCount,
+           'timeRequired': ?timeRequired,
+           'inLanguage': ?inLanguage,
+           'about': ?about,
+           'mentions': ?mentions,
+           'citation': ?citation,
+           'comment': ?comment,
            if (contributor != null) 'contributor': contributor.value,
-           if (copyrightHolder != null) 'copyrightHolder': copyrightHolder,
-           if (copyrightYear != null) 'copyrightYear': copyrightYear,
+           'copyrightHolder': ?copyrightHolder,
+           'copyrightYear': ?copyrightYear,
            if (creator != null) 'creator': creator.value,
            if (editor != null) 'editor': editor.value,
-           if (genre != null) 'genre': genre,
-           if (hasPart != null) 'hasPart': hasPart,
-           if (isAccessibleForFree != null)
-             'isAccessibleForFree': isAccessibleForFree,
-           if (isPartOf != null) 'isPartOf': isPartOf,
-           if (license != null) 'license': license,
-           if (mainEntity != null) 'mainEntity': mainEntity,
-           if (position != null) 'position': position,
-           if (thumbnailUrl != null) 'thumbnailUrl': thumbnailUrl,
-           if (video != null) 'video': video,
-           if (audio != null) 'audio': audio,
-           if (speakable != null) 'speakable': speakable,
-           if (backstory != null) 'backstory': backstory,
-           if (additionalProperties != null) ...additionalProperties,
+           'genre': ?genre,
+           'hasPart': ?hasPart,
+           'isAccessibleForFree': ?isAccessibleForFree,
+           'isPartOf': ?isPartOf,
+           'license': ?license,
+           'mainEntity': ?mainEntity,
+           // `mainEntityOfPage` is strongly recommended by Google's Article
+           // rich-result guidance — it tells crawlers that this Article is
+           // the primary subject of the page identified by the given URL/WebPage.
+           'mainEntityOfPage': ?mainEntityOfPage,
+           'position': ?position,
+           'thumbnailUrl': ?thumbnailUrl,
+           'video': ?video,
+           'audio': ?audio,
+           'speakable': ?speakable,
+           'backstory': ?backstory,
+           ...?additionalProperties,
          },
        );
 
   /// Factory constructor for news articles
-  factory ArticleSchema.newsArticle({
+  factory newsArticle({
     required String headline,
     required String datePublished,
     required SchemaDataType<OrganizationSchema> publisher,
@@ -113,7 +116,7 @@ class ArticleSchema extends Schema {
   }
 
   /// Factory constructor for tech articles
-  factory ArticleSchema.techArticle({
+  factory techArticle({
     required String headline,
     required String datePublished,
     required SchemaDataType<PersonSchema> author,
@@ -140,7 +143,7 @@ class ArticleSchema extends Schema {
   }
 
   /// Factory constructor for blog posts
-  factory ArticleSchema.blogPost({
+  factory blogPost({
     required String headline,
     required String datePublished,
     required SchemaDataType<PersonSchema> author,
@@ -167,7 +170,7 @@ class ArticleSchema extends Schema {
   }
 
   /// Factory constructor for scholarly articles
-  factory ArticleSchema.scholarlyArticle({
+  factory scholarlyArticle({
     required String headline,
     required String datePublished,
     required SchemaDataType<PersonSchema> author,
@@ -225,6 +228,8 @@ class ArticleSchema extends Schema {
   final Map<String, dynamic>? isPartOf;
   final String? license;
   final Map<String, dynamic>? mainEntity;
+  /// Either a URL string (the canonical page URL) or a `WebPage` object map.
+  final dynamic mainEntityOfPage;
   final dynamic position; // Can be String or Number
   final String? thumbnailUrl;
   final Map<String, dynamic>? video;
@@ -245,10 +250,10 @@ class ArticleSchema extends Schema {
     return {
       '@type': type,
       'name': name,
-      if (url != null) 'url': url,
-      if (email != null) 'email': email,
-      if (jobTitle != null) 'jobTitle': jobTitle,
-      if (affiliation != null) 'affiliation': affiliation,
+      'url': ?url,
+      'email': ?email,
+      'jobTitle': ?jobTitle,
+      'affiliation': ?affiliation,
     };
   }
 
@@ -262,13 +267,13 @@ class ArticleSchema extends Schema {
     return {
       '@type': 'Organization',
       'name': name,
-      if (url != null) 'url': url,
+      'url': ?url,
       if (logo != null)
         'logo': {
           '@type': 'ImageObject',
           'url': logo,
         },
-      if (address != null) 'address': address,
+      'address': ?address,
     };
   }
 
@@ -288,9 +293,9 @@ class ArticleSchema extends Schema {
       'description': description,
       'thumbnailUrl': thumbnailUrl,
       'uploadDate': uploadDate,
-      if (duration != null) 'duration': duration,
-      if (contentUrl != null) 'contentUrl': contentUrl,
-      if (embedUrl != null) 'embedUrl': embedUrl,
+      'duration': ?duration,
+      'contentUrl': ?contentUrl,
+      'embedUrl': ?embedUrl,
     };
   }
 
@@ -308,9 +313,9 @@ class ArticleSchema extends Schema {
       'name': name,
       'description': description,
       'contentUrl': contentUrl,
-      if (duration != null) 'duration': duration,
-      if (encodingFormat != null) 'encodingFormat': encodingFormat,
-      if (uploadDate != null) 'uploadDate': uploadDate,
+      'duration': ?duration,
+      'encodingFormat': ?encodingFormat,
+      'uploadDate': ?uploadDate,
     };
   }
 
@@ -340,9 +345,9 @@ class ArticleSchema extends Schema {
       '@type': 'CreativeWork',
       'name': name,
       'author': {'@type': 'Person', 'name': author},
-      if (publisher != null) 'publisher': publisher,
-      if (datePublished != null) 'datePublished': datePublished,
-      if (url != null) 'url': url,
+      'publisher': ?publisher,
+      'datePublished': ?datePublished,
+      'url': ?url,
       if (doi != null) 'identifier': {'@type': 'PropertyValue', 'value': doi},
     };
   }

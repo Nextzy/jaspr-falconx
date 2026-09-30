@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// ContactPoint schema for representing contact information
 class ContactPointSchema extends Schema {
-  ContactPointSchema({
+  new({
     this.contactType,
     this.telephone,
     this.email,
@@ -24,11 +24,11 @@ class ContactPointSchema extends Schema {
          schemaData: {
            '@context': 'https://schema.org',
            '@type': 'ContactPoint',
-           if (contactType != null) 'contactType': contactType,
-           if (telephone != null) 'telephone': telephone,
-           if (email != null) 'email': email,
-           if (url != null) 'url': url,
-           if (faxNumber != null) 'faxNumber': faxNumber,
+           'contactType': ?contactType,
+           'telephone': ?telephone,
+           'email': ?email,
+           'url': ?url,
+           'faxNumber': ?faxNumber,
            if (areaServed != null) 'areaServed': areaServed.value,
            if (availableLanguage != null)
              'availableLanguage': availableLanguage.value,
@@ -36,18 +36,18 @@ class ContactPointSchema extends Schema {
            if (hoursAvailable != null) 'hoursAvailable': hoursAvailable.value,
            if (productSupported != null)
              'productSupported': productSupported.value,
-           if (name != null) 'name': name,
-           if (description != null) 'description': description,
-           if (alternateName != null) 'alternateName': alternateName,
-           if (identifier != null) 'identifier': identifier,
+           'name': ?name,
+           'description': ?description,
+           'alternateName': ?alternateName,
+           'identifier': ?identifier,
            if (sameAs != null && sameAs.isNotEmpty) 'sameAs': sameAs,
            if (address != null) 'address': address.value,
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Creates a sales contact point
-  factory ContactPointSchema.sales({
+  factory sales({
     required String telephone,
     String? email,
     SchemaDataType<Schema>? areaServed,
@@ -65,7 +65,7 @@ class ContactPointSchema extends Schema {
   }
 
   /// Creates a customer service contact point
-  factory ContactPointSchema.customerService({
+  factory customerService({
     required String telephone,
     String? email,
     SchemaDataType<Schema>? areaServed,
@@ -85,7 +85,7 @@ class ContactPointSchema extends Schema {
   }
 
   /// Creates a technical support contact point
-  factory ContactPointSchema.technicalSupport({
+  factory technicalSupport({
     required String telephone,
     String? email,
     String? url,
@@ -105,7 +105,7 @@ class ContactPointSchema extends Schema {
   }
 
   /// Creates a billing support contact point
-  factory ContactPointSchema.billing({
+  factory billing({
     required String telephone,
     String? email,
     SchemaDataType<Schema>? availableLanguage,
@@ -121,7 +121,7 @@ class ContactPointSchema extends Schema {
   }
 
   /// Creates a reservations contact point
-  factory ContactPointSchema.reservations({
+  factory reservations({
     required String telephone,
     String? email,
     String? url,
@@ -139,7 +139,7 @@ class ContactPointSchema extends Schema {
   }
 
   /// Creates an emergency contact point
-  factory ContactPointSchema.emergency({
+  factory emergency({
     required String telephone,
     String? email,
     SchemaDataType<Schema>? areaServed,
@@ -193,16 +193,16 @@ class ContactPointSchema extends Schema {
   }) {
     return {
       '@type': 'ContactPoint',
-      if (contactType != null) 'contactType': contactType,
-      if (telephone != null) 'telephone': telephone,
-      if (email != null) 'email': email,
-      if (url != null) 'url': url,
-      if (faxNumber != null) 'faxNumber': faxNumber,
-      if (areaServed != null) 'areaServed': areaServed,
-      if (availableLanguage != null) 'availableLanguage': availableLanguage,
-      if (contactOption != null) 'contactOption': contactOption,
-      if (hoursAvailable != null) 'hoursAvailable': hoursAvailable,
-      if (productSupported != null) 'productSupported': productSupported,
+      'contactType': ?contactType,
+      'telephone': ?telephone,
+      'email': ?email,
+      'url': ?url,
+      'faxNumber': ?faxNumber,
+      'areaServed': ?areaServed,
+      'availableLanguage': ?availableLanguage,
+      'contactOption': ?contactOption,
+      'hoursAvailable': ?hoursAvailable,
+      'productSupported': ?productSupported,
     };
   }
 
@@ -219,8 +219,8 @@ class ContactPointSchema extends Schema {
       'dayOfWeek': dayOfWeek,
       'opens': opens,
       'closes': closes,
-      if (validFrom != null) 'validFrom': validFrom,
-      if (validThrough != null) 'validThrough': validThrough,
+      'validFrom': ?validFrom,
+      'validThrough': ?validThrough,
     };
   }
 
@@ -247,21 +247,11 @@ class ContactPointSchema extends Schema {
     String closes = '17:00',
     bool includeWeekends = false,
   }) {
-    final days = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-    ];
+    final days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     if (includeWeekends) {
       days.addAll(['Saturday', 'Sunday']);
     }
-    return createOpeningHours(
-      dayOfWeek: days,
-      opens: opens,
-      closes: closes,
-    );
+    return createOpeningHours(dayOfWeek: days, opens: opens, closes: closes);
   }
 
   /// Helper method to create contact point list for organizations

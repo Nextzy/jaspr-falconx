@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// WebSite schema for representing entire websites
 class WebSiteSchema extends Schema {
-  WebSiteSchema({
+  new({
     this.name,
     this.url,
     this.description,
@@ -69,81 +69,77 @@ class WebSiteSchema extends Schema {
          schemaData: {
            '@context': 'https://schema.org',
            '@type': 'WebSite',
-           if (name != null) 'name': name,
-           if (url != null) 'url': url,
-           if (description != null) 'description': description,
-           if (alternateName != null) 'alternateName': alternateName,
+           'name': ?name,
+           'url': ?url,
+           'description': ?description,
+           'alternateName': ?alternateName,
            if (publisher != null) 'publisher': publisher.value,
-           if (inLanguage != null) 'inLanguage': inLanguage,
-           if (dateCreated != null) 'dateCreated': dateCreated,
-           if (dateModified != null) 'dateModified': dateModified,
-           if (datePublished != null) 'datePublished': datePublished,
-           if (issn != null) 'issn': issn,
+           'inLanguage': ?inLanguage,
+           'dateCreated': ?dateCreated,
+           'dateModified': ?dateModified,
+           'datePublished': ?datePublished,
+           'issn': ?issn,
            if (sameAs != null && sameAs.isNotEmpty) 'sameAs': sameAs,
-           if (potentialAction != null) 'potentialAction': potentialAction,
-           if (copyrightYear != null) 'copyrightYear': copyrightYear,
-           if (copyrightHolder != null) 'copyrightHolder': copyrightHolder,
-           if (license != null) 'license': license,
+           'potentialAction': ?potentialAction,
+           'copyrightYear': ?copyrightYear,
+           'copyrightHolder': ?copyrightHolder,
+           'license': ?license,
            if (accessibilityFeature != null && accessibilityFeature.isNotEmpty)
              'accessibilityFeature': accessibilityFeature,
            if (accessibilityHazard != null && accessibilityHazard.isNotEmpty)
              'accessibilityHazard': accessibilityHazard,
-           if (accessibilityAPI != null) 'accessibilityAPI': accessibilityAPI,
-           if (accessibilitySummary != null)
-             'accessibilitySummary': accessibilitySummary,
+           'accessibilityAPI': ?accessibilityAPI,
+           'accessibilitySummary': ?accessibilitySummary,
            if (keywords != null && keywords.isNotEmpty)
              'keywords': keywords.join(', '),
-           if (hasPart != null) 'hasPart': hasPart,
-           if (isPartOf != null) 'isPartOf': isPartOf,
-           if (mainEntity != null) 'mainEntity': mainEntity,
-           if (about != null) 'about': about,
+           'hasPart': ?hasPart,
+           'isPartOf': ?isPartOf,
+           'mainEntity': ?mainEntity,
+           'about': ?about,
            if (accountablePerson != null)
              'accountablePerson': accountablePerson.value,
-           if (aggregateRating != null) 'aggregateRating': aggregateRating,
-           if (audience != null) 'audience': audience,
-           if (award != null) 'award': award,
+           'aggregateRating': ?aggregateRating,
+           'audience': ?audience,
+           'award': ?award,
            if (author != null) 'author': author.value,
            if (citation != null) 'citation': citation.value,
-           if (comment != null) 'comment': comment,
+           'comment': ?comment,
            if (contributor != null) 'contributor': contributor.value,
            if (creator != null) 'creator': creator.value,
-           if (discussionUrl != null) 'discussionUrl': discussionUrl,
+           'discussionUrl': ?discussionUrl,
            if (editor != null) 'editor': editor.value,
-           if (encoding != null) 'encoding': encoding,
-           if (funder != null) 'funder': funder,
-           if (genre != null) 'genre': genre,
-           if (headline != null) 'headline': headline,
+           'encoding': ?encoding,
+           'funder': ?funder,
+           'genre': ?genre,
+           'headline': ?headline,
            if (image != null) 'image': image.value,
-           if (interactionStatistic != null)
-             'interactionStatistic': interactionStatistic,
-           if (isAccessibleForFree != null)
-             'isAccessibleForFree': isAccessibleForFree,
-           if (isBasedOn != null) 'isBasedOn': isBasedOn,
-           if (isFamilyFriendly != null) 'isFamilyFriendly': isFamilyFriendly,
+           'interactionStatistic': ?interactionStatistic,
+           'isAccessibleForFree': ?isAccessibleForFree,
+           'isBasedOn': ?isBasedOn,
+           'isFamilyFriendly': ?isFamilyFriendly,
            if (maintainer != null) 'maintainer': maintainer.value,
-           if (mentions != null) 'mentions': mentions,
-           if (offers != null) 'offers': offers,
+           'mentions': ?mentions,
+           'offers': ?offers,
            if (position != null) 'position': position.value,
-           if (provider != null) 'provider': provider,
-           if (publication != null) 'publication': publication,
-           if (review != null) 'review': review,
-           if (schemaVersion != null) 'schemaVersion': schemaVersion,
-           if (sourceOrganization != null)
-             'sourceOrganization': sourceOrganization,
-           if (sponsor != null) 'sponsor': sponsor,
-           if (thumbnailUrl != null) 'thumbnailUrl': thumbnailUrl,
-           if (timeRequired != null) 'timeRequired': timeRequired,
+           'provider': ?provider,
+           'publication': ?publication,
+           'review': ?review,
+           'schemaVersion': ?schemaVersion,
+           'sourceOrganization': ?sourceOrganization,
+           'sponsor': ?sponsor,
+           'thumbnailUrl': ?thumbnailUrl,
+           'timeRequired': ?timeRequired,
            if (translator != null) 'translator': translator.value,
-           if (typicalAgeRange != null) 'typicalAgeRange': typicalAgeRange,
-           if (version != null) 'version': version,
-           if (video != null) 'video': video,
-           if (workExample != null) 'workExample': workExample,
-           if (additionalProperties != null) ...additionalProperties,
+           'typicalAgeRange': ?typicalAgeRange,
+           'version': ?version,
+           'video': ?video,
+           'workExample': ?workExample,
+           ...?additionalProperties,
          },
        );
 
   /// Creates a WebSite schema with search action for site search functionality
-  factory WebSiteSchema.withSearch({
+  factory withSearch({
     required String name,
     required String url,
     required String searchUrlTemplate,
@@ -162,10 +158,7 @@ class WebSiteSchema extends Schema {
       sameAs: sameAs,
       potentialAction: {
         '@type': 'SearchAction',
-        'target': {
-          '@type': 'EntryPoint',
-          'urlTemplate': searchUrlTemplate,
-        },
+        'target': {'@type': 'EntryPoint', 'urlTemplate': searchUrlTemplate},
         'query-input': 'required name=search_term_string',
       },
       additionalProperties: additionalProperties,
@@ -173,7 +166,7 @@ class WebSiteSchema extends Schema {
   }
 
   /// Creates a basic website schema
-  factory WebSiteSchema.basic({
+  factory basic({
     required String name,
     required String url,
     String? description,
@@ -190,7 +183,7 @@ class WebSiteSchema extends Schema {
   }
 
   /// Creates a blog website schema
-  factory WebSiteSchema.blog({
+  factory blog({
     required String name,
     required String url,
     String? description,
@@ -211,7 +204,7 @@ class WebSiteSchema extends Schema {
   }
 
   /// Factory constructor for e-commerce websites
-  factory WebSiteSchema.ecommerce({
+  factory ecommerce({
     required String name,
     required String url,
     String? description,
@@ -232,7 +225,7 @@ class WebSiteSchema extends Schema {
   }
 
   /// Factory constructor for educational websites
-  factory WebSiteSchema.educational({
+  factory educational({
     required String name,
     required String url,
     String? description,
@@ -325,10 +318,7 @@ class WebSiteSchema extends Schema {
   }) {
     return {
       '@type': 'SearchAction',
-      'target': {
-        '@type': 'EntryPoint',
-        'urlTemplate': searchUrlTemplate,
-      },
+      'target': {'@type': 'EntryPoint', 'urlTemplate': searchUrlTemplate},
       'query-input': 'required name=$inputName',
     };
   }
@@ -343,13 +333,9 @@ class WebSiteSchema extends Schema {
     return {
       '@type': 'Organization',
       'name': name,
-      if (url != null) 'url': url,
-      if (logo != null)
-        'logo': {
-          '@type': 'ImageObject',
-          'url': logo,
-        },
-      if (description != null) 'description': description,
+      'url': ?url,
+      if (logo != null) 'logo': {'@type': 'ImageObject', 'url': logo},
+      'description': ?description,
     }..removeWhere((key, value) => value == null);
   }
 
@@ -367,10 +353,7 @@ class WebSiteSchema extends Schema {
               '@type': 'ListItem',
               'position': entry.key + 1,
               'name': entry.value.name,
-              'item': {
-                '@id': entry.value.url,
-                'name': entry.value.name,
-              },
+              'item': {'@id': entry.value.url, 'name': entry.value.name},
             },
           )
           .toList(),
@@ -388,8 +371,8 @@ class WebSiteSchema extends Schema {
       if (features != null && features.isNotEmpty)
         'accessibilityFeature': features,
       if (hazards != null && hazards.isNotEmpty) 'accessibilityHazard': hazards,
-      if (api != null) 'accessibilityAPI': api,
-      if (summary != null) 'accessibilitySummary': summary,
+      'accessibilityAPI': ?api,
+      'accessibilitySummary': ?summary,
     }..removeWhere((key, value) => value == null);
   }
 
@@ -407,10 +390,10 @@ class WebSiteSchema extends Schema {
     return {
       '@type': 'Audience',
       'audienceType': audienceType,
-      if (geographicArea != null) 'geographicArea': geographicArea,
-      if (suggestedMinAge != null) 'suggestedMinAge': suggestedMinAge,
-      if (suggestedMaxAge != null) 'suggestedMaxAge': suggestedMaxAge,
-      if (suggestedGender != null) 'suggestedGender': suggestedGender,
+      'geographicArea': ?geographicArea,
+      'suggestedMinAge': ?suggestedMinAge,
+      'suggestedMaxAge': ?suggestedMaxAge,
+      'suggestedGender': ?suggestedGender,
       if (requiredGender != null && requiredGender.isNotEmpty)
         'requiredGender': requiredGender,
       if (requiredMinAge != null && requiredMinAge.isNotEmpty)
@@ -431,8 +414,8 @@ class WebSiteSchema extends Schema {
       '@type': 'AggregateRating',
       'ratingValue': ratingValue,
       'reviewCount': reviewCount,
-      if (bestRating != null) 'bestRating': bestRating,
-      if (worstRating != null) 'worstRating': worstRating,
+      'bestRating': ?bestRating,
+      'worstRating': ?worstRating,
     };
   }
 }
