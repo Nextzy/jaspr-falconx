@@ -3,7 +3,7 @@ import 'package:jaspr_falkit/lib.dart';
 /// EducationalOrganization schema for schools, universities,
 /// and educational institutions
 class EducationalOrganizationSchema extends Schema {
-  EducationalOrganizationSchema({
+  new({
     required String name,
     String? url,
     String? logo,
@@ -35,46 +35,40 @@ class EducationalOrganizationSchema extends Schema {
            '@context': 'https://schema.org',
            '@type': 'EducationalOrganization',
            'name': name,
-           if (url != null) 'url': url,
-           if (logo != null)
-             'logo': {
-               '@type': 'ImageObject',
-               'url': logo,
-             },
-           if (description != null) 'description': description,
-           if (email != null) 'email': email,
-           if (telephone != null) 'telephone': telephone,
-           if (address != null) 'address': address,
+           'url': ?url,
+           if (logo != null) 'logo': {'@type': 'ImageObject', 'url': logo},
+           'description': ?description,
+           'email': ?email,
+           'telephone': ?telephone,
+           'address': ?address,
            if (sameAs != null && sameAs.isNotEmpty) 'sameAs': sameAs,
-           if (foundingDate != null) 'foundingDate': foundingDate,
+           'foundingDate': ?foundingDate,
            if (alumni != null && alumni.isNotEmpty) 'alumni': alumni,
-           if (legalName != null) 'legalName': legalName,
-           if (accreditation != null) 'accreditation': accreditation,
+           'legalName': ?legalName,
+           'accreditation': ?accreditation,
            if (educationalCredentialAwarded != null &&
                educationalCredentialAwarded.isNotEmpty)
              'educationalCredentialAwarded': educationalCredentialAwarded,
            if (hasOfferCatalog != null && hasOfferCatalog.isNotEmpty)
              'hasOfferCatalog': hasOfferCatalog,
-           if (contactPoint != null) 'contactPoint': contactPoint,
-           if (areaServed != null) 'areaServed': areaServed,
-           if (numberOfEmployees != null)
-             'numberOfEmployees': numberOfEmployees,
-           if (parentOrganization != null)
-             'parentOrganization': parentOrganization,
+           'contactPoint': ?contactPoint,
+           'areaServed': ?areaServed,
+           'numberOfEmployees': ?numberOfEmployees,
+           'parentOrganization': ?parentOrganization,
            if (subOrganization != null && subOrganization.isNotEmpty)
              'subOrganization': subOrganization,
-           if (department != null) 'department': department,
-           if (slogan != null) 'slogan': slogan,
-           if (taxID != null) 'taxID': taxID,
-           if (vatID != null) 'vatID': vatID,
+           'department': ?department,
+           'slogan': ?slogan,
+           'taxID': ?taxID,
+           'vatID': ?vatID,
            if (review != null && review.isNotEmpty) 'review': review,
-           if (aggregateRating != null) 'aggregateRating': aggregateRating,
-           if (additionalProperties != null) ...additionalProperties,
+           'aggregateRating': ?aggregateRating,
+           ...?additionalProperties,
          },
        );
 
   /// Creates a basic educational organization schema
-  factory EducationalOrganizationSchema.basic({
+  factory basic({
     required String name,
     required String url,
     String? description,
@@ -91,7 +85,7 @@ class EducationalOrganizationSchema extends Schema {
   }
 
   /// Creates a university schema
-  factory EducationalOrganizationSchema.university({
+  factory university({
     required String name,
     required String url,
     String? description,
@@ -116,7 +110,7 @@ class EducationalOrganizationSchema extends Schema {
   }
 
   /// Creates a school schema
-  factory EducationalOrganizationSchema.school({
+  factory school({
     required String name,
     required String url,
     String? description,
@@ -151,32 +145,43 @@ class EducationalOrganizationSchema extends Schema {
     return {
       '@type': 'EducationalOrganization',
       'name': name,
-      if (url != null) 'url': url,
-      if (description != null) 'description': description,
-      if (logo != null)
-        'logo': {
-          '@type': 'ImageObject',
-          'url': logo,
-        },
-      if (address != null) 'address': address,
-      if (legalName != null) 'legalName': legalName,
-      if (accreditation != null) 'accreditation': accreditation,
+      'url': ?url,
+      'description': ?description,
+      if (logo != null) 'logo': {'@type': 'ImageObject', 'url': logo},
+      'address': ?address,
+      'legalName': ?legalName,
+      'accreditation': ?accreditation,
     }..removeWhere((key, value) => value == null);
   }
 
-  /// Helper method to create an alumni person
+  /// Helper method to create an alumni person.
+  ///
+  /// Note: schema.org `Person` has no `graduationYear` property. The closest
+  /// valid representation is an `alumniOf` reference to an
+  /// `EducationalOrganization` with `startDate`/`endDate`, optionally combined
+  /// with `hasCredential` for the awarded degree.
   static Map<String, dynamic> createAlumni({
     required String name,
     String? url,
-    String? graduationYear,
+    String? alumniOfName,
+    String? alumniOfUrl,
+    String? startDate,
+    String? endDate,
     String? degree,
   }) {
     return {
       '@type': 'Person',
       'name': name,
-      if (url != null) 'url': url,
-      if (graduationYear != null) 'graduationYear': graduationYear,
-      if (degree != null) 'hasCredential': degree,
+      'url': ?url,
+      if (alumniOfName != null)
+        'alumniOf': {
+          '@type': 'EducationalOrganization',
+          'name': alumniOfName,
+          'url': ?alumniOfUrl,
+          'startDate': ?startDate,
+          'endDate': ?endDate,
+        },
+      'hasCredential': ?degree,
     };
   }
 
@@ -189,7 +194,7 @@ class EducationalOrganizationSchema extends Schema {
     return {
       '@type': 'OfferCatalog',
       'name': name,
-      if (description != null) 'description': description,
+      'description': ?description,
       if (itemListElement != null && itemListElement.isNotEmpty)
         'itemListElement': itemListElement,
     };
@@ -206,10 +211,10 @@ class EducationalOrganizationSchema extends Schema {
     return {
       '@type': 'Organization',
       'name': name,
-      if (url != null) 'url': url,
-      if (description != null) 'description': description,
-      if (telephone != null) 'telephone': telephone,
-      if (email != null) 'email': email,
+      'url': ?url,
+      'description': ?description,
+      'telephone': ?telephone,
+      'email': ?email,
     };
   }
 }

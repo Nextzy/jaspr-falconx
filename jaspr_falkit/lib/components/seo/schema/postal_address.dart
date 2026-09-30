@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// PostalAddress schema for representing physical addresses
 class PostalAddressSchema extends Schema {
-  PostalAddressSchema({
+  new({
     String? streetAddress,
     String? addressLocality,
     String? addressRegion,
@@ -17,22 +17,21 @@ class PostalAddressSchema extends Schema {
          schemaData: {
            '@context': 'https://schema.org',
            '@type': 'PostalAddress',
-           if (streetAddress != null) 'streetAddress': streetAddress,
-           if (addressLocality != null) 'addressLocality': addressLocality,
-           if (addressRegion != null) 'addressRegion': addressRegion,
-           if (postalCode != null) 'postalCode': postalCode,
-           if (addressCountry != null) 'addressCountry': addressCountry,
-           if (postOfficeBoxNumber != null)
-             'postOfficeBoxNumber': postOfficeBoxNumber,
-           if (addressExtended != null) 'addressExtended': addressExtended,
-           if (name != null) 'name': name,
-           if (description != null) 'description': description,
-           if (additionalProperties != null) ...additionalProperties,
+           'streetAddress': ?streetAddress,
+           'addressLocality': ?addressLocality,
+           'addressRegion': ?addressRegion,
+           'postalCode': ?postalCode,
+           'addressCountry': ?addressCountry,
+           'postOfficeBoxNumber': ?postOfficeBoxNumber,
+           'addressExtended': ?addressExtended,
+           'name': ?name,
+           'description': ?description,
+           ...?additionalProperties,
          },
        );
 
   /// Creates a US address schema
-  factory PostalAddressSchema.usAddress({
+  factory usAddress({
     required String streetAddress,
     required String addressLocality,
     required String addressRegion,
@@ -52,7 +51,7 @@ class PostalAddressSchema extends Schema {
   }
 
   /// Creates an international address schema
-  factory PostalAddressSchema.international({
+  factory international({
     required String streetAddress,
     required String addressLocality,
     required String addressCountry,
@@ -71,7 +70,7 @@ class PostalAddressSchema extends Schema {
   }
 
   /// Creates a simple address schema
-  factory PostalAddressSchema.simple({
+  factory simple({
     required String streetAddress,
     required String city,
     required String country,
@@ -84,7 +83,7 @@ class PostalAddressSchema extends Schema {
   }
 
   /// Creates a European address schema
-  factory PostalAddressSchema.european({
+  factory european({
     required String streetAddress,
     required String city,
     required String postalCode,
@@ -112,14 +111,13 @@ class PostalAddressSchema extends Schema {
   }) {
     return {
       '@type': 'PostalAddress',
-      if (streetAddress != null) 'streetAddress': streetAddress,
-      if (addressLocality != null) 'addressLocality': addressLocality,
-      if (addressRegion != null) 'addressRegion': addressRegion,
-      if (postalCode != null) 'postalCode': postalCode,
-      if (addressCountry != null) 'addressCountry': addressCountry,
-      if (postOfficeBoxNumber != null)
-        'postOfficeBoxNumber': postOfficeBoxNumber,
-      if (addressExtended != null) 'addressExtended': addressExtended,
+      'streetAddress': ?streetAddress,
+      'addressLocality': ?addressLocality,
+      'addressRegion': ?addressRegion,
+      'postalCode': ?postalCode,
+      'addressCountry': ?addressCountry,
+      'postOfficeBoxNumber': ?postOfficeBoxNumber,
+      'addressExtended': ?addressExtended,
     };
   }
 

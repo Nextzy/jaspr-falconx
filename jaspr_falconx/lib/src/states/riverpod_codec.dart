@@ -1,90 +1,107 @@
 import 'package:jaspr_falconx/lib.dart';
 
-Codec<T, dynamic> riverpodCodec<T>(
-  T Function(dynamic json) fromJson,
-) => RiverpodCodec(fromJson);
+Codec<T, Object?> riverpodCodec<T>(T Function(dynamic json) fromJson) =>
+    RiverpodCodec(fromJson);
 
-Codec<Either<Failure, T>, dynamic> riverpodEitherCodec<T>(
+Codec<Result<T>, Object?> riverpodResultCodec<T>(
   T Function(dynamic json) fromJson,
-) => RiverpodEitherCodec(fromJson);
+) => RiverpodResultCodec(fromJson);
 
-class RiverpodEncoder<T> extends Converter<T, dynamic> {
+class RiverpodEncoder<T> extends Converter<T, Object?> {
   @override
-  dynamic convert(T input) => jsonEncode(input);
+  Object? convert(T input) => jsonEncode(input);
 }
 
-class RiverpodDecoder<T> extends Converter<dynamic, T> {
-  const RiverpodDecoder(this.fromJson);
+class RiverpodDecoder<T> extends Converter<Object?, T> {
+  const new(this.fromJson);
 
   final T Function(Map<String, dynamic> json) fromJson;
 
   @override
-  T convert(dynamic input) =>
-      fromJson(jsonDecode(input as String) as Map<String, dynamic>);
+  T convert(Object? input) =>
+      fromJson(jsonDecode(input! as String) as Map<String, dynamic>);
 }
 
-class RiverpodCodec<T> extends Codec<T, dynamic> {
-  const RiverpodCodec(this.fromJson);
+class RiverpodCodec<T> extends Codec<T, Object?> {
+  const new(this.fromJson);
 
   final T Function(Map<String, dynamic> json) fromJson;
 
   @override
-  Converter<T, dynamic> get encoder => RiverpodEncoder();
+  Converter<T, Object?> get encoder => RiverpodEncoder();
 
   @override
-  Converter<dynamic, T> get decoder => RiverpodDecoder(fromJson);
+  Converter<Object?, T> get decoder => RiverpodDecoder(fromJson);
 }
 
-class RiverpodEitherEncoder<T> extends Converter<Either<Failure, T>, dynamic> {
+class RiverpodResultEncoder<T> extends Converter<Result<T>, Object?> {
   @override
-  dynamic convert(Either<Failure, T> input) {
+  Object? convert(Result<T> input) {
+    final ex = input.exceptionOrNull;
     return jsonEncode({
-      if (input.failureOrNull != null)
-        'failure': {
-          'code': input.failureOrNull?.code,
-          'message': input.failureOrNull?.message,
-          'developerMessage': input.failureOrNull?.developerMessage,
+      if (ex != null)
+        'exception': {
+          'type': ex.type is Enum ? (ex.type as Enum).name : ex.type.toString(),
+          'userMessage': ex.userMessage,
+          'developerMessage': ex.developerMessage,
         },
-      'data': input.dataOrNull,
+      'data': input.valueOrNull,
     });
   }
 }
 
-class RiverpodEitherDecoder<T> extends Converter<dynamic, Either<Failure, T>> {
-  const RiverpodEitherDecoder(this.fromJson);
+class RiverpodResultDecoder<T> extends Converter<Object?, Result<T>> {
+  const new(this.fromJson);
 
   final T Function(dynamic json) fromJson;
 
   @override
-  Either<Failure, T> convert(dynamic input) {
-    final json = jsonDecode(input as String) as Map<String, dynamic>;
-    final failureJson = json['failure'] as Map<String, dynamic>?;
+  Result<T> convert(Object? input) {
+    final json = jsonDecode(input! as String) as Map<String, dynamic>;
+    final exJson = json['exception'] as Map<String, dynamic>?;
     final dataJson = json['data'];
 
-    if (failureJson != null) {
-      return Left(
-        Failure(
-          code: failureJson['code'] as String?,
-          message: failureJson['message'] as String?,
-          developerMessage: failureJson['developerMessage'] as String?,
+    if (exJson != null) {
+      return Result.failure(
+        CommonException(
+          type: _parseErrorType(exJson['type'] as String?),
+          userMessage: exJson['userMessage'] as String?,
+          developerMessage: exJson['developerMessage'] as String?,
         ),
       );
     } else if (dataJson != null) {
-      return Right(fromJson(dataJson));
+      return Result.success(fromJson(dataJson));
     }
     throw Exception('Invalid json');
   }
+
+  /// Every [DefaultErrorType] implementation, keyed by enum name. The type is
+  /// sealed, so this list is exhaustive for the pinned dart_falmodel version;
+  /// names are unique across these enums.
+  static final _errorTypesByName = <String, DefaultErrorType>{
+    ...SystemErrorType.values.asNameMap(),
+    ...InputErrorType.values.asNameMap(),
+    ...TimeoutErrorType.values.asNameMap(),
+    ...StorageErrorType.values.asNameMap(),
+    ...ConnectivityErrorType.values.asNameMap(),
+    ...AsyncErrorType.values.asNameMap(),
+    ...AccessErrorType.values.asNameMap(),
+    ...ExternalErrorType.values.asNameMap(),
+    ...BusinessErrorType.values.asNameMap(),
+  };
+
+  DefaultErrorType _parseErrorType(String? name) =>
+      _errorTypesByName[name] ?? SystemErrorType.unknown;
 }
 
-class RiverpodEitherCodec<T> extends Codec<Either<Failure, T>, dynamic> {
-  const RiverpodEitherCodec(this.fromJson);
+class RiverpodResultCodec<T> extends Codec<Result<T>, Object?> {
+  const new(this.fromJson);
 
   final T Function(dynamic json) fromJson;
 
   @override
-  Converter<Either<Failure, T>, dynamic> get encoder => RiverpodEitherEncoder();
+  Converter<Result<T>, Object?> get encoder => RiverpodResultEncoder();
 
   @override
-  Converter<dynamic, Either<Failure, T>> get decoder =>
-      RiverpodEitherDecoder(fromJson);
+  Converter<Object?, Result<T>> get decoder => RiverpodResultDecoder(fromJson);
 }

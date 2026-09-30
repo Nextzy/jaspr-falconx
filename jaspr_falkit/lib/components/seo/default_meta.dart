@@ -1,7 +1,7 @@
 import 'package:jaspr_falkit/lib.dart';
 
 class DefaultMeta extends StatelessComponent {
-  const DefaultMeta({
+  const new({
     this.title,
     this.description,
     this.keywords,
@@ -33,18 +33,9 @@ class DefaultMeta extends StatelessComponent {
   Component build(BuildContext context) => Document.head(
     children: [
       if (title.isNotNullOrBlank)
-        Component.element(
-          tag: 'title',
-          children: [
-            raw(title!),
-          ],
-        ),
+        Component.element(tag: 'title', children: [RawText(title!)]),
       if (description.isNotNullOrBlank)
-        Meta(
-          name: 'description',
-          content: description,
-          unique: true,
-        ),
+        Meta(name: 'description', content: description, unique: true),
       if (keywords != null && keywords.isNotNullOrEmpty)
         Meta(
           name: 'keywords',
@@ -52,60 +43,31 @@ class DefaultMeta extends StatelessComponent {
           unique: true,
         ),
       if (publisher.isNotNullOrBlank)
-        Meta(
-          name: 'publisher',
-          content: publisher,
-          unique: true,
-        ),
+        Meta(name: 'publisher', content: publisher, unique: true),
       if (author.isNotNullOrBlank)
-        Meta(
-          name: 'author',
-          content: author,
-          unique: true,
-        ),
+        Meta(name: 'author', content: author, unique: true),
       if (robots.isNotNullOrBlank)
-        Meta(
-          name: 'robots',
-          content: robots,
-          unique: true,
-        ),
+        Meta(name: 'robots', content: robots, unique: true),
       if (canonical.isNotNullOrBlank)
-        LinkHeader(
-          rel: 'canonical',
-          href: canonical!,
-        ),
+        LinkHeader(rel: 'canonical', href: canonical!),
       if (favicon.isNotNullOrBlank)
         LinkHeader(
           rel: 'icon',
           href: favicon!,
-          attributes: const {
-            'sizes': 'any',
-          },
+          attributes: const {'sizes': 'any'},
         ),
       if (faviconSvg.isNotNullOrBlank)
         LinkHeader(
           rel: 'icon',
           href: faviconSvg!,
-          attributes: const {
-            'type': 'image/svg+xml',
-          },
+          attributes: const {'type': 'image/svg+xml'},
         ),
       if (themeColor.isNotNullOrBlank)
-        Meta(
-          name: 'theme-color',
-          content: themeColor,
-          unique: true,
-        ),
+        Meta(name: 'theme-color', content: themeColor, unique: true),
       if (manifest.isNotNullOrBlank)
-        LinkHeader(
-          rel: 'manifest',
-          href: manifest!,
-        ),
+        LinkHeader(rel: 'manifest', href: manifest!),
       if (imageSrc.isNotNullOrBlank)
-        LinkHeader(
-          rel: 'image_src',
-          href: imageSrc!,
-        ),
+        LinkHeader(rel: 'image_src', href: imageSrc!),
     ],
   );
 }

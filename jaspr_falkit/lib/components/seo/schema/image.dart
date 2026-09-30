@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// ImageObject schema for representing images
 class ImageSchema extends Schema {
-  ImageSchema({
+  new({
     required this.url,
     this.caption,
     this.width,
@@ -35,40 +35,38 @@ class ImageSchema extends Schema {
            '@context': 'https://schema.org',
            '@type': 'ImageObject',
            'url': url,
-           if (caption != null) 'caption': caption,
-           if (width != null) 'width': width,
-           if (height != null) 'height': height,
-           if (name != null) 'name': name,
-           if (description != null) 'description': description,
-           if (contentUrl != null) 'contentUrl': contentUrl,
-           if (contentSize != null) 'contentSize': contentSize,
-           if (encodingFormat != null) 'encodingFormat': encodingFormat,
-           if (uploadDate != null) 'uploadDate': uploadDate,
-           if (embedUrl != null) 'embedUrl': embedUrl,
+           'caption': ?caption,
+           'width': ?width,
+           'height': ?height,
+           'name': ?name,
+           'description': ?description,
+           'contentUrl': ?contentUrl,
+           'contentSize': ?contentSize,
+           'encodingFormat': ?encodingFormat,
+           'uploadDate': ?uploadDate,
+           'embedUrl': ?embedUrl,
            if (thumbnail != null) 'thumbnail': thumbnail.value,
-           if (representativeOfPage != null)
-             'representativeOfPage': representativeOfPage,
-           if (exifData != null) 'exifData': exifData,
+           'representativeOfPage': ?representativeOfPage,
+           'exifData': ?exifData,
            if (author != null) 'author': author.value,
            if (creator != null) 'creator': creator.value,
-           if (copyrightHolder != null) 'copyrightHolder': copyrightHolder,
-           if (copyrightYear != null) 'copyrightYear': copyrightYear,
-           if (datePublished != null) 'datePublished': datePublished,
-           if (dateModified != null) 'dateModified': dateModified,
-           if (license != null) 'license': license,
-           if (acquireLicensePage != null)
-             'acquireLicensePage': acquireLicensePage,
-           if (creditText != null) 'creditText': creditText,
-           if (alternateName != null) 'alternateName': alternateName,
-           if (inLanguage != null) 'inLanguage': inLanguage,
+           'copyrightHolder': ?copyrightHolder,
+           'copyrightYear': ?copyrightYear,
+           'datePublished': ?datePublished,
+           'dateModified': ?dateModified,
+           'license': ?license,
+           'acquireLicensePage': ?acquireLicensePage,
+           'creditText': ?creditText,
+           'alternateName': ?alternateName,
+           'inLanguage': ?inLanguage,
            if (keywords != null && keywords.isNotEmpty)
              'keywords': keywords.join(', '),
-           if (additionalProperties != null) ...additionalProperties,
+           ...?additionalProperties,
          },
        );
 
   /// Factory constructor for basic image
-  factory ImageSchema.basic({
+  factory basic({
     required String url,
     String? caption,
     int? width,
@@ -83,7 +81,7 @@ class ImageSchema extends Schema {
   }
 
   /// Factory constructor for photo with metadata
-  factory ImageSchema.photo({
+  factory photo({
     required String url,
     required String name,
     String? caption,
@@ -110,20 +108,12 @@ class ImageSchema extends Schema {
   }
 
   /// Factory constructor for thumbnail image
-  factory ImageSchema.thumbnail({
-    required String url,
-    int width = 150,
-    int height = 150,
-  }) {
-    return ImageSchema(
-      url: url,
-      width: width,
-      height: height,
-    );
+  factory thumbnail({required String url, int width = 150, int height = 150}) {
+    return ImageSchema(url: url, width: width, height: height);
   }
 
   /// Factory constructor for hero/banner image
-  factory ImageSchema.hero({
+  factory hero({
     required String url,
     required String name,
     String? caption,
@@ -180,10 +170,10 @@ class ImageSchema extends Schema {
     return {
       '@type': 'ImageObject',
       'url': url,
-      if (caption != null) 'caption': caption,
-      if (width != null) 'width': width,
-      if (height != null) 'height': height,
-      if (name != null) 'name': name,
+      'caption': ?caption,
+      'width': ?width,
+      'height': ?height,
+      'name': ?name,
     };
   }
 

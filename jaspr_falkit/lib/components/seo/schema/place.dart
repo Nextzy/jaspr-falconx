@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// Place schema for representing physical locations
 class PlaceSchema extends Schema {
-  PlaceSchema({
+  new({
     this.name,
     this.description,
     this.address,
@@ -23,42 +23,31 @@ class PlaceSchema extends Schema {
          schemaData: {
            '@context': 'https://schema.org',
            '@type': 'Place',
-           if (name != null) 'name': name,
-           if (description != null) 'description': description,
+           'name': ?name,
+           'description': ?description,
            if (address != null) 'address': address.value,
-           if (geo != null)
-             'geo': {
-               '@type': 'GeoCoordinates',
-               ...geo,
-             },
-           if (telephone != null) 'telephone': telephone,
-           if (url != null) 'url': url,
+           if (geo != null) 'geo': {'@type': 'GeoCoordinates', ...geo},
+           'telephone': ?telephone,
+           'url': ?url,
            if (image != null) 'image': image.value,
-           if (openingHours != null) 'openingHours': openingHours,
-           if (publicAccess != null) 'publicAccess': publicAccess,
-           if (smokingAllowed != null) 'smokingAllowed': smokingAllowed,
-           if (maximumAttendeeCapacity != null)
-             'maximumAttendeeCapacity': maximumAttendeeCapacity,
+           'openingHours': ?openingHours,
+           'publicAccess': ?publicAccess,
+           'smokingAllowed': ?smokingAllowed,
+           'maximumAttendeeCapacity': ?maximumAttendeeCapacity,
            if (containedInPlace != null)
              'containedInPlace': containedInPlace.value,
            if (containsPlace != null) 'containsPlace': containsPlace.value,
            if (placeEvents != null && placeEvents.isNotEmpty)
              'event': placeEvents
-                 .map(
-                   (event) => {
-                     '@type': 'Event',
-                     ...event,
-                   },
-                 )
+                 .map((event) => {'@type': 'Event', ...event})
                  .toList(),
-           if (isAccessibleForFree != null)
-             'isAccessibleForFree': isAccessibleForFree,
-           if (additionalProperties != null) ...additionalProperties,
+           'isAccessibleForFree': ?isAccessibleForFree,
+           ...?additionalProperties,
          },
        );
 
   /// Creates a business location schema
-  factory PlaceSchema.businessLocation({
+  factory businessLocation({
     required String name,
     required SchemaDataType<PostalAddressSchema> address,
     String? description,
@@ -81,7 +70,7 @@ class PlaceSchema extends Schema {
   }
 
   /// Creates a basic place schema
-  factory PlaceSchema.basic({
+  factory basic({
     required String name,
     String? description,
     SchemaDataType<PostalAddressSchema>? address,
@@ -98,7 +87,7 @@ class PlaceSchema extends Schema {
   }
 
   /// Creates an event venue schema
-  factory PlaceSchema.eventVenue({
+  factory eventVenue({
     required String name,
     required SchemaDataType<PostalAddressSchema> address,
     String? description,
@@ -147,17 +136,13 @@ class PlaceSchema extends Schema {
   }) {
     return {
       '@type': 'Place',
-      if (name != null) 'name': name,
-      if (description != null) 'description': description,
-      if (telephone != null) 'telephone': telephone,
-      if (url != null) 'url': url,
-      if (address != null) 'address': address,
-      if (geo != null) 'geo': geo,
-      if (image != null)
-        'image': {
-          '@type': 'ImageObject',
-          'url': image,
-        },
+      'name': ?name,
+      'description': ?description,
+      'telephone': ?telephone,
+      'url': ?url,
+      'address': ?address,
+      'geo': ?geo,
+      if (image != null) 'image': {'@type': 'ImageObject', 'url': image},
     }..removeWhere((key, value) => value == null);
   }
 
@@ -167,10 +152,7 @@ class PlaceSchema extends Schema {
     required String longitude,
     String? elevation,
   }) {
-    final map = <String, String>{
-      'latitude': latitude,
-      'longitude': longitude,
-    };
+    final map = <String, String>{'latitude': latitude, 'longitude': longitude};
     if (elevation != null) map['elevation'] = elevation;
     return map;
   }
@@ -199,7 +181,7 @@ typedef PlaceSchemaData = PlaceSchema;
 
 /// Helper class for opening hours
 class OpeningHours {
-  const OpeningHours({
+  const new({
     required this.dayOfWeek,
     required this.opens,
     required this.closes,

@@ -142,7 +142,7 @@ class Log {
     }
   }
 
-  static void _printLong(Object? object) async {
+  static void _printLong(Object? object) {
     if (!kReleaseMode) {
       const defaultPrintLength = 1020;
       if (object == null || object.toString().length <= defaultPrintLength) {

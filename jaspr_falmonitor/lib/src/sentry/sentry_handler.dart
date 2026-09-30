@@ -1,7 +1,7 @@
 import 'package:jaspr_falmonitor/lib.dart';
 
 class SentryHandler extends MonitorHandler<SentryAnalyticOption> {
-  SentryHandler._();
+  new _();
 
   static final SentryHandler instance = SentryHandler._();
 
@@ -27,9 +27,9 @@ class SentryHandler extends MonitorHandler<SentryAnalyticOption> {
     try {
       if (enabled) {
         // Configure Sentry user context
-        await Sentry.configureScope(
-          (scope) {
-            // Set the user with ID and additional attributes
+        await Sentry.configureScope((scope) {
+          // Set the user with ID and additional attributes
+          unawaited(
             scope.setUser(
               SentryUser(
                 id: userId,
@@ -40,30 +40,42 @@ class SentryHandler extends MonitorHandler<SentryAnalyticOption> {
                 ipAddress: attributes?['ipAddress'] as String?,
                 // Convert remaining attributes to extra data
                 data: attributes?.entries
-                    .where((e) => !['email', 'username', 'name', 'ipAddress']
-                        .contains(e.key))
+                    .where(
+                      (e) => ![
+                        'email',
+                        'username',
+                        'name',
+                        'ipAddress',
+                      ].contains(e.key),
+                    )
                     .fold<Map<String, dynamic>>(
-                  {},
-                  (map, entry) => map..[entry.key] = entry.value,
-                ),
+                      {},
+                      (map, entry) => map..[entry.key] = entry.value,
+                    ),
               ),
-            );
+            ),
+          );
 
-            // Add user-related tags for easier filtering
-            if (attributes != null) {
-              // Add user segment or type as tags
-              if (attributes['segment'] != null) {
-                scope.setTag('user.segment', attributes['segment'].toString());
-              }
-              if (attributes['userType'] != null) {
-                scope.setTag('user.type', attributes['userType'].toString());
-              }
-              if (attributes['plan'] != null) {
-                scope.setTag('user.plan', attributes['plan'].toString());
-              }
+          // Add user-related tags for easier filtering
+          if (attributes != null) {
+            // Add user segment or type as tags
+            if (attributes['segment'] != null) {
+              unawaited(
+                scope.setTag('user.segment', attributes['segment'].toString()),
+              );
             }
-          },
-        );
+            if (attributes['userType'] != null) {
+              unawaited(
+                scope.setTag('user.type', attributes['userType'].toString()),
+              );
+            }
+            if (attributes['plan'] != null) {
+              unawaited(
+                scope.setTag('user.plan', attributes['plan'].toString()),
+              );
+            }
+          }
+        });
       }
     } catch (error, stackTrace) {
       Log.w(error, error: error, stackTrace: stackTrace);
@@ -113,7 +125,7 @@ class SentryHandler extends MonitorHandler<SentryAnalyticOption> {
               template: 'User action: %s%s',
               params: [
                 _formatActionType(type),
-                if (name != null) ' on $name' else ''
+                if (name != null) ' on $name' else '',
               ],
               // User actions are typically info level
             ),
@@ -123,8 +135,8 @@ class SentryHandler extends MonitorHandler<SentryAnalyticOption> {
             // Tags for filtering in Sentry dashboard
             tags: {
               'action.type': type,
-              if (name != null) 'action.target': name,
-              if (screenName != null) 'screen': screenName,
+              'action.target': ?name,
+              'screen': ?screenName,
               'event.category': 'user_interaction',
             },
             // Use contexts for structured data (recommended)
@@ -134,7 +146,7 @@ class SentryHandler extends MonitorHandler<SentryAnalyticOption> {
                 'target_name': name,
                 'screen': screenName,
                 'timestamp': now.toIso8601String(),
-                if (eventAttributes != null) 'attributes': eventAttributes,
+                'attributes': ?eventAttributes,
               },
             // Add breadcrumb for user journey tracking
             breadcrumbs: [
@@ -145,19 +157,15 @@ class SentryHandler extends MonitorHandler<SentryAnalyticOption> {
                 level: SentryLevel.info,
                 data: {
                   'action': type,
-                  if (name != null) 'target': name,
-                  if (screenName != null) 'screen': screenName,
+                  'target': ?name,
+                  'screen': ?screenName,
                   ...?eventAttributes?.map((k, v) => MapEntry(k, v.toString())),
                 },
                 timestamp: now,
               ),
             ],
             // Custom fingerprint for grouping similar actions
-            fingerprint: [
-              'user_action',
-              type,
-              screenName ?? 'unknown_screen',
-            ],
+            fingerprint: ['user_action', type, screenName ?? 'unknown_screen'],
             timestamp: now,
           ),
         );
@@ -168,10 +176,7 @@ class SentryHandler extends MonitorHandler<SentryAnalyticOption> {
   }
 
   @override
-  Future<void> captureScreenView(
-    String path, {
-    String? referrer,
-  }) async {
+  Future<void> captureScreenView(String path, {String? referrer}) async {
     if (enabled) {
       // Sentry no setup user identifier feature
     }
@@ -184,9 +189,11 @@ class SentryHandler extends MonitorHandler<SentryAnalyticOption> {
     // "add_to_cart" -> "Add to cart"
     return type
         .split('_')
-        .map((word) => word.isNotEmpty
-            ? '${word[0].toUpperCase()}${word.substring(1)}'
-            : '')
+        .map(
+          (word) => word.isNotEmpty
+              ? '${word[0].toUpperCase()}${word.substring(1)}'
+              : '',
+        )
         .join(' ');
   }
 
