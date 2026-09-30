@@ -94,6 +94,13 @@ dart fix --apply
 dart format .
 ```
 
+### Export conflicts
+```bash
+# Fail on an export name collision with a dart: library or jaspr that the
+# allowlist in tool/export_check/bin/check.dart does not settle (about 15 s)
+melos run check:exports
+```
+
 ## Architecture Overview
 
 ### Package Dependencies
