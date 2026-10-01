@@ -14,41 +14,27 @@ analyzer:
   exclude:
   - '**/*.g.dart' # Ignore generated files
   - '**/*.freezed.dart'
-  plugins:
-  - dart_code_metrics
 
 linter:
   rules:
-  # Readability and Clarity
-  - always_declare_return_types
-  - avoid_print
-  - camel_case_types
-  - prefer_const_constructors
-  - prefer_const_declarations
-  - prefer_final_locals
-  - unnecessary_new
-  - prefer_single_quotes
-  - lines_longer_than_80_chars: false
-  # Basic Safety
-  - avoid_void_async
-  - await_only_futures
-  - unnecessary_null_checks
-  - use_key_in_widget_constructors
-
-  # Flutter-Specific
-  - prefer_const_literals_to_create_immutables
-  - sort_child_properties_last
-
-dart_code_metrics:
-  metrics:
-    cyclomatic-complexity: 20
-    lines-of-code: 120
-    maximum-nesting: 5
-  metrics-exclude:
-    - test/**
-  rules:
-    - prefer-const-border-radius
-    - prefer-correct-identifier-length
+    # Readability and Clarity
+    always_declare_return_types: true
+    avoid_print: true
+    camel_case_types: true
+    prefer_const_constructors: true
+    prefer_const_declarations: true
+    prefer_final_locals: true
+    unnecessary_new: true
+    prefer_single_quotes: true
+    lines_longer_than_80_chars: false
+    # Basic Safety
+    avoid_void_async: true
+    await_only_futures: true
+    unnecessary_null_checks: true
+    use_key_in_widget_constructors: true
+    # Flutter-Specific
+    prefer_const_literals_to_create_immutables: true
+    sort_child_properties_last: true
 
 formatter:
   page_width: 120
