@@ -28,7 +28,7 @@ melos:
     format:
       description: Run dart format across all packages.
       exec:
-        command: dart format --set-exit-if-changed .
+        command: dart format --output=none --set-exit-if-changed .
         concurrency: 4
 
     test:
