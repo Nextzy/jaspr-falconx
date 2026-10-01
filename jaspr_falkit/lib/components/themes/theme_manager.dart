@@ -73,7 +73,7 @@ class ThemeManagerState extends State<ThemeManager> {
     try {
       // Use the prefers-color-scheme media query
       return web.window.matchMedia('(prefers-color-scheme: dark)').matches;
-    } catch (e) {
+    } on Object catch (e) {
       Log.e('Error detecting system theme: $e');
       return false;
     }
