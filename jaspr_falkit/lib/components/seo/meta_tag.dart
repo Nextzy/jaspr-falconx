@@ -174,10 +174,12 @@ class SeoMetaTags extends StatelessComponent {
     final resolvedColor = color ?? defaults?.color;
     final resolvedImageUrl = imageUrl ?? defaults?.imageUrl;
     final resolvedImageAlt = imageAlt ?? defaults?.imageAlt;
-    final resolvedImageWidth =
-        imageWidth.isNotEmpty ? imageWidth : (defaults?.imageWidth ?? '1200');
-    final resolvedImageHeight =
-        imageHeight.isNotEmpty ? imageHeight : (defaults?.imageHeight ?? '630');
+    final resolvedImageWidth = imageWidth.isNotEmpty
+        ? imageWidth
+        : (defaults?.imageWidth ?? '1200');
+    final resolvedImageHeight = imageHeight.isNotEmpty
+        ? imageHeight
+        : (defaults?.imageHeight ?? '630');
     final resolvedRobots = robots ?? defaults?.robots ?? 'index,follow';
     final resolvedSiteName = defaults?.siteName;
     final resolvedSiteUrl = defaults?.siteUrl;
@@ -194,7 +196,8 @@ class SeoMetaTags extends StatelessComponent {
     // — otherwise Twitter falls back to a tiny preview even though we ship
     // a 1200x630 image.
     final twitterImage = twitter?.image ?? resolvedImageUrl;
-    final resolvedTwitterCard = twitter?.card ??
+    final resolvedTwitterCard =
+        twitter?.card ??
         defaultTwitter?.card ??
         (twitterImage != null ? 'summary_large_image' : null);
 
@@ -248,9 +251,8 @@ class SeoMetaTags extends StatelessComponent {
         PinterestMeta(
           pinterestRichPin:
               pinterest?.pinterestRichPin ?? defaultPinterest?.pinterestRichPin,
-          author: pinterest?.author ??
-              defaultPinterest?.author ??
-              resolvedAuthor,
+          author:
+              pinterest?.author ?? defaultPinterest?.author ?? resolvedAuthor,
         ),
         AppleMeta(
           title: apple?.title ?? defaultApple?.title ?? title,
@@ -260,10 +262,12 @@ class SeoMetaTags extends StatelessComponent {
           fullscreen: apple?.fullscreen ?? defaultApple?.fullscreen,
         ),
         MicrosoftMeta(
-          tileColor: microsoft?.tileColor ??
+          tileColor:
+              microsoft?.tileColor ??
               defaultMicrosoft?.tileColor ??
               resolvedColor,
-          tileImageUrl: microsoft?.tileImageUrl ??
+          tileImageUrl:
+              microsoft?.tileImageUrl ??
               defaultMicrosoft?.tileImageUrl ??
               resolvedIconUrl,
         ),
@@ -285,7 +289,8 @@ class SeoMetaTags extends StatelessComponent {
               dateModified: schemaWebSite?.dateModified,
               author:
                   schemaWebSite?.author ?? resolvedAuthor?.toSchemaDataType(),
-              publisher: schemaWebSite?.publisher ??
+              publisher:
+                  schemaWebSite?.publisher ??
                   resolvedPublisher?.toSchemaDataType(),
               keywords: schemaWebSite?.keywords ?? keywords,
               image:
@@ -300,11 +305,14 @@ class SeoMetaTags extends StatelessComponent {
                 url: schemaBlogPosting?.url ?? url,
                 datePublished: schemaBlogPosting?.datePublished,
                 dateModified: schemaBlogPosting?.dateModified,
-                author: schemaBlogPosting?.author ??
+                author:
+                    schemaBlogPosting?.author ??
                     resolvedAuthor?.toSchemaDataType(),
-                publisher: schemaBlogPosting?.publisher ??
+                publisher:
+                    schemaBlogPosting?.publisher ??
                     resolvedPublisher?.toSchemaDataType(),
-                image: schemaBlogPosting?.image ??
+                image:
+                    schemaBlogPosting?.image ??
                     resolvedImageUrl?.toSchemaDataType(),
                 keywords: schemaBlogPosting?.keywords ?? keywords,
                 articleSection: schemaBlogPosting?.articleSection,
@@ -345,9 +353,7 @@ class Meta extends StatelessComponent {
     id: unique ? 'meta_$id$name$property'.hashSha256(length: 5) : id,
     name: name,
     content: content,
-    attributes: {
-      if (property.isNotNullOrBlank) 'property': property!,
-    },
+    attributes: {if (property.isNotNullOrBlank) 'property': property!},
   );
 }
 

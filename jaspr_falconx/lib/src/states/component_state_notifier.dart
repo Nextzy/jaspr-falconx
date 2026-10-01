@@ -8,6 +8,5 @@ abstract class ComponentStateNotifier<T>
 
 abstract class NullableComponentStateNotifier<T>
     extends StateNotifier<ComponentState<T?>> {
-  new([T? initial])
-      : super(ComponentState.initial(initial));
+  new([T? initial]) : super(ComponentState.initial(initial));
 }

@@ -228,6 +228,7 @@ class ArticleSchema extends Schema {
   final Map<String, dynamic>? isPartOf;
   final String? license;
   final Map<String, dynamic>? mainEntity;
+
   /// Either a URL string (the canonical page URL) or a `WebPage` object map.
   final dynamic mainEntityOfPage;
   final dynamic position; // Can be String or Number
@@ -268,11 +269,7 @@ class ArticleSchema extends Schema {
       '@type': 'Organization',
       'name': name,
       'url': ?url,
-      if (logo != null)
-        'logo': {
-          '@type': 'ImageObject',
-          'url': logo,
-        },
+      if (logo != null) 'logo': {'@type': 'ImageObject', 'url': logo},
       'address': ?address,
     };
   }

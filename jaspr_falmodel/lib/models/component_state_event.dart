@@ -16,8 +16,7 @@ enum FullComponentState {
   success,
   cancel,
   warning,
-  fail
-  ;
+  fail;
 
   bool get isInitial => this == FullComponentState.initial; //
   bool get isNormal => this == FullComponentState.normal; //
@@ -56,181 +55,133 @@ enum FullComponentState {
 
 @immutable
 class ComponentState<DATA> {
-  factory initial(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.initial,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
+  factory initial(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.initial,
+        id: id,
+        feedback: feedback ?? const Information(),
+        data: data,
+      );
 
-  factory normal(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.normal,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
+  factory normal(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.normal,
+        id: id,
+        feedback: feedback ?? const Information(),
+        data: data,
+      );
 
-  factory empty(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.empty,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
+  factory empty(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.empty,
+        id: id,
+        feedback: feedback ?? const Information(),
+        data: data,
+      );
 
-  factory hovered(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.hovered,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
+  factory hovered(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.hovered,
+        id: id,
+        feedback: feedback ?? const Information(),
+        data: data,
+      );
 
-  factory focused(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.focused,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
+  factory focused(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.focused,
+        id: id,
+        feedback: feedback ?? const Information(),
+        data: data,
+      );
 
-  factory focusedVisible(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.focusedVisible,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
+  factory focusedVisible(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.focusedVisible,
+        id: id,
+        feedback: feedback ?? const Information(),
+        data: data,
+      );
 
-  factory pressed(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.pressed,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
+  factory pressed(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.pressed,
+        id: id,
+        feedback: feedback ?? const Information(),
+        data: data,
+      );
 
-  factory dragged(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.dragged,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
+  factory dragged(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.dragged,
+        id: id,
+        feedback: feedback ?? const Information(),
+        data: data,
+      );
 
-  factory selected(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.selected,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
+  factory selected(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.selected,
+        id: id,
+        feedback: feedback ?? const Information(),
+        data: data,
+      );
 
-  factory scrolledUnder(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.scrolledUnder,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
+  factory scrolledUnder(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.scrolledUnder,
+        id: id,
+        feedback: feedback ?? const Information(),
+        data: data,
+      );
 
-  factory disabled(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.disabled,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
+  factory disabled(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.disabled,
+        id: id,
+        feedback: feedback ?? const Information(),
+        data: data,
+      );
 
-  factory loading(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.loading,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
+  factory loading(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.loading,
+        id: id,
+        feedback: feedback ?? const Information(),
+        data: data,
+      );
 
-  factory success(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.success,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
+  factory success(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.success,
+        id: id,
+        feedback: feedback ?? const Information(),
+        data: data,
+      );
 
-  factory cancel(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.cancel,
-    id: id,
-    feedback: feedback ?? const Information(),
-    data: data,
-  );
+  factory cancel(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.cancel,
+        id: id,
+        feedback: feedback ?? const Information(),
+        data: data,
+      );
 
-  factory warning(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.warning,
-    id: id,
-    feedback: feedback ?? const Warning(),
-    data: data,
-  );
+  factory warning(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.warning,
+        id: id,
+        feedback: feedback ?? const Warning(),
+        data: data,
+      );
 
-  factory fail(
-    DATA data, {
-    String? id,
-    UserFeedback? feedback,
-  }) => ComponentState._(
-    FullComponentState.fail,
-    id: id,
-    feedback: feedback ?? const Failure(),
-    data: data,
-  );
+  factory fail(DATA data, {String? id, UserFeedback? feedback}) =>
+      ComponentState._(
+        FullComponentState.fail,
+        id: id,
+        feedback: feedback ?? const Failure(),
+        data: data,
+      );
 
   const new _(
     this.state, {
