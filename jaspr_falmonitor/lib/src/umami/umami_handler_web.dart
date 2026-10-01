@@ -47,7 +47,7 @@ class UmamiHandler extends MonitorHandler<UmamiAnalyticOption> {
 
         _umami.callMethod('track'.toJS, jsEventType, jsData);
       }
-    } catch (e) {
+    } on Object catch (e) {
       Log.w('Failed to track event with umami.js: $e');
     }
   }
@@ -58,7 +58,7 @@ class UmamiHandler extends MonitorHandler<UmamiAnalyticOption> {
       if (enabled) {
         _umami.callMethod('track'.toJS);
       }
-    } catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       Log.w(error, error: error, stackTrace: stackTrace);
     }
   }

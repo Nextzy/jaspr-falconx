@@ -4,6 +4,7 @@ import 'package:build/build.dart';
 import 'package:glob/glob.dart';
 import 'package:scratch_space/scratch_space.dart';
 
+/// Creates the [TailwindBuilder] that `build.yaml` registers.
 Builder buildStylesheet(BuilderOptions options) => TailwindBuilder(options);
 
 /// One scratch space per build, shared across build steps and deleted when the
@@ -24,8 +25,10 @@ final _scratchSpaceResource = Resource<ScratchSpace>(
 ///   3. run the CLI
 ///   4. copy the generated CSS back as a build output
 class TailwindBuilder implements Builder {
+  /// Creates a builder configured by [options].
   new(this.options);
 
+  /// Options from `build.yaml`.
   final BuilderOptions options;
 
   @override
@@ -53,7 +56,7 @@ class TailwindBuilder implements Builder {
     final inputPath = scratchSpace.fileFor(buildStep.inputId).path;
     final outputPath = scratchSpace.fileFor(outputId).path;
 
-    if (!await File(inputPath).exists()) {
+    if (!File(inputPath).existsSync()) {
       log.severe('Input file does not exist in scratch space: $inputPath');
       return;
     }
@@ -81,17 +84,19 @@ class TailwindBuilder implements Builder {
     final result = await Process.run(executable, commandArgs, runInShell: true);
 
     if (result.exitCode != 0) {
-      log.severe('Tailwind CSS failed with exit code ${result.exitCode}');
-      log.severe('stdout: ${result.stdout}');
-      log.severe('stderr: ${result.stderr}');
+      log
+        ..severe('Tailwind CSS failed with exit code ${result.exitCode}')
+        ..severe('stdout: ${result.stdout}')
+        ..severe('stderr: ${result.stderr}');
       return;
     }
 
     final outputFile = File(outputPath);
-    if (!await outputFile.exists()) {
-      log.severe('Output file was not created: $outputPath');
-      log.severe('Tailwind stdout: ${result.stdout}');
-      log.severe('Tailwind stderr: ${result.stderr}');
+    if (!outputFile.existsSync()) {
+      log
+        ..severe('Output file was not created: $outputPath')
+        ..severe('Tailwind stdout: ${result.stdout}')
+        ..severe('Tailwind stderr: ${result.stderr}');
       return;
     }
 
@@ -170,7 +175,7 @@ void _bridgeNodeModulesIntoScratch(String inputPath) {
 
   try {
     Link(linkPath).createSync(realNodeModules.absolute.path);
-  } catch (e) {
+  } on Object catch (e) {
     log.warning(
       'jaspr_falwind: failed to symlink node_modules into scratch space '
       '($linkPath -> ${realNodeModules.absolute.path}): $e\n'
@@ -189,8 +194,11 @@ bool _which(String binary) {
   return result.exitCode == 0;
 }
 
+/// Converts Windows paths to the forward-slash form Tailwind expects.
 extension POSIXPath on String {
-  String toPosix([bool quoted = false]) {
+  /// Returns this path with `/` separators on Windows, wrapped in single
+  /// quotes when [quoted] is true; other platforms get the path unchanged.
+  String toPosix({bool quoted = false}) {
     if (Platform.isWindows) {
       final result = replaceAll(r'\', '/');
       return quoted ? "'$result'" : result;

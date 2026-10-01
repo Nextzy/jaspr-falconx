@@ -9,22 +9,21 @@ environment:
 resolution: workspace
 
 dependencies:
+  jaspr: ^0.23.5
   jaspr_falconnect:
     path: ../jaspr_falconnect
+  jaspr_falkit:
+    path: ../jaspr_falkit
   jaspr_falmodel:
     path: ../jaspr_falmodel
   jaspr_falmonitor:
     path: ../jaspr_falmonitor
-  jaspr_falkit:
-    path: ../jaspr_falkit
   jaspr_falstore:
     path: ../jaspr_falstore
   jaspr_faltool:
     path: ../jaspr_faltool
-
-  jaspr: ^0.23.5
-  jaspr_router: ^0.9.0
   jaspr_riverpod: ^0.4.6
+  jaspr_router: ^0.9.0
   universal_web: ^1.1.1+1
 
 dev_dependencies:

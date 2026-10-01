@@ -9,16 +9,15 @@ environment:
 resolution: workspace
 
 dependencies:
+  jaspr: ^0.23.5
   jaspr_falmodel:
     path: ../jaspr_falmodel
   jaspr_falstore:
     path: ../jaspr_falstore
   jaspr_faltool:
     path: ../jaspr_faltool
-
-  jaspr: ^0.23.5
-  jaspr_router: ^0.9.0
   jaspr_riverpod: ^0.4.6
+  jaspr_router: ^0.9.0
   universal_web: ^1.1.1+1
 
 dev_dependencies:

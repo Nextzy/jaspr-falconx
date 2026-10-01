@@ -24,5 +24,6 @@ class Locale {
 
   @override
   String toString() =>
-      'Locale{languageCode: $languageCode, scriptCode: $scriptCode, countryCode: $countryCode}';
+      'Locale{languageCode: $languageCode, scriptCode: $scriptCode, '
+      'countryCode: $countryCode}';
 }
