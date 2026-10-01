@@ -22,7 +22,7 @@ melos:
     analyze:
       description: Run dart analyze across all packages.
       exec:
-        command: flutter analyze
+        command: dart analyze --fatal-infos
         concurrency: 4
 
     format:
@@ -34,7 +34,7 @@ melos:
     test:
       description: Run tests across all packages.
       exec:
-        command: flutter test
+        command: dart test
         concurrency: 4
         failFast: true
       packageFilters:
@@ -69,19 +69,19 @@ melos:
     get:
       description: Get the current package's dependencies.
       exec:
-        command: flutter pub get
+        command: dart pub get
         concurrency: 5
 
     upgrade:
       description: Upgrade the current package's dependencies to latest versions.
       exec:
-        command: flutter pub upgrade
+        command: dart pub upgrade
         concurrency: 5
 
     outdated:
       description: Analyze your dependencies to find which ones can be upgraded.
       exec:
-        command: flutter pub outdated
+        command: dart pub outdated
         concurrency: 5
 
     check:exports:
