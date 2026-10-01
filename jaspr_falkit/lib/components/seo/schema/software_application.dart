@@ -417,8 +417,8 @@ class WebApplicationSchema extends Schema {
     required String url,
     String? description,
     String? applicationCategory,
-    dynamic offers,
-    dynamic aggregateRating,
+    SchemaDataType<Schema>? offers,
+    SchemaDataType<Schema>? aggregateRating,
     List<String>? featureList,
     List<String>? browserRequirements,
     SchemaDataType<PersonSchema>? author,
@@ -470,8 +470,8 @@ class WebApplicationSchema extends Schema {
   final List<String>? browserRequirements;
   final List<String>? permissions;
   final String? softwareVersion;
-  final dynamic offers;
-  final dynamic aggregateRating;
+  final SchemaDataType<Schema>? offers;
+  final SchemaDataType<Schema>? aggregateRating;
   final List<String>? sameAs;
   final String? screenshot;
   final List<String>? featureList;
