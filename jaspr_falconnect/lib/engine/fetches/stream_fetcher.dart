@@ -6,7 +6,7 @@ class ResultStreamFetcher<T> {
     : _streamController = controller ?? StreamController<ComponentState<T?>>();
 
   final StreamController<ComponentState<T?>> _streamController;
-  StreamSubscription? _streamSubscription;
+  StreamSubscription<Result<T>>? _streamSubscription;
 
   Stream<ComponentState<T?>> get stream => _streamController.stream;
 

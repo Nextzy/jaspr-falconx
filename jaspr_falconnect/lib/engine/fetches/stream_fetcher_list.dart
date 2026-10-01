@@ -2,7 +2,7 @@
 import 'package:jaspr_falconnect/lib.dart';
 
 class ResultStreamFetcherList {
-  final Map<dynamic, ResultStreamFetcher> _fetcherMap = {};
+  final Map<dynamic, ResultStreamFetcher<dynamic>> _fetcherMap = {};
 
   Stream<ComponentState<T?>> fetchStream<T>({
     required Object key,
