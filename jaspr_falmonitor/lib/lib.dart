@@ -11,6 +11,7 @@ export 'package:sentry/sentry.dart'
         LegacyInstrumentationSpan,
         LegacyInstrumentationSpanFactory,
         OnBeforeSendEvent,
+        OnEventSampledOut,
         OnGenerateNewTrace,
         OnProcessLog,
         OnProcessMetric,
@@ -30,7 +31,6 @@ export 'package:sentry/sentry.dart'
         SentryFeatures,
         SentryIdleSpanFinishReasons,
         SentryInternalLogger,
-        SentrySpanData,
         SentrySpanDescriptions,
         SentrySpanOperations,
         SentrySpanStatusMessages,
@@ -46,6 +46,7 @@ export 'package:sentry/sentry.dart'
         formatDateAsIso8601WithMillisPrecision,
         getBreadcrumbLogLevelFromHttpStatusCode,
         getUtcDateTime,
+        isSentryRequestUrl,
         jsonSerializationFallback,
         shouldContinueTrace,
         utf8JsonEncoder;
