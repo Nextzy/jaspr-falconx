@@ -8,7 +8,16 @@ This package is a first-class Tailwind integration for [Jaspr](https://github.co
 
 ## 🔧 Prerequisites
 
-Install the standalone TailwindCSS v4 CLI:
+Install the Tailwind CSS v4 CLI and daisyUI v5 with npm in your project root
+(recommended):
+
+```sh
+npm i -D tailwindcss @tailwindcss/cli daisyui
+```
+
+The builder uses `node_modules/.bin/tailwindcss` from your package
+(`tailwindcss.cmd` on Windows). Without it, the builder falls back to a
+standalone `tailwindcss` v4 binary on your PATH:
 
 ```sh
 curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-<your-platform>
@@ -16,40 +25,47 @@ chmod +x tailwindcss-<your-platform>
 mv tailwindcss-<your-platform> /usr/local/bin/tailwindcss
 ```
 
-Confirm installation:
-
-```sh
-tailwindcss -h
-```
+Use the npm route when the stylesheet loads `@plugin "daisyui";`: Tailwind
+resolves plugins from `node_modules`.
 
 ---
 
 ## 📦 Setup
 
-1. Add the `jaspr_daisui` dev dependency:
+1. Add `jaspr_falwind` as a dev dependency.
 
-```sh
-dart pub add jaspr_daisui --dev
-```
-
-2. Download DaisyUI v5 plugin files in your `web/` directory:
-
-```sh
-curl -sLO https://github.com/saadeghi/daisyui/releases/latest/download/daisyui.js
-curl -sLO https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.js
-```
-
-3. Create a `styles.tw.css` file in your `web/` directory:
+2. Create a `styles.tw.css` file in your `web/` directory:
 
 ```css
 @import "tailwindcss";
-@plugin "./daisyui.js";
-
-/* Optional: add custom themes */
-@plugin "./daisyui-theme.js" {
-  /* your custom theme config */
-}
+@plugin "daisyui";
 ```
+
+Tailwind scans your package for class names from the package root. Relative
+`@import` and `@source` paths resolve from the stylesheet's own folder.
+
+### Options
+
+Set options in your project's `build.yaml`:
+
+```yaml
+targets:
+  $default:
+    builders:
+      jaspr_falwind:compiler:
+        options:
+          cli: npx
+```
+
+- `cli`: `npx` runs `@tailwindcss/cli` through npx, `standalone` uses
+  `tailwindcss` from your PATH, and any other value is the path of a Tailwind
+  CLI.
+- `tailwindcss`: extra CLI flags, separated by spaces. Release builds pass
+  `--minify` by default.
+
+The build fails with a message when no CLI is found, the CLI is Tailwind v3, the
+stylesheet uses v3 `@tailwind` directives, the CLI exits with an error, or the
+output has no CSS rules.
 
 ---
 
@@ -114,17 +130,12 @@ class SimpleCard extends StatelessComponent {
 
 ## ⚙️ Configuration (Optional)
 
-You can customize your Tailwind setup by adding `tailwind.config.js` in your root:
+Tailwind CSS v4 is configured in CSS. Use
+[`@theme`](https://tailwindcss.com/docs/theme) for colors and fonts, and
+daisyUI's `@plugin "daisyui/theme"` for themes. A legacy `tailwind.config.js`
+is read only when the stylesheet loads it with `@config "../tailwind.config.js";`;
+the build warns when it finds one that is not loaded.
 
-```js
-/** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: ['./{lib,web}/**/*.dart'],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-}
-```
-
-> ℹ️ Note: Automatic recompilation only triggers on `.dart` file changes. If you change your config, re-run the build manually.
+The CSS is rebuilt when a Dart file in `lib/` or `web/`, a CSS file in `web/`,
+or a file in `content/` changes. build_runner sees `content/` only when the
+package's `sources` in `build.yaml` include `content/**`.

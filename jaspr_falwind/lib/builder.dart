@@ -1,208 +1,223 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:build/build.dart';
 import 'package:glob/glob.dart';
-import 'package:scratch_space/scratch_space.dart';
+import 'package:jaspr_falwind/src/package_root.dart';
+import 'package:jaspr_falwind/src/stylesheet.dart';
+import 'package:jaspr_falwind/src/tailwind_cli.dart';
+import 'package:path/path.dart' as p;
 
 /// Creates the [TailwindBuilder] that `build.yaml` registers.
 Builder buildStylesheet(BuilderOptions options) => TailwindBuilder(options);
 
-/// One scratch space per build, shared across build steps and deleted when the
-/// build ends. Replaces `scratchSpaceResource` from the discontinued
-/// `build_modules` package; Tailwind needs no `package_config.json` in it.
-final _scratchSpaceResource = Resource<ScratchSpace>(
-  ScratchSpace.new,
-  dispose: (scratchSpace) => scratchSpace.delete(),
-);
-
-/// Builds CSS from `web/*.tw.css` entrypoints using Tailwind CSS v4 + daisyUI v5.
+/// The Tailwind major version of each CLI, probed once per build.
 ///
-/// daisyUI v5 is configured entirely from CSS via `@plugin "daisyui";` in the
-/// input file — there is no `tailwind.config.js`, no `daisyui.js` plugin file,
-/// and no `daisyui-theme.js`. This builder therefore only needs to:
-///   1. resolve which Tailwind CLI to invoke
-///   2. ensure the input asset is in the scratch space
-///   3. run the CLI
-///   4. copy the generated CSS back as a build output
+/// Holds futures so build steps running at the same time share one probe.
+final _versionCache = Resource<Map<String, Future<int?>>>(() => <String, Future<int?>>{});
+
+const _configNames = ['tailwind.config.js', 'tailwind.config.cjs', 'tailwind.config.mjs', 'tailwind.config.ts'];
+
+/// Builds `web/**/*.css` from each `web/**/*.tw.css` entrypoint with the
+/// Tailwind CSS v4 CLI.
+///
+/// The CLI runs on the stylesheet where it lives in the package, so relative
+/// `@import` and `@source` paths and `@plugin` packages from `node_modules`
+/// resolve as they do outside the build. The CLI writes into a temporary
+/// directory, and the result becomes the build output.
 class TailwindBuilder implements Builder {
   /// Creates a builder configured by [options].
   new(this.options);
 
-  /// Options from `build.yaml`.
+  /// Options from `build.yaml`: `cli` picks the Tailwind CLI, and
+  /// `tailwindcss` holds extra CLI flags such as `--minify`.
   final BuilderOptions options;
 
   @override
+  Map<String, List<String>> get buildExtensions => const {
+    'web/{{file}}.tw.css': ['web/{{file}}.css'],
+  };
+
+  @override
   Future<void> build(BuildStep buildStep) async {
-    final scratchSpace = await buildStep.fetchResource(_scratchSpaceResource);
-    await scratchSpace.ensureAssets({buildStep.inputId}, buildStep);
+    final inputId = buildStep.inputId;
+    final outputId = inputId.changeExtension('').changeExtension('.css');
 
-    final outputId = buildStep.inputId.changeExtension('').changeExtension('.css');
-
-    final (executable, leadingArgs) = _resolveTailwindCli(options);
-    if (executable == null) {
+    final root = await packageRootOf(inputId.package, Directory.current);
+    if (root == null) {
       log.severe(
-        'Tailwind CLI not found. Install one of:\n'
-        '  • npm i -D tailwindcss @tailwindcss/cli daisyui   (recommended)\n'
-        '  • the standalone `tailwindcss` binary on your PATH\n'
-        'Or set `cli: <path>` in build.yaml options for jaspr_falwind:buildStylesheet.',
+        'Cannot find the root of package ${inputId.package} in the '
+        'package config. Run `dart pub get` and build again.',
       );
       return;
     }
 
-    // Trigger rebuilds when any Dart source changes (Tailwind scans these for class usage).
-    final assets = await buildStep.findAssets(Glob('{lib,web}/**.dart')).toList();
-    await Future.wait(assets.map((a) => buildStep.canRead(a)));
-
-    final inputPath = scratchSpace.fileFor(buildStep.inputId).path;
-    final outputPath = scratchSpace.fileFor(outputId).path;
-
-    if (!File(inputPath).existsSync()) {
-      log.severe('Input file does not exist in scratch space: $inputPath');
-      return;
-    }
-
-    // Make `@plugin "daisyui"` (and any other bare-module @plugins) resolvable.
-    // build_runner uses a hermetic scratch space that contains no node_modules,
-    // so Tailwind v4's module resolution (which walks up from the CSS file's
-    // directory) will fail with `Can't resolve 'daisyui'`. Symlink the
-    // project's node_modules into the scratch root so resolution succeeds
-    // without copying hundreds of megabytes.
-    _bridgeNodeModulesIntoScratch(inputPath);
-
-    final commandArgs = <String>[
-      ...leadingArgs,
-      '--input',
-      inputPath.toPosix(),
-      '--output',
-      outputPath.toPosix(),
-      if (options.config.containsKey('tailwindcss')) options.config['tailwindcss'] as String,
-      '--cwd',
-      Directory.current.path,
-    ];
-
-    log.info('Running: $executable ${commandArgs.join(' ')}');
-    final result = await Process.run(executable, commandArgs, runInShell: true);
-
-    if (result.exitCode != 0) {
-      log
-        ..severe('Tailwind CSS failed with exit code ${result.exitCode}')
-        ..severe('stdout: ${result.stdout}')
-        ..severe('stderr: ${result.stderr}');
-      return;
-    }
-
-    final outputFile = File(outputPath);
-    if (!outputFile.existsSync()) {
-      log
-        ..severe('Output file was not created: $outputPath')
-        ..severe('Tailwind stdout: ${result.stdout}')
-        ..severe('Tailwind stderr: ${result.stderr}');
-      return;
-    }
-
-    if ((await outputFile.readAsString()).isEmpty) {
-      log.warning('Output file is empty. Check your Tailwind input CSS and @source globs.');
-    }
-
-    await scratchSpace.copyOutput(outputId, buildStep);
-    log.info('Successfully generated ${outputId.path}');
-  }
-
-  @override
-  Map<String, List<String>> get buildExtensions => {
-    'web/{{file}}.tw.css': ['web/{{file}}.css'],
-  };
-}
-
-/// Resolves which Tailwind CLI to invoke.
-///
-/// Returns `(executable, leadingArgs)` where `leadingArgs` are prepended before
-/// `--input` / `--output`. Returns `(null, [])` if no CLI can be located.
-///
-/// Strategy (in order):
-///   1. Explicit `cli` option in build.yaml — accepts `npx`, `standalone`,
-///      or an absolute path to a binary.
-///   2. Local `node_modules/.bin/tailwindcss` (Tailwind v4 + daisyUI v5 — preferred,
-///      because `@plugin "daisyui"` resolves through node_modules).
-///   3. Standalone `tailwindcss` binary on PATH (legacy fallback).
-(String?, List<String>) _resolveTailwindCli(BuilderOptions options) {
-  final override = options.config['cli'] as String?;
-  if (override != null) {
-    switch (override) {
-      case 'npx':
-        return ('npx', ['--yes', '@tailwindcss/cli']);
-      case 'standalone':
-        return _which('tailwindcss') ? ('tailwindcss', <String>[]) : (null, <String>[]);
-      default:
-        return (override, <String>[]);
-    }
-  }
-
-  final localBin = File(
-    '${Directory.current.path}/node_modules/.bin/tailwindcss${Platform.isWindows ? '.cmd' : ''}',
-  );
-  if (localBin.existsSync()) {
-    return (localBin.path, <String>[]);
-  }
-
-  if (_which('tailwindcss')) {
-    return ('tailwindcss', <String>[]);
-  }
-
-  return (null, <String>[]);
-}
-
-/// Symlinks `<project>/node_modules` into the scratch space root so that
-/// Tailwind v4's `@plugin "<bare-module>"` resolution succeeds.
-///
-/// The scratch space layout for an input at `web/styles.tw.css` looks like
-/// `<scratch>/web/styles.tw.css`, so the symlink target is `<scratch>/node_modules`.
-///
-/// Skips silently if:
-///   • the project has no `node_modules` (nothing to bridge)
-///   • a node_modules entry already exists at the target (idempotent)
-///   • symlink creation fails (e.g. Windows without dev mode) — logged as a
-///     warning so users see why bare-module @plugins still fail.
-void _bridgeNodeModulesIntoScratch(String inputPath) {
-  final realNodeModules = Directory('${Directory.current.path}/node_modules');
-  if (!realNodeModules.existsSync()) return;
-
-  // <scratch>/web/styles.tw.css → parent.parent = <scratch>
-  final scratchRoot = File(inputPath).parent.parent;
-  final linkPath = '${scratchRoot.path}/node_modules';
-
-  if (Link(linkPath).existsSync() || Directory(linkPath).existsSync()) return;
-
-  try {
-    Link(linkPath).createSync(realNodeModules.absolute.path);
-  } on Object catch (e) {
-    log.warning(
-      'jaspr_falwind: failed to symlink node_modules into scratch space '
-      '($linkPath -> ${realNodeModules.absolute.path}): $e\n'
-      'Bare-module `@plugin "<name>"` directives will fail to resolve. '
-      'On Windows, enable Developer Mode or run as Administrator.',
+    final cli = resolveTailwindCli(
+      cliOption: options.config['cli'] as String?,
+      packageRoot: root,
+      isWindows: Platform.isWindows,
+      isOnPath: _isOnPath,
     );
+    if (cli == null) {
+      log.severe(
+        'Tailwind CSS CLI not found for ${inputId.package}. '
+        'Install it one of these ways:\n'
+        '  - npm i -D tailwindcss @tailwindcss/cli daisyui  (recommended, '
+        'run in $root)\n'
+        '  - put the standalone tailwindcss binary on PATH: '
+        'https://tailwindcss.com/blog/standalone-cli\n'
+        '  - set the `cli` option in build.yaml to npx, standalone, or the '
+        'path of a Tailwind CLI',
+      );
+      return;
+    }
+
+    final int? major;
+    try {
+      final cache = await buildStep.fetchResource(_versionCache);
+      major = await cache.putIfAbsent(cli.toString(), () => _probeMajorVersion(cli, root));
+    } on ProcessException catch (e) {
+      log.severe('Cannot run the Tailwind CSS CLI `$cli`: ${e.message}');
+      return;
+    }
+    if (major == null) {
+      log.warning(
+        'Cannot tell which Tailwind CSS version `$cli` is. '
+        'jaspr_falwind needs Tailwind CSS v4.',
+      );
+    } else if (major < 4) {
+      log.severe(
+        'jaspr_falwind needs Tailwind CSS v4; `$cli` is v$major. '
+        'Install Tailwind CSS v4 or point the `cli` option at it.',
+      );
+      return;
+    }
+
+    final input = p.joinAll([root, ...p.posix.split(inputId.path)]);
+    final inputFile = File(input);
+    if (!inputFile.existsSync()) {
+      log.severe(
+        'Cannot find $input. Tailwind CSS runs on the stylesheet '
+        'file itself, so it must exist in the package.',
+      );
+      return;
+    }
+    final css = await inputFile.readAsString();
+    if (usesV3Directives(css)) {
+      log.severe(
+        '${inputId.path} uses Tailwind CSS v3 directives, which '
+        'Tailwind CSS v4 does not build. Replace the @tailwind directives '
+        'with @import "tailwindcss"; (see '
+        'https://tailwindcss.com/docs/upgrade-guide).',
+      );
+      return;
+    }
+    if (!hasConfigDirective(css)) _warnIgnoredConfig(root, input);
+
+    await _trackSources(buildStep);
+
+    final tempDir = await Directory.systemTemp.createTemp('jaspr_falwind_');
+    try {
+      final output = File(p.join(tempDir.path, 'out.css'));
+      final ProcessResult result;
+      try {
+        result = await Process.run(
+          cli.executable,
+          [
+            ...cli.leadingArgs,
+            '-i',
+            input,
+            '-o',
+            output.path,
+            ...splitCliOptions(options.config['tailwindcss']),
+            '--cwd',
+            root,
+          ],
+          workingDirectory: root,
+          runInShell: Platform.isWindows,
+        );
+      } on ProcessException catch (e) {
+        log.severe('Cannot run the Tailwind CSS CLI `$cli`: ${e.message}');
+        return;
+      }
+
+      if (result.exitCode != 0 || !output.existsSync()) {
+        log.severe(
+          'Tailwind CSS failed on ${inputId.path} '
+          '(exit code ${result.exitCode}).\n'
+          'stdout:\n${result.stdout}\nstderr:\n${result.stderr}',
+        );
+        return;
+      }
+      final bytes = await output.readAsBytes();
+      if (!hasCssRules(utf8.decode(bytes, allowMalformed: true))) {
+        log.severe(
+          'Tailwind produced no CSS rules for ${inputId.path}. '
+          'Start the stylesheet with @import "tailwindcss"; and check that '
+          'your classes appear in files under $root.',
+        );
+        return;
+      }
+      await buildStep.writeAsBytes(outputId, bytes);
+    } finally {
+      await tempDir.delete(recursive: true);
+    }
+  }
+
+  /// Records the files Tailwind scans as inputs of this step, so that
+  /// editing one of them rebuilds the CSS.
+  ///
+  /// CSS files built by this builder are skipped: reading an output of this
+  /// builder from one of its own steps is a dependency cycle.
+  Future<void> _trackSources(BuildStep buildStep) async {
+    final css = await buildStep.findAssets(Glob('web/**.css')).toList();
+    final entrypoints = {
+      for (final asset in css)
+        if (asset.path.endsWith('.tw.css')) asset.path,
+    };
+    final sources = [
+      ...await buildStep.findAssets(Glob('{lib,web}/**.dart')).toList(),
+      ...await buildStep.findAssets(Glob('content/**')).toList(),
+      for (final asset in css)
+        if (!entrypoints.contains(_entrypointFor(asset.path))) asset,
+    ];
+    await Future.wait(sources.map(buildStep.canRead));
+  }
+
+  /// Warns when [root] holds a Tailwind JS config that the stylesheet at
+  /// [input] does not load; Tailwind CSS v4 reads it only through `@config`.
+  void _warnIgnoredConfig(String root, String input) {
+    for (final name in _configNames) {
+      final config = p.join(root, name);
+      if (!File(config).existsSync()) continue;
+      final relative = p.relative(config, from: p.dirname(input)).replaceAll(r'\', '/');
+      log.warning(
+        'Tailwind CSS v4 ignores $name unless the stylesheet loads '
+        'it. Add @config "$relative"; to ${p.basename(input)} to keep it.',
+      );
+      return;
+    }
   }
 }
 
-bool _which(String binary) {
-  final result = Process.runSync(
-    Platform.isWindows ? 'where' : 'which',
-    [binary],
-    runInShell: true,
+/// The `.tw.css` entrypoint that would build [cssPath].
+String _entrypointFor(String cssPath) => '${cssPath.substring(0, cssPath.length - '.css'.length)}.tw.css';
+
+Future<int?> _probeMajorVersion(TailwindCli cli, String root) async {
+  final result = await Process.run(
+    cli.executable,
+    [...cli.leadingArgs, '--help'],
+    workingDirectory: root,
+    runInShell: Platform.isWindows,
   );
-  return result.exitCode == 0;
+  return parseTailwindMajorVersion('${result.stdout}\n${result.stderr}');
 }
 
-/// Converts Windows paths to the forward-slash form Tailwind expects.
-extension POSIXPath on String {
-  /// Returns this path with `/` separators on Windows, wrapped in single
-  /// quotes when [quoted] is true; other platforms get the path unchanged.
-  String toPosix({bool quoted = false}) {
-    if (Platform.isWindows) {
-      final result = replaceAll(r'\', '/');
-      return quoted ? "'$result'" : result;
-    }
-    return this;
+bool _isOnPath(String name) {
+  try {
+    final result = Process.runSync(Platform.isWindows ? 'where' : 'which', [name]);
+    return result.exitCode == 0;
+  } on ProcessException {
+    return false;
   }
 }
