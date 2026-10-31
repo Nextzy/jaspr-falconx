@@ -59,13 +59,14 @@ targets:
 
 - `cli`: `npx` runs `@tailwindcss/cli` through npx, `standalone` uses
   `tailwindcss` from your PATH, and any other value is the path of a Tailwind
-  CLI.
-- `tailwindcss`: extra CLI flags, separated by spaces. Release builds pass
-  `--minify` by default.
+  CLI. A relative path resolves from the package root.
+- `tailwindcss`: extra CLI flags, one string separated by spaces or a YAML list.
+  Release builds pass `--minify` by default.
 
 The build fails with a message when no CLI is found, the CLI is Tailwind v3, the
 stylesheet uses v3 `@tailwind` directives, the CLI exits with an error, or the
-output has no CSS rules.
+output has no CSS rules. After installing or fixing the CLI, save a Dart or CSS
+file (or run `dart run build_runner clean`) to build again.
 
 ---
 
@@ -136,6 +137,6 @@ daisyUI's `@plugin "daisyui/theme"` for themes. A legacy `tailwind.config.js`
 is read only when the stylesheet loads it with `@config "../tailwind.config.js";`;
 the build warns when it finds one that is not loaded.
 
-The CSS is rebuilt when a Dart file in `lib/` or `web/`, a CSS file in `web/`,
-or a file in `content/` changes. build_runner sees `content/` only when the
+The CSS is rebuilt when a Dart or CSS file in `lib/` or `web/`, or a file in
+`content/`, changes. build_runner sees `content/` only when the
 package's `sources` in `build.yaml` include `content/**`.
