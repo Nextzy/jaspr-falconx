@@ -15,7 +15,7 @@ dependencies:
     git:
       url: https://github.com/Nextzy/dart-falconx
       path: dart_falconnect
-      ref: 2.4.0
+      ref: 2.4.2
 #    path: /Users/nonthawit/Data/Github/FalconX/dart-falconx/dart_falconnect
   freezed_annotation: ^3.1.0
   jaspr_falmodel:

@@ -237,29 +237,29 @@ packages:
     dependency: transitive
     description:
       path: dart_falconnect
-      ref: "2.4.0"
-      resolved-ref: "9fe212a209c0f357629ed0ecf46e0bb8959c3f60"
+      ref: "2.4.2"
+      resolved-ref: "7ee4b1f6d01dba010b5767fea7b87b56e52de010"
       url: "https://github.com/Nextzy/dart-falconx"
     source: git
-    version: "2.4.0"
+    version: "2.4.2"
   dart_falmodel:
     dependency: transitive
     description:
       path: dart_falmodel
-      ref: "2.4.0"
-      resolved-ref: "9fe212a209c0f357629ed0ecf46e0bb8959c3f60"
+      ref: "2.4.2"
+      resolved-ref: "7ee4b1f6d01dba010b5767fea7b87b56e52de010"
       url: "https://github.com/Nextzy/dart-falconx"
     source: git
-    version: "2.4.0"
+    version: "2.4.2"
   dart_faltool:
     dependency: transitive
     description:
       path: dart_faltool
-      ref: "2.4.0"
-      resolved-ref: "9fe212a209c0f357629ed0ecf46e0bb8959c3f60"
+      ref: "2.4.2"
+      resolved-ref: "7ee4b1f6d01dba010b5767fea7b87b56e52de010"
       url: "https://github.com/Nextzy/dart-falconx"
     source: git
-    version: "2.4.0"
+    version: "2.4.2"
   dart_style:
     dependency: transitive
     description:
