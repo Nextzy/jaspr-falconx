@@ -52,8 +52,8 @@ class PageHead extends StatelessComponent {
   /// Name of the first breadcrumb (the site root).
   final String rootBreadcrumbName;
 
-  /// Display name for a path segment; the segment itself when null or null
-  /// is returned.
+  /// Display name for a path segment. Falls back to the segment itself when
+  /// this is null or returns null.
   final String? Function(String segment)? breadcrumbName;
 
   @override
@@ -90,9 +90,9 @@ class PageHead extends StatelessComponent {
   }
 
   List<BreadcrumbItem> _breadcrumbs() {
-    final segments = Uri.parse(
-      path,
-    ).pathSegments.where((seg) => seg.isNotEmpty).toList();
+    final segments = Uri.parse(path).pathSegments
+        .where((seg) => seg.isNotEmpty)
+        .toList();
     if (segments.isEmpty) {
       return [];
     }
@@ -102,17 +102,12 @@ class PageHead extends StatelessComponent {
         : segments;
 
     return [
-      BreadcrumbItem(
-        name: rootBreadcrumbName,
-        url: '$siteUrl/$languageCode',
-      ),
+      BreadcrumbItem(name: rootBreadcrumbName, url: '$siteUrl/$languageCode'),
       for (var i = 0; i < pathSegments.length; i++)
         BreadcrumbItem(
           name: breadcrumbName?.call(pathSegments[i]) ?? pathSegments[i],
-          url: '$siteUrl/${[
-            languageCode,
-            ...pathSegments.take(i + 1),
-          ].join('/')}',
+          url:
+              '$siteUrl/${[languageCode, ...pathSegments.take(i + 1)].join('/')}',
         ),
     ];
   }

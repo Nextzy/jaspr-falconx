@@ -1,8 +1,12 @@
 import 'package:jaspr_falkit/jaspr_falkit.dart';
 import 'package:jaspr_test/server_test.dart';
 
-PageHead _head(String path, void Function(PageSeoContext) capture) => PageHead(
-  languageCode: 'en',
+PageHead _head(
+  String path,
+  void Function(PageSeoContext) capture, {
+  String languageCode = 'en',
+}) => PageHead(
+  languageCode: languageCode,
   supportedLanguageCodes: const ['th', 'en'],
   siteUrl: 'https://nonthawit.com',
   path: path,
@@ -47,5 +51,49 @@ void main() {
     tester.pumpComponent(_head('', (c) => ctx = c));
     await tester.request('/');
     expect(ctx.breadcrumbItems, isEmpty);
+  });
+
+  testServer('PageHead handles a Thai path', (tester) async {
+    late PageSeoContext ctx;
+    tester.pumpComponent(
+      _head('/th/tools', (c) => ctx = c, languageCode: 'th'),
+    );
+    final response = await tester.request('/');
+
+    expect(ctx.url, 'https://nonthawit.com/th/tools');
+    expect(ctx.alternateLanguageUrls.map((t) => '${t.locale}=${t.url}'), [
+      'th=https://nonthawit.com/th/tools',
+      'en=https://nonthawit.com/en/tools',
+      'x-default=https://nonthawit.com/th/tools',
+    ]);
+    expect(ctx.breadcrumbItems.map((b) => b.url), [
+      'https://nonthawit.com/th',
+      'https://nonthawit.com/th/tools',
+    ]);
+    expect(response.body, contains('lang="th"'));
+  });
+
+  testServer('PageHead keeps a path without a locale segment', (tester) async {
+    late PageSeoContext ctx;
+    tester.pumpComponent(_head('/policies/abc', (c) => ctx = c));
+    await tester.request('/');
+
+    expect(ctx.alternateLanguageUrls.map((t) => '${t.locale}=${t.url}'), [
+      'th=https://nonthawit.com/policies/abc',
+      'en=https://nonthawit.com/policies/abc',
+      'x-default=https://nonthawit.com/policies/abc',
+    ]);
+    // Mirrors page_state.dart:154-215: no segment is skipped, URLs get the
+    // page language prefix.
+    expect(ctx.breadcrumbItems.map((b) => b.url), [
+      'https://nonthawit.com/en',
+      'https://nonthawit.com/en/policies',
+      'https://nonthawit.com/en/policies/abc',
+    ]);
+    expect(ctx.breadcrumbItems.map((b) => b.name), [
+      'Nonthawit',
+      'policies',
+      'abc',
+    ]);
   });
 }
