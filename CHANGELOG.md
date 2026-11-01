@@ -8,6 +8,7 @@ A page can now answer 404 or 503 from the CMS status, a locale switcher can buil
 
 - `jaspr_falconx`: `pageErrorStatus(error)` returns 404 when the CMS answered 403 or 404, and 503 for every other failure, so crawlers retry. `isExpectedPageFailure(error)` is true for a missing record, which suits `ServerData.quietWhen`. `switchLocalePath(path, toCode, supported)` replaces the locale segment of a path, or prefixes one when the path has none, and keeps the query and fragment.
 - `jaspr_falserver`: `validInternalCmsUrl` normalizes a private CMS URL and returns null when it is empty or not an absolute `http`/`https` URL. `resolveServerCmsBaseUrl` picks that URL only when a probe reaches it, and otherwise falls back to the public URL. It falls back silently when the internal URL is unset or blank, and logs one line when the URL is set but malformed or the probe fails or throws. `pingOk` is a probe for it: it asks `/server/ping` and returns true on a 200, and it throws on another status, a network error, or a 2-second timeout. `SitemapUrl`, `renderSitemap`, and `sitemapMiddleware` write a sitemap with hreflang alternates and serve it on GET and HEAD; a failing loader gives 503 with `retry-after: 60`.
+- `jaspr_falconnect`: `FalRepository` is the data-layer sibling of `FalUsecase`. Its `runDataCatching` returns the call's `Result` and turns a thrown `DioException`, `CommonException`, or any other object into a failed `Result` holding a `DataLayerException`.
 
 ### Changed
 

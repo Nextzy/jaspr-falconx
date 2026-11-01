@@ -17,3 +17,16 @@ final status = pageErrorStatus(error); // 404 or 503
 ```dart
 switchLocalePath('/th/blogs/abc?page=2', 'en', ['th', 'en']); // /en/blogs/abc?page=2
 ```
+
+## Repository error handling
+
+Extend `FalRepository` (from `jaspr_falconnect`) and wrap each data call in `runDataCatching`. It returns the call's `Result`, and turns any thrown error into a failed `Result` holding a `DataLayerException`.
+
+```dart
+class BlogRepository extends FalRepository {
+  Future<Result<Blog>> get(String id) => runDataCatching(() async {
+    final blog = await _remote.get(id);
+    return Result.success(blog);
+  });
+}
+```
