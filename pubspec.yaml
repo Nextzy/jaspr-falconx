@@ -73,10 +73,10 @@ melos:
         concurrency: 5
 
     upgrade:
-      description: Upgrade the current package's dependencies to latest versions.
-      exec:
-        command: dart pub upgrade
-        concurrency: 5
+      description: >-
+        Upgrade every workspace member's dependencies within their constraints
+        and raise each lower bound to the resolved version.
+      run: dart pub upgrade --tighten
 
     outdated:
       description: Analyze your dependencies to find which ones can be upgraded.
