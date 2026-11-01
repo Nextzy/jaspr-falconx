@@ -55,3 +55,8 @@ linter:
     public_member_api_docs: false
     prefer_constructors_over_static_methods: false
     prefer_generic_function_type_aliases: false
+    # WORKAROUND: consumers build these packages with jaspr_builder 0.23.5,
+    # whose analyzer 12.1 rejects Dart 3.13 `new(...)` constructors as the
+    # experimental 'primary-constructors' feature; remove when jaspr_builder
+    # supports an analyzer that parses them.
+    unnecessary_type_name_in_constructor: false

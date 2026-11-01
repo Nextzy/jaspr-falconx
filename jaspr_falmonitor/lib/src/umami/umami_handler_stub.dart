@@ -1,7 +1,7 @@
 import 'package:jaspr_falmonitor/lib.dart';
 
 class UmamiHandler extends MonitorHandler<UmamiAnalyticOption> {
-  new _();
+  UmamiHandler._();
 
   static final UmamiHandler instance = UmamiHandler._();
 

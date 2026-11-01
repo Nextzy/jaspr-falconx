@@ -1,7 +1,7 @@
 import 'package:jaspr_falconnect/lib.dart';
 
 class ResultStreamFetcher<T> {
-  new([StreamController<ComponentState<T?>>? controller])
+  ResultStreamFetcher([StreamController<ComponentState<T?>>? controller])
     : _streamController = controller ?? StreamController<ComponentState<T?>>();
 
   final StreamController<ComponentState<T?>> _streamController;

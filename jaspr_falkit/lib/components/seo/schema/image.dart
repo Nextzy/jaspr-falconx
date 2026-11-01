@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// ImageObject schema for representing images
 class ImageSchema extends Schema {
-  new({
+  ImageSchema({
     required this.url,
     this.caption,
     this.width,

@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// WebSite schema for representing entire websites
 class WebSiteSchema extends Schema {
-  new({
+  WebSiteSchema({
     this.name,
     this.url,
     this.description,

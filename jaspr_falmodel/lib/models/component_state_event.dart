@@ -183,7 +183,7 @@ class ComponentState<DATA> {
         data: data,
       );
 
-  const new _(
+  const ComponentState._(
     this.state, {
     this.id,
     this.event,

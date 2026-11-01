@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// Person schema for representing individuals
 class PersonSchema extends Schema {
-  new({
+  PersonSchema({
     this.name,
     this.givenName,
     this.familyName,

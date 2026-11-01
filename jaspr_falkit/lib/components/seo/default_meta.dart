@@ -1,7 +1,7 @@
 import 'package:jaspr_falkit/lib.dart';
 
 class DefaultMeta extends StatelessComponent {
-  const new({
+  const DefaultMeta({
     this.title,
     this.description,
     this.keywords,

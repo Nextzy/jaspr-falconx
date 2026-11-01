@@ -1,5 +1,5 @@
 class Locale {
-  const new({required this.languageCode, this.scriptCode, this.countryCode});
+  const Locale({required this.languageCode, this.scriptCode, this.countryCode});
 
   final String languageCode;
   final String? scriptCode;

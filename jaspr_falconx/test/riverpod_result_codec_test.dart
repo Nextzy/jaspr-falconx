@@ -3,7 +3,7 @@ import 'package:jaspr_falmodel/jaspr_falmodel.dart';
 import 'package:test/test.dart';
 
 class _Data {
-  new(this.v);
+  _Data(this.v);
   factory fromJson(dynamic json) => _Data((json as Map)['v'] as int);
   final int v;
   Map<String, dynamic> toJson() => {'v': v};
