@@ -4,8 +4,10 @@ import 'package:test/test.dart';
 
 void main() {
   late String seen;
+  late Request seenRequest;
   Response inner(Request r) {
     seen = r.url.path;
+    seenRequest = r;
     return Response.ok('x');
   }
 
@@ -38,5 +40,19 @@ void main() {
       (await get('en/profile')).headers['cache-control'],
       'public, max-age=0, s-maxage=86400',
     );
+  });
+
+  test('forwards query, method and headers faithfully', () async {
+    await handler(
+      Request(
+        'GET',
+        Uri.parse('http://localhost/_v/b1/main.client.dart.js?x=1'),
+        headers: {'accept-encoding': 'gzip'},
+      ),
+    );
+    expect(seenRequest.url.path, 'main.client.dart.js');
+    expect(seenRequest.url.query, 'x=1');
+    expect(seenRequest.method, 'GET');
+    expect(seenRequest.headers['accept-encoding'], 'gzip');
   });
 }

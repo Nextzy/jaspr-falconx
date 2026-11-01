@@ -25,7 +25,11 @@ class CachePolicy {
     required String? buildId,
   }) {
     if (existing != null) return null;
-    if (statusCode < 200 || statusCode >= 300) return _noStore;
+    // A 304 revalidation refreshes the stored response's metadata, so it
+    // takes the same policy as the 2xx it revalidates (RFC 9111 4.3.4).
+    final cacheable =
+        (statusCode >= 200 && statusCode < 300) || statusCode == 304;
+    if (!cacheable) return _noStore;
 
     final version = splitVersion(path);
     if (version != null) {

@@ -25,6 +25,15 @@ void main() {
     expect(h('en/x', status: 500), 'no-store');
   });
 
+  test('304 revalidation keeps the path-based policy', () {
+    expect(
+      h('_v/b1/main.client.dart.js', status: 304),
+      'public, max-age=31536000, immutable',
+    );
+    expect(h('en/profile', status: 304), 'public, max-age=0, s-maxage=86400');
+    expect(h('_v/old/a.js', status: 304), 'no-store');
+  });
+
   test('current version is immutable', () {
     expect(
       h('_v/b1/main.client.dart.js'),
