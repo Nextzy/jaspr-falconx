@@ -107,6 +107,22 @@ final cmsBaseUrl = await resolveServerCmsBaseUrl(
 
 `validInternalCmsUrl` trims a value and removes one trailing `/`; it returns `null` unless the value is an absolute `http` or `https` URL with a host. `pingOk` returns `true` on 200, throws `StateError('HTTP <code>')` on another status, and throws on a network error or timeout.
 
+## Sitemap
+
+`sitemapMiddleware` serves `/sitemap.xml` (GET and HEAD) from a `load` callback that returns `SitemapUrl` entries. Each entry has a `loc`, optional hreflang `alternates`, and an optional `lastModified`; `renderSitemap` writes the XML and escapes every URL.
+
+```dart
+ServerApp.addMiddleware(assetMiddleware(buildId: buildId));
+ServerApp.addMiddleware(sitemapMiddleware(() async => [
+  SitemapUrl(
+    loc: 'https://example.com/th',
+    alternates: {'th': 'https://example.com/th', 'en': 'https://example.com/en'},
+  ),
+]));
+```
+
+Register it after `assetMiddleware`, which then sets `Cache-Control` on the response; the sitemap middleware sets none. When `load` throws, it answers 503 with `retry-after: 60` and writes one line to stderr.
+
 ## Cloudflare
 
 Cloudflare does not cache HTML by default, so the HTML rows above have no effect at the edge until a Cache Rule makes HTML eligible for cache and tells Cloudflare to respect the origin `Cache-Control`.
