@@ -13,6 +13,8 @@ void main() {
     test('prefixes the locale when the path has none', () {
       expect(switchLocalePath('/', 'en', codes), '/en');
       expect(switchLocalePath('/fr/x', 'en', codes), '/en/fr/x');
+      expect(switchLocalePath('blogs', 'th', codes), '/th/blogs');
+      expect(switchLocalePath('/th/', 'en', codes), '/en');
     });
 
     test('keeps the query string and the fragment', () {
