@@ -1,1 +1,2 @@
-export 'theme_dom_stub.dart' if (dart.library.js_interop) 'theme_dom_web.dart';
+export 'theme_dom_io_or_stub.dart'
+    if (dart.library.js_interop) 'theme_dom_web.dart';
