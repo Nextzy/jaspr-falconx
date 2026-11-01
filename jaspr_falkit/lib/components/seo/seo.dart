@@ -5,6 +5,7 @@ export 'default_meta.dart';
 export 'meta_tag.dart';
 export 'microsoft_meta.dart';
 export 'opengraph_meta.dart';
+export 'page_head.dart';
 export 'pinterest_meta.dart';
 export 'schema/schema.dart';
 export 'twitter_meta.dart';

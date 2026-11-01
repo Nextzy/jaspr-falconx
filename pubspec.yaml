@@ -1,6 +1,6 @@
 name: jaspr_falconx_core
 description: A jaspr falcon package.
-version: 3.1.0
+version: 4.0.0
 
 environment:
   sdk: ">=3.13.0 <4.0.0"
@@ -10,6 +10,7 @@ workspace:
   - jaspr_falconx
   - jaspr_falmonitor
   - jaspr_falkit
+  - jaspr_falserver
   - jaspr_falstore
   - jaspr_falmodel
   - jaspr_faltool

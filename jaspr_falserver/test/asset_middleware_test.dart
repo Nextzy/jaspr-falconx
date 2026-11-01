@@ -1,0 +1,99 @@
+import 'package:jaspr_falserver/jaspr_falserver.dart';
+import 'package:shelf/shelf.dart';
+import 'package:test/test.dart';
+
+void main() {
+  late String seen;
+  late Request seenRequest;
+  Response inner(Request r) {
+    seen = r.url.path;
+    seenRequest = r;
+    return Response.ok('x');
+  }
+
+  final handler = assetMiddleware(buildId: 'b1')(inner);
+  Future<Response> get(String path) async =>
+      handler(Request('GET', Uri.parse('http://localhost/$path')));
+
+  test('strips current version prefix and marks immutable', () async {
+    final r = await get('_v/b1/main.client.dart.js');
+    expect(seen, 'main.client.dart.js');
+    expect(r.headers['cache-control'], 'public, max-age=31536000, immutable');
+  });
+
+  test('serves stale version from current files with no-store', () async {
+    final r = await get('_v/old/main.client.dart.js_1.part.js');
+    expect(seen, 'main.client.dart.js_1.part.js');
+    expect(r.headers['cache-control'], 'no-store');
+  });
+
+  test('leaves an existing cache-control alone', () async {
+    final h = assetMiddleware(buildId: 'b1')(
+      (_) => Response.ok('x', headers: {'cache-control': 'no-store'}),
+    );
+    final r = await h(Request('GET', Uri.parse('http://localhost/en/profile')));
+    expect(r.headers['cache-control'], 'no-store');
+  });
+
+  test('html gets the edge policy', () async {
+    expect(
+      (await get('en/profile')).headers['cache-control'],
+      'public, max-age=0, s-maxage=86400',
+    );
+  });
+
+  test('forwards query, method and headers faithfully', () async {
+    await handler(
+      Request(
+        'GET',
+        Uri.parse('http://localhost/_v/b1/main.client.dart.js?x=1'),
+        headers: {'accept-encoding': 'gzip'},
+      ),
+    );
+    expect(seenRequest.url.path, 'main.client.dart.js');
+    expect(seenRequest.url.query, 'x=1');
+    expect(seenRequest.method, 'GET');
+    expect(seenRequest.headers['accept-encoding'], 'gzip');
+  });
+
+  test('a versioned path without a file extension is 404 no-store', () async {
+    for (final path in ['_v/b1/en/profile', '_v/old/en', '_v/b1/a.b/page']) {
+      seen = '';
+      final r = await get(path);
+      expect(r.statusCode, 404, reason: path);
+      expect(r.headers['cache-control'], 'no-store', reason: path);
+      expect(seen, isEmpty, reason: '$path must not reach the inner handler');
+    }
+  });
+
+  test('a versioned path with a file extension is rewritten', () async {
+    final r = await get('_v/b1/scripts/umami.js');
+    expect(r.statusCode, 200);
+    expect(seen, 'scripts/umami.js');
+    expect(r.headers['cache-control'], 'public, max-age=31536000, immutable');
+  });
+
+  test('a POST response is no-store', () async {
+    final r = await handler(
+      Request('POST', Uri.parse('http://localhost/en/profile')),
+    );
+    expect(r.headers['cache-control'], 'no-store');
+  });
+
+  test('a response that sets a cookie is no-store', () async {
+    final h = assetMiddleware(buildId: 'b1')(
+      (_) => Response.ok('x', headers: {'set-cookie': 'a=1'}),
+    );
+    final r = await h(Request('GET', Uri.parse('http://localhost/en/profile')));
+    expect(r.headers['cache-control'], 'no-store');
+  });
+
+  test('passes a custom policy through', () async {
+    final h = assetMiddleware(
+      buildId: 'b1',
+      policy: const CacheHeaderPolicy(htmlEdgeTtl: Duration(hours: 1)),
+    )(inner);
+    final r = await h(Request('GET', Uri.parse('http://localhost/en/profile')));
+    expect(r.headers['cache-control'], 'public, max-age=0, s-maxage=3600');
+  });
+}
