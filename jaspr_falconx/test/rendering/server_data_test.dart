@@ -150,4 +150,21 @@ void main() {
     expect(captured.lines.single, contains('Bad state: boom'));
     expect(captured.lines.single, contains('#0 here'));
   });
+
+  test('logServerError prints a stack trace the error already has once', () {
+    final trace = StackTrace.fromString('#0 inside');
+    final captured = _CapturedStderr();
+    IOOverrides.runZoned(
+      () => logServerError(
+        'load failed',
+        error: DomainLayerException(
+          type: SystemErrorType.unexpected,
+          stackTrace: trace,
+        ),
+        stackTrace: trace,
+      ),
+      stderr: () => captured,
+    );
+    expect('#0 inside'.allMatches(captured.lines.single), hasLength(1));
+  });
 }
