@@ -4,7 +4,8 @@ import 'package:jaspr_falmodel/jaspr_falmodel.dart';
 
 /// Loads data on the server and renders [builder] with it.
 ///
-/// A failed load is written to the server log with [logServerError], sets
+/// A failed load is written to the server log with [logServerError] (or, when
+/// [quietWhen] returns true, one line with [logServerInfo]), sets
 /// `cache-control: no-store` on the response so an error page is never
 /// cached, then renders [errorBuilder]. `ServerData` sets no status code;
 /// the error builder picks one.
@@ -14,6 +15,7 @@ class ServerData<T> extends StatelessComponent {
     required this.load,
     required this.builder,
     required this.errorBuilder,
+    this.quietWhen,
     super.key,
   });
 
@@ -27,6 +29,12 @@ class ServerData<T> extends StatelessComponent {
   final Component Function(BuildContext context, CommonException error)
   errorBuilder;
 
+  /// Skips the stack trace for a failure the page expects, such as a missing
+  /// record. When it returns true for the error, [ServerData] logs one info
+  /// line with the exception type and message instead of an error with a
+  /// stack trace. The response is the same: `no-store` and [errorBuilder].
+  final bool Function(CommonException error)? quietWhen;
+
   @override
   Component build(BuildContext context) {
     return AsyncBuilder(
@@ -36,11 +44,19 @@ class ServerData<T> extends StatelessComponent {
           return builder(context, result.value);
         }
         final error = result.exception;
-        logServerError(
-          'ServerData<$T> load failed',
-          error: error,
-          stackTrace: error.stackTrace,
-        );
+        if (quietWhen?.call(error) ?? false) {
+          final detail = error.developerMessage ?? error.userMessage ?? '';
+          logServerInfo(
+            'ServerData<$T> load failed: ${error.runtimeType} '
+            '[${error.type}] $detail',
+          );
+        } else {
+          logServerError(
+            'ServerData<$T> load failed',
+            error: error,
+            stackTrace: error.stackTrace,
+          );
+        }
         context.setHeader('cache-control', 'no-store');
         return errorBuilder(context, error);
       },

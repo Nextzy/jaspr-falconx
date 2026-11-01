@@ -15,3 +15,12 @@ void logServerError(Object? message, {Object? error, StackTrace? stackTrace}) {
   if (trace.isNotEmpty && !errorText.contains(trace)) buffer.write('\n$trace');
   stderr.writeln(buffer);
 }
+
+/// Writes [message] as one `[INFO]` line to the server's standard error.
+///
+/// Unlike `Log.i`, which prints only in debug builds, this also writes in a
+/// release build. Use it for an expected failure that needs a trace in the
+/// log but no stack trace.
+void logServerInfo(Object? message) {
+  stderr.writeln('[INFO] $message');
+}

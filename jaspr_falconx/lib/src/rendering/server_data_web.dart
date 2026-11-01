@@ -10,6 +10,7 @@ class ServerData<T> extends StatelessComponent {
     required this.load,
     required this.builder,
     required this.errorBuilder,
+    this.quietWhen,
     super.key,
   });
 
@@ -22,6 +23,12 @@ class ServerData<T> extends StatelessComponent {
   /// Builds the content when [load] fails.
   final Component Function(BuildContext context, CommonException error)
   errorBuilder;
+
+  /// Skips the stack trace for a failure the page expects, such as a missing
+  /// record. When it returns true for the error, [ServerData] logs one info
+  /// line with the exception type and message instead of an error with a
+  /// stack trace. The response is the same: `no-store` and [errorBuilder].
+  final bool Function(CommonException error)? quietWhen;
 
   @override
   Component build(BuildContext context) {
