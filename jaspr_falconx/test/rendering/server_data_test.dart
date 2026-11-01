@@ -41,4 +41,18 @@ void main() {
     final r = await tester.request('/');
     expect(r.body, contains('al:null'));
   });
+
+  testServer('setResponseStatus sets the response status code', (tester) async {
+    tester.pumpComponent(
+      Builder(
+        builder: (context) {
+          setResponseStatus(context, 404);
+          return const Component.text('gone');
+        },
+      ),
+    );
+    final r = await tester.request('/');
+    expect(r.statusCode, 404);
+    expect(r.body, contains('gone'));
+  });
 }
