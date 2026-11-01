@@ -1,0 +1,51 @@
+import 'package:jaspr_falkit/jaspr_falkit.dart';
+import 'package:jaspr_test/server_test.dart';
+
+PageHead _head(String path, void Function(PageSeoContext) capture) => PageHead(
+  languageCode: 'en',
+  supportedLanguageCodes: const ['th', 'en'],
+  siteUrl: 'https://nonthawit.com',
+  path: path,
+  rootBreadcrumbName: 'Nonthawit',
+  breadcrumbName: (segment) => segment == 'projects' ? 'Projects' : null,
+  seo: (ctx) {
+    capture(ctx);
+    return const SeoMetaTags(title: 'T');
+  },
+);
+
+void main() {
+  testServer('PageHead builds url, alternates, and breadcrumbs', (
+    tester,
+  ) async {
+    late PageSeoContext ctx;
+    tester.pumpComponent(_head('/en/projects/42', (c) => ctx = c));
+    final response = await tester.request('/');
+
+    expect(ctx.url, 'https://nonthawit.com/en/projects/42');
+    expect(ctx.canonical, ctx.url);
+    expect(ctx.alternateLanguageUrls.map((t) => '${t.locale}=${t.url}'), [
+      'th=https://nonthawit.com/th/projects/42',
+      'en=https://nonthawit.com/en/projects/42',
+      'x-default=https://nonthawit.com/en/projects/42',
+    ]);
+    expect(ctx.breadcrumbItems.map((b) => b.url), [
+      'https://nonthawit.com/en',
+      'https://nonthawit.com/en/projects',
+      'https://nonthawit.com/en/projects/42',
+    ]);
+    expect(ctx.breadcrumbItems.map((b) => b.name), [
+      'Nonthawit',
+      'Projects',
+      '42',
+    ]);
+    expect(response.body, contains('lang="en"'));
+  });
+
+  testServer('PageHead emits no breadcrumbs for an empty path', (tester) async {
+    late PageSeoContext ctx;
+    tester.pumpComponent(_head('', (c) => ctx = c));
+    await tester.request('/');
+    expect(ctx.breadcrumbItems, isEmpty);
+  });
+}
