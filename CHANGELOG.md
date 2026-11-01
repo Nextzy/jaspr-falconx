@@ -17,6 +17,7 @@ A page can now answer 404 or 503 from the CMS status, a locale switcher can buil
 ### Fixed
 
 - `jaspr_falkit`: `DefaultOpenGraphMeta` no longer preloads the share image, so the page stops downloading it early on every load.
+- `jaspr_falkit`: `PageHead` builds the canonical, `og:url`, alternates, and `PageSeoContext.url` from the path alone, so a query string such as `?fbclid=abc` or a fragment no longer reaches them.
 
 ## 4.2.0
 

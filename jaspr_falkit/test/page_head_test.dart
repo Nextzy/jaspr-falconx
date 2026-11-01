@@ -96,4 +96,21 @@ void main() {
       'abc',
     ]);
   });
+
+  testServer('PageHead drops the query and fragment from every URL', (
+    tester,
+  ) async {
+    late PageSeoContext ctx;
+    tester.pumpComponent(_head('/th/blogs/a?fbclid=x#top', (c) => ctx = c));
+    await tester.request('/');
+
+    expect(ctx.url, 'https://nonthawit.com/th/blogs/a');
+    expect(ctx.canonical, 'https://nonthawit.com/th/blogs/a');
+    expect(ctx.alternateLanguageUrls.map((t) => '${t.locale}=${t.url}'), [
+      'th=https://nonthawit.com/th/blogs/a',
+      'en=https://nonthawit.com/en/blogs/a',
+      'x-default=https://nonthawit.com/th/blogs/a',
+    ]);
+    expect(ctx.breadcrumbItems.last.url, 'https://nonthawit.com/en/blogs/a');
+  });
 }
