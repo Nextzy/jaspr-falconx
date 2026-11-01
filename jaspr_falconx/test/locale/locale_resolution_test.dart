@@ -26,6 +26,12 @@ void main() {
       expect(localeFromPath('/th/projects/42', s), 'th');
       expect(localeFromPath('en', s), 'en');
     });
+    test('ignores query and fragment', () {
+      expect(localeFromPath('/th?view=contact', s), 'th');
+      expect(localeFromPath('/en/profile?view=contact', s), 'en');
+      expect(localeFromPath('/en#top', s), 'en');
+      expect(localeFromPath('?th', s), isNull);
+    });
     test('returns null otherwise', () {
       expect(localeFromPath('/policies/x', s), isNull);
       expect(localeFromPath('', s), isNull);

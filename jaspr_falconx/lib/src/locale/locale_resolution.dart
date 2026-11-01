@@ -1,6 +1,10 @@
 /// Returns the first non-empty segment of [path] when it is in [supported].
+///
+/// Any query string or fragment on [path] is ignored.
 String? localeFromPath(String path, Iterable<String> supported) {
-  for (final segment in path.split('/')) {
+  final end = path.indexOf(RegExp('[?#]'));
+  final pathOnly = end == -1 ? path : path.substring(0, end);
+  for (final segment in pathOnly.split('/')) {
     if (segment.isEmpty) continue;
     return supported.contains(segment) ? segment : null;
   }
