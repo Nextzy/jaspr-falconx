@@ -1,4 +1,3 @@
-
 import 'package:jaspr_falconnect/lib.dart';
 
 class ResultStreamFetcher<T> {
@@ -6,7 +5,7 @@ class ResultStreamFetcher<T> {
     : _streamController = controller ?? StreamController<ComponentState<T?>>();
 
   final StreamController<ComponentState<T?>> _streamController;
-  StreamSubscription? _streamSubscription;
+  StreamSubscription<Result<T>>? _streamSubscription;
 
   Stream<ComponentState<T?>> get stream => _streamController.stream;
 
@@ -14,9 +13,7 @@ class ResultStreamFetcher<T> {
 
   T? _data;
 
-  Stream<ComponentState<T?>> fetch(
-    Stream<Result<T>> call,
-  ) {
+  Stream<ComponentState<T?>> fetch(Stream<Result<T>> call) {
     _streamController.add(ComponentState.loading(_data));
     _streamSubscription = call.listen(
       (result) {

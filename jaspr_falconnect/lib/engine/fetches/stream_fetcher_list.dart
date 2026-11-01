@@ -1,8 +1,7 @@
-
 import 'package:jaspr_falconnect/lib.dart';
 
 class ResultStreamFetcherList {
-  final Map<dynamic, ResultStreamFetcher> _fetcherMap = {};
+  final Map<dynamic, ResultStreamFetcher<dynamic>> _fetcherMap = {};
 
   Stream<ComponentState<T?>> fetchStream<T>({
     required Object key,
@@ -23,13 +22,11 @@ class ResultStreamFetcherList {
     required Object key,
     required Future<Result<T>> call,
     bool debounceFetch = true,
-  }) =>
-      fetchStream<T>(
-        key: key,
-        call: Stream.fromFuture(call),
-        debounceFetch: debounceFetch,
-      );
-
+  }) => fetchStream<T>(
+    key: key,
+    call: Stream.fromFuture(call),
+    debounceFetch: debounceFetch,
+  );
 
   bool _canFetch(Object key, bool debounceFetch) {
     if (debounceFetch) {
@@ -47,10 +44,8 @@ class ResultStreamFetcherList {
   }
 
   Future<void> closeAsync() async {
-    await Future.wait(_fetcherMap
-        .mapEntries(
-          (fetcher) => fetcher.value.close(),
-        )
-        .toList());
+    await Future.wait(
+      _fetcherMap.mapEntries((fetcher) => fetcher.value.close()).toList(),
+    );
   }
 }

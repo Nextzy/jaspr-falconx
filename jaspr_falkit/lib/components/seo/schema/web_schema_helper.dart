@@ -48,10 +48,7 @@ class WebSchemaHelper {
       description: description,
       publisher: organization,
       potentialAction: [
-        {
-          '@type': 'ReadAction',
-          'target': url,
-        },
+        {'@type': 'ReadAction', 'target': url},
       ],
     );
   }
@@ -118,10 +115,7 @@ class WebSchemaHelper {
       mainEntity: organization,
       potentialAction: contactPoint != null
           ? [
-              {
-                '@type': 'CommunicateAction',
-                'recipient': contactPoint,
-              },
+              {'@type': 'CommunicateAction', 'recipient': contactPoint},
             ]
           : null,
     );
@@ -145,10 +139,7 @@ class WebSchemaHelper {
               (faq) => {
                 '@type': 'Question',
                 'name': faq['question'],
-                'acceptedAnswer': {
-                  '@type': 'Answer',
-                  'text': faq['answer'],
-                },
+                'acceptedAnswer': {'@type': 'Answer', 'text': faq['answer']},
               },
             )
             .toList(),

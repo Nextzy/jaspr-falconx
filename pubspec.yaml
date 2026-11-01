@@ -1,6 +1,6 @@
 name: jaspr_falconx_core
 description: A jaspr falcon package.
-version: 2.0.0
+version: 3.0.0
 
 environment:
   sdk: ">=3.13.0 <4.0.0"
@@ -15,26 +15,26 @@ workspace:
   - jaspr_faltool
 
 dev_dependencies:
-  melos: ^8.9.0
+  melos: ^8.10.0
 
 melos:
   scripts:
     analyze:
       description: Run dart analyze across all packages.
       exec:
-        command: flutter analyze
+        command: dart analyze --fatal-infos
         concurrency: 4
 
     format:
       description: Run dart format across all packages.
       exec:
-        command: dart format --set-exit-if-changed .
+        command: dart format --output=none --set-exit-if-changed .
         concurrency: 4
 
     test:
       description: Run tests across all packages.
       exec:
-        command: flutter test
+        command: dart test
         concurrency: 4
         failFast: true
       packageFilters:
@@ -69,21 +69,25 @@ melos:
     get:
       description: Get the current package's dependencies.
       exec:
-        command: flutter pub get
+        command: dart pub get
         concurrency: 5
 
     upgrade:
-      description: Upgrade the current package's dependencies to latest versions.
-      exec:
-        command: flutter pub upgrade
-        concurrency: 5
+      description: >-
+        Upgrade every workspace member's dependencies within their constraints
+        and raise each lower bound to the resolved version.
+      run: dart pub upgrade --tighten
 
     outdated:
       description: Analyze your dependencies to find which ones can be upgraded.
       exec:
-        command: flutter pub outdated
+        command: dart pub outdated
         concurrency: 5
 
     check:exports:
       description: Fail when a barrel exports a name that collides with a dart library or jaspr and tool/export_check/bin/check.dart does not allowlist it.
       run: cd tool/export_check && dart pub get && dart run bin/check.dart
+
+    check:exports:test:
+      description: Analyze and test tool/export_check, which melos run analyze and melos run test skip.
+      run: cd tool/export_check && dart pub get && dart analyze && dart test

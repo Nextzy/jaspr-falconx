@@ -24,10 +24,7 @@ class ShareUtils {
 
   static Future<void> shareToTwitter(String url, {String? message}) async {
     final fullUrl = _getFullUrl(url);
-    final params = <String, String>{
-      'url': fullUrl,
-      'text': ?message,
-    };
+    final params = <String, String>{'url': fullUrl, 'text': ?message};
     final queryString = params.entries
         .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
         .join('&');
@@ -40,10 +37,7 @@ class ShareUtils {
     // LinkedIn uses Open Graph tags for title and description
     // Custom message can be added through summary parameter
     // (deprecated but sometimes works)
-    final params = <String, String>{
-      'url': fullUrl,
-      'summary': ?message,
-    };
+    final params = <String, String>{'url': fullUrl, 'summary': ?message};
     final queryString = params.entries
         .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
         .join('&');

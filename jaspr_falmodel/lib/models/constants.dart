@@ -1,12 +1,4 @@
-enum ComponentSize {
-  micro,
-  tiny,
-  small,
-  medium,
-  large,
-  huge,
-  giant,
-}
+enum ComponentSize { micro, tiny, small, medium, large, huge, giant }
 
 enum ThemeMode {
   /// Use either the light or dark theme based on what the user has selected in

@@ -19,10 +19,7 @@ abstract class MonitorHandler<OPTION extends AnalyticOption> {
     Map<String, Object>? eventAttributes,
   });
 
-  FutureOr<void> captureScreenView(
-    String path, {
-    String? referrer,
-  });
+  FutureOr<void> captureScreenView(String path, {String? referrer});
 
   FutureOr<void> captureError(
     Object error, {

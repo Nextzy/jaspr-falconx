@@ -77,7 +77,7 @@ class SentryHandler extends MonitorHandler<SentryAnalyticOption> {
           }
         });
       }
-    } catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       Log.w(error, error: error, stackTrace: stackTrace);
     }
   }
@@ -102,7 +102,7 @@ class SentryHandler extends MonitorHandler<SentryAnalyticOption> {
               : null,
         );
       }
-    } catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       Log.w(error, error: error, stackTrace: stackTrace);
     }
   }
@@ -121,7 +121,8 @@ class SentryHandler extends MonitorHandler<SentryAnalyticOption> {
           SentryEvent(
             // Create a descriptive message for the user action
             message: SentryMessage(
-              'User action: ${_formatActionType(type)}${name != null ? ' on $name' : ''}',
+              'User action: ${_formatActionType(type)}'
+              '${name != null ? ' on $name' : ''}',
               template: 'User action: %s%s',
               params: [
                 _formatActionType(type),
@@ -152,7 +153,8 @@ class SentryHandler extends MonitorHandler<SentryAnalyticOption> {
             breadcrumbs: [
               Breadcrumb(
                 message:
-                    '${_formatActionType(type)}${name != null ? ': $name' : ''}',
+                    '${_formatActionType(type)}'
+                    '${name != null ? ': $name' : ''}',
                 category: 'ui.${_getActionCategory(type)}',
                 level: SentryLevel.info,
                 data: {
@@ -170,7 +172,7 @@ class SentryHandler extends MonitorHandler<SentryAnalyticOption> {
           ),
         );
       }
-    } catch (error, stackTrace) {
+    } on Object catch (error, stackTrace) {
       Log.w(error, error: error, stackTrace: stackTrace);
     }
   }

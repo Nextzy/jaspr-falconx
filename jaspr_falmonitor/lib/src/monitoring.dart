@@ -144,7 +144,7 @@ class Monitoring {
           'window_outer_width': web.window.outerWidth,
           'window_outer_height': web.window.outerHeight,
         });
-    } catch (e) {
+    } on Object catch (e) {
       deviceData['error'] = 'Failed to get device info: $e';
     }
 
