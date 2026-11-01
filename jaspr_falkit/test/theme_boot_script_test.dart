@@ -82,10 +82,7 @@ void main() {
       const ThemeBootScript(preferenceAttribute: 'data-theme-preference'),
     );
     final body = (await tester.request('/')).body;
-    expect(
-      body,
-      contains("h.setAttribute('data-theme',dark?'dark':'light');"),
-    );
+    expect(body, contains("h.setAttribute('data-theme',dark?'dark':'light');"));
     expect(body, contains("h.setAttribute('data-theme-preference',p);"));
     expect(body, isNot(contains("h.setAttribute('data-theme',p);")));
     expect(body, contains("m.addEventListener('change'"));

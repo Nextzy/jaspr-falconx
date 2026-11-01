@@ -116,7 +116,9 @@ void main() {
     expect(ctx.breadcrumbItems.last.url, 'https://nonthawit.com/en/blogs/a');
   });
 
-  testServer('PageHead points x-default at defaultLanguageCode', (tester) async {
+  testServer('PageHead points x-default at defaultLanguageCode', (
+    tester,
+  ) async {
     late PageSeoContext ctx;
     tester.pumpComponent(
       _head('/en/projects/42', (c) => ctx = c, defaultLanguageCode: 'th'),
