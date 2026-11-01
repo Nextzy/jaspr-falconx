@@ -1,6 +1,17 @@
+import 'dart:io';
+
 import 'package:jaspr/jaspr.dart';
 import 'package:jaspr_falconx/jaspr_falconx.dart';
 import 'package:jaspr_test/server_test.dart';
+import 'package:test/fake.dart';
+
+/// Collects what is written to `stderr` inside [IOOverrides.runZoned].
+class _CapturedStderr extends Fake implements Stdout {
+  final lines = <String>[];
+
+  @override
+  void writeln([Object? object = '']) => lines.add('$object');
+}
 
 void main() {
   testServer('renders builder on success', (tester) async {
@@ -29,6 +40,45 @@ void main() {
     final r = await tester.request('/');
     expect(r.body, contains('err'));
     expect(r.headers['cache-control'], 'no-store');
+  });
+
+  testServer('logs a failed load to stderr', (tester) async {
+    tester.pumpComponent(
+      ServerData<String>(
+        load: () async => Result.failure(
+          const DomainLayerException(
+            type: SystemErrorType.unexpected,
+            developerMessage: 'cms down',
+          ),
+        ),
+        builder: (_, d) => const Component.text('data'),
+        errorBuilder: (_, e) => const Component.text('err'),
+      ),
+    );
+    final captured = _CapturedStderr();
+    await IOOverrides.runZoned(
+      () => tester.request('/'),
+      stderr: () => captured,
+    );
+    expect(captured.lines, hasLength(1));
+    expect(captured.lines.single, contains('ServerData<String> load failed'));
+    expect(captured.lines.single, contains('cms down'));
+  });
+
+  testServer('does not log a successful load', (tester) async {
+    tester.pumpComponent(
+      ServerData<String>(
+        load: () async => Result.success('hi'),
+        builder: (_, d) => Component.text('data:$d'),
+        errorBuilder: (_, e) => const Component.text('err'),
+      ),
+    );
+    final captured = _CapturedStderr();
+    await IOOverrides.runZoned(
+      () => tester.request('/'),
+      stderr: () => captured,
+    );
+    expect(captured.lines, isEmpty);
   });
 
   testServer('requestHeader is null when the header is absent', (tester) async {
@@ -84,5 +134,20 @@ void main() {
     final r = await tester.request('/');
     expect(r.statusCode, 503);
     expect(r.headers['retry-after'], '60');
+  });
+
+  test('logServerError writes the message, error, and stack trace', () {
+    final captured = _CapturedStderr();
+    IOOverrides.runZoned(
+      () => logServerError(
+        'load failed',
+        error: StateError('boom'),
+        stackTrace: StackTrace.fromString('#0 here'),
+      ),
+      stderr: () => captured,
+    );
+    expect(captured.lines.single, startsWith('[ERROR] load failed'));
+    expect(captured.lines.single, contains('Bad state: boom'));
+    expect(captured.lines.single, contains('#0 here'));
   });
 }
