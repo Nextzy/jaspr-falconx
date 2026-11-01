@@ -88,6 +88,7 @@ void main() {
       );
       expect(result, public);
       expect(logs.single, contains('HTTP 503'));
+      expect(logs.single, isNot(contains('CMS_INTERNAL_API_BASE_URL')));
     });
 
     test('malformed internal URL gives public and skips the probe', () async {

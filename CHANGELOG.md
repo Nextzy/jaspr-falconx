@@ -12,7 +12,7 @@ A page can now answer 404 or 503 from the CMS status, a locale switcher can buil
 - `jaspr_falkit`: `ThemeBootScript` takes an optional `preferenceAttribute`. When set, the script writes the preference (`light`, `dark`, `system`) to that `<html>` attribute and writes the resolved theme (`light` or `dark`, following `prefers-color-scheme` live) to `data-theme`, which is what daisyUI reads. `window.falSetTheme` updates both. The default output is unchanged.
 - `jaspr_faltool`: `ShareLinks` builds share URLs without touching the browser: `facebook(url)`, `x(url, {text})`, `linkedIn(url, {summary})`, and `line(url, {text})`. `ShareUtils.shareTo*` now opens these URLs, so its output is unchanged.
 - `jaspr_falconx`: `applyPageErrorStatus(context, error)` sets the response status from `pageErrorStatus(error)` and, for a 503, `retry-after: 60`. It does nothing in the browser.
-- `jaspr_falconnect`: `FalRepository` is the data-layer sibling of `FalUsecase`. Its `runDataCatching` returns the call's `Result` and turns a thrown `DioException`, `CommonException`, or any other object into a failed `Result` holding a `DataLayerException`.
+- `jaspr_falconnect`: `FalRepository` is the data-layer sibling of `FalUsecase`. Its `runDataCatching` returns the call's `Result` and turns a thrown error into a failed `Result`: a `DioException` becomes the `NetworkException` from `toException()`, a `CommonException` becomes a `DataLayerException` with the same type, and any other object becomes an unexpected `DataLayerException`.
 
 ### Changed
 

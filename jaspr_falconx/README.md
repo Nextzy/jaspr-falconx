@@ -20,7 +20,7 @@ switchLocalePath('/th/blogs/abc?page=2', 'en', ['th', 'en']); // /en/blogs/abc?p
 
 ## Repository error handling
 
-Extend `FalRepository` (from `jaspr_falconnect`) and wrap each data call in `runDataCatching`. It returns the call's `Result`, and turns any thrown error into a failed `Result` holding a `DataLayerException`.
+Extend `FalRepository` (from `jaspr_falconnect`) and wrap each data call in `runDataCatching`. It returns the call's `Result`, and turns a thrown error into a failed `Result`: a `DioException` becomes the `NetworkException` from `toException()`, a `CommonException` becomes a `DataLayerException` with the same type, and any other error becomes an unexpected `DataLayerException`.
 
 ```dart
 class BlogRepository extends FalRepository {

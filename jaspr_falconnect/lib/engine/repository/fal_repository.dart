@@ -1,8 +1,11 @@
 import 'package:jaspr_falconnect/jaspr_falconnect.dart';
 import 'package:jaspr_falmodel/jaspr_falmodel.dart';
 
-/// Base class for repositories: wraps failures into [Result] as
-/// [DataLayerException].
+/// Base class for repositories: wraps a thrown error into a failed [Result].
+///
+/// A `DioException` becomes the `NetworkException` from `toException()`, a
+/// `CommonException` becomes a [DataLayerException] with the same type, and
+/// any other object becomes an unexpected [DataLayerException].
 abstract class FalRepository {
   /// Runs [execute] and converts any thrown error into a failed [Result].
   Future<Result<T>> runDataCatching<T>(

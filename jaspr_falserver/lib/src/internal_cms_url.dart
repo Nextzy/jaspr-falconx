@@ -38,7 +38,7 @@ Future<String> resolveServerCmsBaseUrl({
   if (internal == null) {
     if (internalUrl != null && internalUrl.trim().isNotEmpty) {
       log?.call(
-        'CMS_INTERNAL_API_BASE_URL is not an absolute http(s) URL; '
+        'The internal CMS URL is not an absolute http(s) URL; '
         'using the public CMS URL',
       );
     }
@@ -47,12 +47,12 @@ Future<String> resolveServerCmsBaseUrl({
   try {
     if (await probe(internal)) return internal;
     log?.call(
-      'CMS_INTERNAL_API_BASE_URL did not answer the health probe; '
+      'The internal CMS URL did not answer the health probe; '
       'using the public CMS URL',
     );
   } on Object catch (error) {
     log?.call(
-      'CMS_INTERNAL_API_BASE_URL probe failed '
+      'The internal CMS URL probe failed '
       '(${error.toString().replaceAll(RegExp(r'\s+'), ' ')}); '
       'using the public CMS URL',
     );
