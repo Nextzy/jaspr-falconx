@@ -17,6 +17,7 @@ abstract class Schema extends StatelessComponent {
   Component build(BuildContext context) => Component.element(
     tag: 'script',
     attributes: {
+      'id': ?id,
       'type': 'application/ld+json',
       if (additionalAttributes != null)
         ...additionalAttributes!.map(

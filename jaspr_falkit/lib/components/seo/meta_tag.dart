@@ -97,10 +97,10 @@ class SeoMetaTags extends StatelessComponent {
     this.url,
     this.imageUrl,
     this.canonical,
-    required this.type,
+    this.type,
     this.locale,
-    required this.imageWidth,
-    required this.imageHeight,
+    this.imageWidth,
+    this.imageHeight,
     this.imageAlt,
     this.video,
     this.iconUrl,
@@ -133,10 +133,10 @@ class SeoMetaTags extends StatelessComponent {
   final String? url;
   final String? imageUrl;
   final String? canonical;
-  final OgType type;
+  final OgType? type;
   final String? locale;
-  final String imageWidth;
-  final String imageHeight;
+  final String? imageWidth;
+  final String? imageHeight;
   final String? imageAlt;
   final String? video;
   final String? iconUrl;
@@ -174,11 +174,11 @@ class SeoMetaTags extends StatelessComponent {
     final resolvedColor = color ?? defaults?.color;
     final resolvedImageUrl = imageUrl ?? defaults?.imageUrl;
     final resolvedImageAlt = imageAlt ?? defaults?.imageAlt;
-    final resolvedImageWidth = imageWidth.isNotEmpty
-        ? imageWidth
+    final resolvedImageWidth = imageWidth?.isNotEmpty == true
+        ? imageWidth!
         : (defaults?.imageWidth ?? '1200');
-    final resolvedImageHeight = imageHeight.isNotEmpty
-        ? imageHeight
+    final resolvedImageHeight = imageHeight?.isNotEmpty == true
+        ? imageHeight!
         : (defaults?.imageHeight ?? '630');
     final resolvedRobots = robots ?? defaults?.robots ?? 'index,follow';
     final resolvedSiteName = defaults?.siteName;

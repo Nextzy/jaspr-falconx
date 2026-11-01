@@ -46,16 +46,30 @@ class AppleMeta extends StatelessComponent {
       ),
       if (appleIcon.isNotNullOrBlank || iconUrl.isNotNullOrBlank)
         LinkHeader(rel: 'apple-touch-icon', href: appleIcon ?? iconUrl!),
-      script(id: pwaScript.hashSha256(length: 5), src: pwaScript, defer: true),
       script(
         id: (appleIcon ?? iconUrl)?.hashSha256(length: 5),
-        // `pwaScript` above is loaded with `defer`, so it's not yet available
-        // when this inline script executes. Wait for `window.load` (which
-        // fires after all deferred scripts have run) before calling into it.
+        // Load `pwaScript` only on iOS, after `window.load`, and call into it
+        // from its `onload` so other platforms never download it.
         content:
-            "window.addEventListener('load',function(){"
-            "iosPWASplash('${appleIcon ?? iconUrl}','${color ?? '#FFFFFF'}');"
-            '});',
+            """
+window.addEventListener('load', function() {
+  var isIOS = (
+    ['iPad Simulator','iPhone Simulator','iPod Simulator','iPad','iPhone','iPod']
+      .includes(navigator.platform) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ||
+    (/^(iPad|iPhone|iPod)/.test(navigator.userAgent) && !window.MSStream)
+  );
+  
+  if (isIOS) {
+    var s = document.createElement('script');
+    s.src = '$pwaScript';
+    s.onload = function() {
+      iosPWASplash('${appleIcon ?? iconUrl}', '${color ?? '#FFFFFF'}');
+    };
+    document.head.appendChild(s);
+  }
+});
+""",
       ),
     ],
   );
