@@ -1,9 +1,15 @@
 import 'package:jaspr_falserver/src/asset_version.dart';
 import 'package:jaspr_falserver/src/cache_header_policy.dart';
+import 'package:jaspr_falserver/src/file_extension.dart';
 import 'package:shelf/shelf.dart';
 
 /// Serves `_v/<id>/<rest>` from `<rest>` and sets `Cache-Control` through
 /// [policy]. A header the inner handler already set is kept.
+///
+/// Only a file is versioned: when the last segment of `<rest>` has no file
+/// extension (a page route such as `_v/<id>/en/profile`), the middleware
+/// answers 404 with `no-store` and never calls the inner handler. Otherwise a
+/// page would be served under a versioned URL and marked `immutable`.
 Middleware assetMiddleware({
   required String? buildId,
   CacheHeaderPolicy policy = const CacheHeaderPolicy(),
@@ -12,6 +18,12 @@ Middleware assetMiddleware({
     return (request) async {
       final path = request.url.path;
       final split = splitVersion(path);
+      if (split != null && fileExtensionOf(split.rest).isEmpty) {
+        return Response.notFound(
+          'Not Found',
+          headers: {'cache-control': 'no-store'},
+        );
+      }
       final forwarded = split == null
           ? request
           : Request(

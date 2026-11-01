@@ -56,6 +56,23 @@ void main() {
     expect(seenRequest.headers['accept-encoding'], 'gzip');
   });
 
+  test('a versioned path without a file extension is 404 no-store', () async {
+    for (final path in ['_v/b1/en/profile', '_v/old/en', '_v/b1/a.b/page']) {
+      seen = '';
+      final r = await get(path);
+      expect(r.statusCode, 404, reason: path);
+      expect(r.headers['cache-control'], 'no-store', reason: path);
+      expect(seen, isEmpty, reason: '$path must not reach the inner handler');
+    }
+  });
+
+  test('a versioned path with a file extension is rewritten', () async {
+    final r = await get('_v/b1/scripts/umami.js');
+    expect(r.statusCode, 200);
+    expect(seen, 'scripts/umami.js');
+    expect(r.headers['cache-control'], 'public, max-age=31536000, immutable');
+  });
+
   test('a POST response is no-store', () async {
     final r = await handler(
       Request('POST', Uri.parse('http://localhost/en/profile')),
