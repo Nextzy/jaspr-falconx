@@ -46,6 +46,17 @@ void main() {
       expect(result.exception.stackTrace, same(trace));
     });
 
+    test(
+      'lifts a CommonException subclass and keeps its network type',
+      () async {
+        final result = await repo.runDataCatching<int>(
+          () async => throw const NetworkNotFoundException(),
+        );
+        expect(result.exception, isA<DataLayerException>());
+        expect(result.exception.type, NetworkErrorType.notFound);
+      },
+    );
+
     test('keeps a DataLayerException as is', () async {
       const original = DataLayerException(type: NetworkErrorType.notFound);
       final result = await repo.runDataCatching<int>(
