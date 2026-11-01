@@ -32,13 +32,11 @@ const List<LibraryRef> _targets = [
   (uri: 'package:jaspr/server.dart', root: _workspace),
 ];
 
-/// jaspr, its router, and riverpod own these declarations; their collisions
-/// with `dart:` libraries, such as riverpod's `AsyncError`, are theirs.
+/// jaspr and its router own these declarations; their collisions with `dart:`
+/// libraries are theirs.
 const _frameworkOwned = [
   'package:jaspr/',
   'package:jaspr_router/',
-  'package:jaspr_riverpod/',
-  'package:riverpod/',
 ];
 
 const _shelfResponse =

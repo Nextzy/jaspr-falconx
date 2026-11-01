@@ -22,7 +22,6 @@ dependencies:
     path: ../jaspr_falstore
   jaspr_faltool:
     path: ../jaspr_faltool
-  jaspr_riverpod: ^0.4.6
   jaspr_router: ^0.9.0
   universal_web: ^1.1.1+2
 
