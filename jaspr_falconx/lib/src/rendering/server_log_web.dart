@@ -5,7 +5,7 @@ void logServerError(Object? message, {Object? error, StackTrace? stackTrace}) {
   Log.e(message, error: error, stackTrace: stackTrace);
 }
 
-/// Forwards to `Log.i` in the browser, which prints only in debug builds.
+/// Calls `Log.i` in the browser, which prints only in debug builds.
 void logServerInfo(Object? message) {
   Log.i(message);
 }

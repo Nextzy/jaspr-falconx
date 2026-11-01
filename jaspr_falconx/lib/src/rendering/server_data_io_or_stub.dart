@@ -46,10 +46,10 @@ class ServerData<T> extends StatelessComponent {
         final error = result.exception;
         if (quietWhen?.call(error) ?? false) {
           final detail = error.developerMessage ?? error.userMessage ?? '';
-          logServerInfo(
-            'ServerData<$T> load failed: ${error.runtimeType} '
-            '[${error.type}] $detail',
-          );
+          final line =
+              'ServerData<$T> load failed: ${error.runtimeType} '
+              '[${error.type}] $detail';
+          logServerInfo(line.replaceAll(RegExp(r'[\r\n]+'), ' '));
         } else {
           logServerError(
             'ServerData<$T> load failed',

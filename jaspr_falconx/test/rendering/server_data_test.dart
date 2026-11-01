@@ -99,6 +99,34 @@ void main() {
     expect(r.headers['cache-control'], 'no-store');
   });
 
+  testServer('quietWhen keeps a multi-line message on one line', (
+    tester,
+  ) async {
+    tester.pumpComponent(
+      ServerData<String>(
+        load: () async => Result.failure(
+          const DomainLayerException(
+            type: SystemErrorType.unexpected,
+            developerMessage: 'first line\r\nsecond line\nthird line',
+          ),
+        ),
+        quietWhen: (error) => true,
+        builder: (_, d) => const Component.text('data'),
+        errorBuilder: (_, e) => const Component.text('err'),
+      ),
+    );
+    final captured = _CapturedStderr();
+    await IOOverrides.runZoned(
+      () => tester.request('/'),
+      stderr: () => captured,
+    );
+    expect(captured.lines, hasLength(1));
+    final line = captured.lines.single;
+    expect(line, isNot(contains('\n')));
+    expect(line, isNot(contains('\r')));
+    expect(line, contains('first line second line third line'));
+  });
+
   testServer('quietWhen false keeps the error log', (tester) async {
     tester.pumpComponent(
       ServerData<String>(

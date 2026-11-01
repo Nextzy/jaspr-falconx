@@ -45,6 +45,8 @@ void main() {
     expect(body, contains('metaKey'));
     expect(body, contains('download'));
     expect(body, contains('target'));
+    expect(body, contains('new URL(h)'));
+    expect(body, isNot(contains('location.href')));
     expect(body, contains('location.origin'));
     expect(body, contains('pathname'));
     expect(body, contains('search'));

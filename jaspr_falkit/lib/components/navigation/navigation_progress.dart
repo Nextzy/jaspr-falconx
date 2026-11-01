@@ -72,7 +72,8 @@ if(e.defaultPrevented||e.button!==0||e.metaKey||e.ctrlKey||e.shiftKey||e.altKey)
 var a=e.target&&e.target.closest?e.target.closest('a[href]'):null;if(!a)return;
 if(a.hasAttribute('download'))return;
 var t=a.getAttribute('target');if(t&&t!=='_self')return;
-var u;try{u=new URL(a.getAttribute('href'),location.href);}catch(x){return;}
+var h=a.href;if(typeof h!=='string')return;
+var u;try{u=new URL(h);}catch(x){return;}
 if(u.origin!==location.origin)return;
 if(u.pathname===location.pathname&&u.search===location.search)return;
 start();});

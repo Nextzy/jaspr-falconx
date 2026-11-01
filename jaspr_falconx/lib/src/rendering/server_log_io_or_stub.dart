@@ -16,7 +16,8 @@ void logServerError(Object? message, {Object? error, StackTrace? stackTrace}) {
   stderr.writeln(buffer);
 }
 
-/// Writes [message] as one `[INFO]` line to the server's standard error.
+/// Writes [message] as one `[INFO]` line, with no stack trace, to the
+/// server's standard error.
 ///
 /// Unlike `Log.i`, which prints only in debug builds, this also writes in a
 /// release build. Use it for an expected failure that needs a trace in the
