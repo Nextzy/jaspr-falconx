@@ -65,6 +65,90 @@ void main() {
     expect(captured.lines.single, contains('cms down'));
   });
 
+  testServer('quietWhen logs one info line without a stack trace', (
+    tester,
+  ) async {
+    tester.pumpComponent(
+      ServerData<String>(
+        load: () async => Result.failure(
+          DomainLayerException(
+            type: SystemErrorType.unexpected,
+            developerMessage: 'post not found',
+            stackTrace: StackTrace.fromString('#0 frame_marker (a.dart:1:1)'),
+          ),
+        ),
+        quietWhen: (error) => true,
+        builder: (_, d) => const Component.text('data'),
+        errorBuilder: (_, e) => const Component.text('err'),
+      ),
+    );
+    final captured = _CapturedStderr();
+    final r = await IOOverrides.runZoned(
+      () => tester.request('/'),
+      stderr: () => captured,
+    );
+    expect(captured.lines, hasLength(1));
+    final line = captured.lines.single;
+    expect(line, startsWith('[INFO]'));
+    expect(line, contains('ServerData<String> load failed'));
+    expect(line, contains('DomainLayerException'));
+    expect(line, contains('post not found'));
+    expect(line, isNot(contains('frame_marker')));
+    expect(line, isNot(contains('\n')));
+    expect(r.body, contains('err'));
+    expect(r.headers['cache-control'], 'no-store');
+  });
+
+  testServer('quietWhen keeps a multi-line message on one line', (
+    tester,
+  ) async {
+    tester.pumpComponent(
+      ServerData<String>(
+        load: () async => Result.failure(
+          const DomainLayerException(
+            type: SystemErrorType.unexpected,
+            developerMessage: 'first line\r\nsecond line\nthird line',
+          ),
+        ),
+        quietWhen: (error) => true,
+        builder: (_, d) => const Component.text('data'),
+        errorBuilder: (_, e) => const Component.text('err'),
+      ),
+    );
+    final captured = _CapturedStderr();
+    await IOOverrides.runZoned(
+      () => tester.request('/'),
+      stderr: () => captured,
+    );
+    expect(captured.lines, hasLength(1));
+    final line = captured.lines.single;
+    expect(line, isNot(contains('\n')));
+    expect(line, isNot(contains('\r')));
+    expect(line, contains('first line second line third line'));
+  });
+
+  testServer('quietWhen false keeps the error log', (tester) async {
+    tester.pumpComponent(
+      ServerData<String>(
+        load: () async => Result.failure(
+          const DomainLayerException(
+            type: SystemErrorType.unexpected,
+            developerMessage: 'cms down',
+          ),
+        ),
+        quietWhen: (error) => false,
+        builder: (_, d) => const Component.text('data'),
+        errorBuilder: (_, e) => const Component.text('err'),
+      ),
+    );
+    final captured = _CapturedStderr();
+    await IOOverrides.runZoned(
+      () => tester.request('/'),
+      stderr: () => captured,
+    );
+    expect(captured.lines.single, startsWith('[ERROR]'));
+  });
+
   testServer('does not log a successful load', (tester) async {
     tester.pumpComponent(
       ServerData<String>(

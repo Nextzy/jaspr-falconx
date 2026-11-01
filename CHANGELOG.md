@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.1.0
+
+A site that does full page loads on navigation can now show a thin progress bar, and `ServerData` can log an expected failure without a stack trace. `jaspr_falmonitor` is unchanged and keeps its own version.
+
+### Added
+
+- `jaspr_falkit`: `NavigationProgress`. It draws a bar fixed to the top of the page when the next page takes longer than `showDelay` (150 ms by default) to arrive after a link click. You can set `color`, `height`, and `zIndex`. The bar does not creep for visitors who prefer reduced motion. It is a plain inline script, so it works before any island loads.
+- `jaspr_falconx`: `ServerData.quietWhen`. When it returns true for a failed load, `ServerData` logs one info line with the exception type and message and no stack trace. The response stays the same: `no-store` and `errorBuilder`. The line goes through the new `logServerInfo`, which writes to stderr on the server, in release builds too.
+
 ## 4.0.0
 
 falconx moves from SPA-style hydration to Jaspr islands. Pages render on the server, and only `@client` islands hydrate. `jaspr_falmonitor` is unchanged and keeps its own version.
