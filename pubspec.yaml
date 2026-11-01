@@ -10,6 +10,7 @@ workspace:
   - jaspr_falconx
   - jaspr_falmonitor
   - jaspr_falkit
+  - jaspr_falserver
   - jaspr_falstore
   - jaspr_falmodel
   - jaspr_faltool

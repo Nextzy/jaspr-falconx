@@ -1,0 +1,17 @@
+name: jaspr_falserver
+description: Server-only helpers for jaspr_falconx apps, cache policy and versioned asset middleware.
+version: 4.0.0
+publish_to: none
+
+environment:
+  sdk: ">=3.13.0 <4.0.0"
+
+resolution: workspace
+
+dependencies:
+  jaspr: ^0.23.5
+  shelf: ^1.4.0
+
+dev_dependencies:
+  test: ^1.33.0
+  very_good_analysis: ^11.0.0
