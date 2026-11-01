@@ -65,4 +65,30 @@ void main() {
     expect(body, contains(r"a\'b\x3c/script>"));
     expect(body, isNot(contains("a'b")));
   });
+
+  testServer('ThemeBootScript keeps data-theme as the preference by default', (
+    tester,
+  ) async {
+    tester.pumpComponent(const ThemeBootScript());
+    final body = (await tester.request('/')).body;
+    expect(body, contains("h.setAttribute('data-theme',p);"));
+    expect(body, isNot(contains('data-theme-preference')));
+  });
+
+  testServer('ThemeBootScript writes the preference to its own attribute', (
+    tester,
+  ) async {
+    tester.pumpComponent(
+      const ThemeBootScript(preferenceAttribute: 'data-theme-preference'),
+    );
+    final body = (await tester.request('/')).body;
+    expect(
+      body,
+      contains("h.setAttribute('data-theme',dark?'dark':'light');"),
+    );
+    expect(body, contains("h.setAttribute('data-theme-preference',p);"));
+    expect(body, isNot(contains("h.setAttribute('data-theme',p);")));
+    expect(body, contains("m.addEventListener('change'"));
+    expect(body, contains('window.falSetTheme'));
+  });
 }
