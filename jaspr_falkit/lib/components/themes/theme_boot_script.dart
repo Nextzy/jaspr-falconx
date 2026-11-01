@@ -45,13 +45,18 @@ class ThemeBootScript extends StatelessComponent {
     final k = _jsString(storageKey);
     final l = _jsString(lightClass);
     final d = _jsString(darkClass);
+    // Paint before subscribing, so a browser without
+    // MediaQueryList.addEventListener (Safari before 14) still gets the theme.
+    // classList keeps every <html> class that is not a theme token.
     return """
-(function(){var k='$k',L='$l',D='$d',h=document.documentElement,m=matchMedia('(prefers-color-scheme: dark)'),cur;
-function paint(p){var dark=p==='dark'||(p==='system'&&m.matches);h.className=dark?D:L;h.setAttribute('data-theme',p);}
+(function(){var k='$k',L=t('$l'),D=t('$d'),h=document.documentElement,m=matchMedia('(prefers-color-scheme: dark)'),cur;
+function t(s){return s.split(' ').filter(function(x){return x;});}
+function paint(p){var dark=p==='dark'||(p==='system'&&m.matches),c=h.classList,a=dark?D:L,i;for(i=0;i<L.length;i++)c.remove(L[i]);for(i=0;i<D.length;i++)c.remove(D[i]);for(i=0;i<a.length;i++)c.add(a[i]);h.setAttribute('data-theme',p);}
 function read(){try{return localStorage.getItem(k)||'system'}catch(e){return 'system'}}
+function onChange(){if(cur==='system')paint('system');}
 window.falSetTheme=function(p){cur=p;try{localStorage.setItem(k,p)}catch(e){}paint(p);};
-m.addEventListener('change',function(){if(cur==='system')paint('system');});
-cur=read();paint(cur);})();""";
+cur=read();paint(cur);
+if(m.addEventListener)m.addEventListener('change',onChange);else if(m.addListener)m.addListener(onChange);})();""";
   }
 
   /// Escapes [value] for a single-quoted JS string inside an inline script.
