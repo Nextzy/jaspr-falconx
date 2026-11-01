@@ -1,3 +1,5 @@
+import 'package:jaspr/jaspr.dart';
+import 'package:jaspr_falconx/src/rendering/request_info.dart';
 import 'package:jaspr_falmodel/jaspr_falmodel.dart';
 
 /// Returns the HTTP status for a page whose data failed to load.
@@ -7,6 +9,16 @@ import 'package:jaspr_falmodel/jaspr_falmodel.dart';
 int pageErrorStatus(CommonException error) {
   final status = _cmsStatus(error);
   return status == 403 || status == 404 ? 404 : 503;
+}
+
+/// Sets the response status for [error] from [pageErrorStatus].
+///
+/// A 503 also gets `retry-after: 60`. Like [setResponseStatus], it does
+/// nothing in the browser.
+void applyPageErrorStatus(BuildContext context, CommonException error) {
+  final status = pageErrorStatus(error);
+  setResponseStatus(context, status);
+  if (status == 503) setResponseHeader(context, 'retry-after', '60');
 }
 
 /// Returns whether [error] is a missing record, which logs one info line

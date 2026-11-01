@@ -1,5 +1,6 @@
+import 'package:jaspr/jaspr.dart';
 import 'package:jaspr_falconx/jaspr_falconx.dart';
-import 'package:test/test.dart';
+import 'package:jaspr_test/server_test.dart';
 
 void main() {
   group('pageErrorStatus', () {
@@ -68,6 +69,39 @@ void main() {
         isFalse,
       );
       expect(isExpectedPageFailure(const NetworkTimeoutException()), isFalse);
+    });
+  });
+
+  group('applyPageErrorStatus', () {
+    testServer('404 sets the status and no retry-after', (tester) async {
+      tester.pumpComponent(
+        Builder(
+          builder: (context) {
+            applyPageErrorStatus(context, const NetworkNotFoundException());
+            return const Component.text('x');
+          },
+        ),
+      );
+      final r = await tester.request('/');
+      expect(r.statusCode, 404);
+      expect(r.headers['retry-after'], isNull);
+    });
+
+    testServer('503 sets the status and retry-after: 60', (tester) async {
+      tester.pumpComponent(
+        Builder(
+          builder: (context) {
+            applyPageErrorStatus(
+              context,
+              const NetworkInternalServerException(),
+            );
+            return const Component.text('x');
+          },
+        ),
+      );
+      final r = await tester.request('/');
+      expect(r.statusCode, 503);
+      expect(r.headers['retry-after'], '60');
     });
   });
 }
