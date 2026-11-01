@@ -14,21 +14,36 @@ void main() {
     });
 
     test('maps DioException through toException', () async {
+      final dioError = DioException(
+        requestOptions: RequestOptions(path: '/x'),
+        type: DioExceptionType.connectionTimeout,
+      );
       final result = await repo.runDataCatching<int>(
-        () async => throw DioException(
-          requestOptions: RequestOptions(path: '/x'),
-          type: DioExceptionType.connectionTimeout,
-        ),
+        () async => throw dioError,
       );
       expect(result.isFailure, isTrue);
+      expect(result.exception.type, dioError.toException().type);
+      expect(result.exception.type, isNot(SystemErrorType.unexpected));
     });
 
-    test('lifts a CommonException into DataLayerException', () async {
+    test('copies every field of a CommonException', () async {
+      final original = Exception('root');
+      final trace = StackTrace.fromString('#0 here');
       final result = await repo.runDataCatching<int>(
-        () async => throw const NetworkNotFoundException(),
+        () async => throw CommonException(
+          type: NetworkErrorType.notFound,
+          userMessage: 'user text',
+          developerMessage: 'dev text',
+          originalException: original,
+          stackTrace: trace,
+        ),
       );
       expect(result.exception, isA<DataLayerException>());
       expect(result.exception.type, NetworkErrorType.notFound);
+      expect(result.exception.userMessage, 'user text');
+      expect(result.exception.developerMessage, 'dev text');
+      expect(result.exception.originalException, same(original));
+      expect(result.exception.stackTrace, same(trace));
     });
 
     test('keeps a DataLayerException as is', () async {
