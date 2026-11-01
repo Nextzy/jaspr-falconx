@@ -1,5 +1,18 @@
 # Changelog
 
+## 4.3.0
+
+A page can now answer 404 or 503 from the CMS status, a locale switcher can build its links, and a server can reach the CMS over a private URL and publish a sitemap. `jaspr_falmonitor` is unchanged and keeps its own version.
+
+### Added
+
+- `jaspr_falconx`: `pageErrorStatus(error)` returns 404 when the CMS answered 403 or 404, and 503 for every other failure, so crawlers retry. `isExpectedPageFailure(error)` is true for a missing record, which suits `ServerData.quietWhen`. `switchLocalePath(path, toCode, supported)` replaces the locale segment of a path, or prefixes one when the path has none, and keeps the query and fragment.
+- `jaspr_falserver`: `validInternalCmsUrl` normalizes a private CMS URL and returns null when it is empty or not an absolute `http`/`https` URL. `resolveServerCmsBaseUrl` picks that URL only when a probe reaches it, and otherwise logs one line and falls back to the public URL. `pingOk` is a probe for it: it asks `/server/ping` and returns true on a 200, and it throws on another status, a network error, or a 2-second timeout. `SitemapUrl`, `renderSitemap`, and `sitemapMiddleware` write a sitemap with hreflang alternates and serve it on GET and HEAD; a failing loader gives 503 with `retry-after: 60`.
+
+### Changed
+
+- `jaspr_falserver`: `assetMiddleware` keeps versioned URLs away from the sitemap route.
+
 ## 4.2.0
 
 `NavigationProgress` is now flat by default, with no shadow. The new `glow` parameter restores the 4.1.0 look.
