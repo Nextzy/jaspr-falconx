@@ -55,4 +55,34 @@ void main() {
     expect(r.statusCode, 404);
     expect(r.body, contains('gone'));
   });
+
+  testServer('markNotCacheable sets cache-control no-store', (tester) async {
+    tester.pumpComponent(
+      Builder(
+        builder: (context) {
+          markNotCacheable(context);
+          return const Component.text('partial');
+        },
+      ),
+    );
+    final r = await tester.request('/');
+    expect(r.statusCode, 200);
+    expect(r.headers['cache-control'], 'no-store');
+    expect(r.body, contains('partial'));
+  });
+
+  testServer('setResponseHeader sets a response header', (tester) async {
+    tester.pumpComponent(
+      Builder(
+        builder: (context) {
+          setResponseStatus(context, 503);
+          setResponseHeader(context, 'retry-after', '60');
+          return const Component.text('later');
+        },
+      ),
+    );
+    final r = await tester.request('/');
+    expect(r.statusCode, 503);
+    expect(r.headers['retry-after'], '60');
+  });
 }
