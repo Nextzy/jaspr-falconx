@@ -3,7 +3,7 @@ import 'package:jaspr_falkit/lib.dart';
 /// WebPage schema with all schema.org properties
 class WebPageSchema extends Schema {
   /// Main constructor with all schema.org properties
-  new({
+  WebPageSchema({
     this.name,
     this.description,
     this.url,

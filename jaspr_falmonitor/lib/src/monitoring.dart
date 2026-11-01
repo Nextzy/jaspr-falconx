@@ -5,7 +5,7 @@ import 'package:jaspr_falmonitor/src/src.dart';
 import 'package:universal_web/web.dart' as web;
 
 class Monitoring {
-  const new _();
+  const Monitoring._();
 
   static String? _userDeviceId; //
   static String get userDeviceId => _userDeviceId!; //

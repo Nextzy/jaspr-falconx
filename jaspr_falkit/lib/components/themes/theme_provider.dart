@@ -1,7 +1,7 @@
 import 'package:jaspr_falkit/lib.dart';
 
 class ThemeProvider extends InheritedComponent {
-  const new({
+  const ThemeProvider({
     required this.currentTheme,
     required this.isDark,
     required this.setTheme,

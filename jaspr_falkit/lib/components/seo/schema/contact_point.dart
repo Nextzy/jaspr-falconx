@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// ContactPoint schema for representing contact information
 class ContactPointSchema extends Schema {
-  new({
+  ContactPointSchema({
     this.contactType,
     this.telephone,
     this.email,

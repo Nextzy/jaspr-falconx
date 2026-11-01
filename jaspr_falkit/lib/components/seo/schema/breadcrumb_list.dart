@@ -3,7 +3,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// BreadcrumbList schema component for navigation breadcrumbs
 class BreadcrumbListSchema extends Schema {
-  new({required this.items, this.additionalProperties})
+  BreadcrumbListSchema({required this.items, this.additionalProperties})
     : super(
         schemaData: {
           '@context': 'https://schema.org',
@@ -60,7 +60,7 @@ class BreadcrumbListSchema extends Schema {
 
 /// Individual breadcrumb item
 class BreadcrumbItem {
-  const new({required this.name, this.url});
+  const BreadcrumbItem({required this.name, this.url});
 
   final String name;
   final String? url;

@@ -10,7 +10,7 @@ import 'package:jaspr_falkit/lib.dart';
 /// schemaBlogPosting, breadcrumbItems, alternateLanguageUrls, keywords)
 /// are intentionally NOT inheritable and must be set on each [SeoMetaTags].
 class SeoDefaults extends InheritedComponent {
-  const new({
+  const SeoDefaults({
     required super.child,
     this.favicon,
     this.faviconSvg,
@@ -84,7 +84,7 @@ class SeoDefaults extends InheritedComponent {
 }
 
 class SeoMetaTags extends StatelessComponent {
-  const new({
+  const SeoMetaTags({
     //**** Default SEO *****//
     this.favicon,
     this.faviconSvg,
@@ -334,7 +334,7 @@ class SeoMetaTags extends StatelessComponent {
 }
 
 class Meta extends StatelessComponent {
-  const new({
+  const Meta({
     this.id,
     this.name,
     this.property,
@@ -358,7 +358,7 @@ class Meta extends StatelessComponent {
 }
 
 class LinkHeader extends StatelessComponent {
-  const new({
+  const LinkHeader({
     required this.href,
     this.id,
     this.rel,

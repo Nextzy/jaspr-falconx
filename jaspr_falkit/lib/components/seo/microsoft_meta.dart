@@ -1,7 +1,7 @@
 import 'package:jaspr_falkit/lib.dart';
 
 class MicrosoftMeta extends StatelessComponent {
-  const new({
+  const MicrosoftMeta({
     this.msValidate = 'verification_token',
     this.tileColor,
     this.tileImageUrl,

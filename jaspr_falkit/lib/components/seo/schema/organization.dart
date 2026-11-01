@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// Organization schema component with full schema.org support
 class OrganizationSchema extends Schema {
-  new({
+  OrganizationSchema({
     this.name,
     this.url,
     this.logo,

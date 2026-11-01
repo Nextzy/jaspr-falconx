@@ -20,7 +20,7 @@ enum OgType {
   restaurant('restaurant'),
   fitnessCourse('fitness.course');
 
-  new(this.name);
+  OgType(this.name);
 
   final String name;
 

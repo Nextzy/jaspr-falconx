@@ -3,7 +3,7 @@ import 'package:jaspr_falkit/lib.dart';
 /// EducationalOrganization schema for schools, universities,
 /// and educational institutions
 class EducationalOrganizationSchema extends Schema {
-  new({
+  EducationalOrganizationSchema({
     required String name,
     String? url,
     String? logo,

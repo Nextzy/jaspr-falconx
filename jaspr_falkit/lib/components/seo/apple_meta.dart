@@ -1,7 +1,7 @@
 import 'package:jaspr_falkit/lib.dart';
 
 class AppleMeta extends StatelessComponent {
-  const new({
+  const AppleMeta({
     this.title,
     this.capable,
     this.fullscreen,

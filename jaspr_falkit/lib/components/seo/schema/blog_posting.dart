@@ -3,7 +3,7 @@ import 'package:jaspr_falkit/lib.dart';
 /// BlogPosting schema component with full schema.org support
 /// Implements https://schema.org/BlogPosting specification
 class BlogPostingSchema extends Schema {
-  new({
+  BlogPostingSchema({
     this.headline,
     this.alternativeHeadline,
     this.description,

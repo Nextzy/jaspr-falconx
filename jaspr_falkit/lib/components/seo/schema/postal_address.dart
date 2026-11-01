@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// PostalAddress schema for representing physical addresses
 class PostalAddressSchema extends Schema {
-  new({
+  PostalAddressSchema({
     String? streetAddress,
     String? addressLocality,
     String? addressRegion,

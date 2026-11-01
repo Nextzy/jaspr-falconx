@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// Base class for all Schema.org components
 abstract class Schema extends StatelessComponent {
-  const new({this.id, required this.schemaData, this.additionalAttributes});
+  const Schema({this.id, required this.schemaData, this.additionalAttributes});
 
   final String? id;
   final Map<String, dynamic>? additionalAttributes;
@@ -36,7 +36,7 @@ abstract class Schema extends StatelessComponent {
 
 /// Schema Group component for @graph support
 class SchemaGroup extends Schema {
-  new({
+  SchemaGroup({
     super.id,
     required List<Schema> schemas,
     String context = 'https://schema.org',
@@ -202,5 +202,6 @@ class SchemaGroup extends Schema {
 
 /// Generic schema wrapper for arbitrary schema data
 class GenericSchema extends Schema {
-  const new({required Map<String, dynamic> data}) : super(schemaData: data);
+  const GenericSchema({required Map<String, dynamic> data})
+    : super(schemaData: data);
 }
