@@ -55,7 +55,7 @@ link(rel: 'stylesheet', href: versionedPath('styles.css', buildId)),
 script(src: versionedPath('scripts/analytics.js', buildId), defer: true),
 ```
 
-`versionedPath` drops one leading `/` and returns the path unchanged when `buildId` is null or empty.
+`versionedPath` drops one leading `/` and returns the path unchanged when `buildId` is null or empty. The result is relative (`_v/<buildId>/styles.css`), so it resolves from the site root only when the page has `<base href="/">`, which Jaspr's `Document` emits by default. If your app changes `<base>`, prefix the result with `/` yourself.
 
 ## Header policy
 

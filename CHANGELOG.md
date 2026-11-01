@@ -17,7 +17,7 @@ falconx moves from SPA-style hydration to Jaspr islands. Pages render on the ser
 - `PreloadFamily`, `PreloadListFamily`, `PreloadComponentNotifier`, `ComponentStateNotifier`, `NullableComponentStateNotifier`.
 - The json and riverpod codecs.
 - `ThemeManager` and `ThemeProvider`.
-- The `jaspr_riverpod` dependency and its re-export.
+- The `jaspr_riverpod` dependency and its re-export. Apps that still use Riverpod must depend on `jaspr_riverpod` directly. The `jaspr_falconx` barrel no longer hides `AsyncError`, so `AsyncError` from `dart:async` is visible again through it.
 
 ### Migration: SPA hydration to islands
 
