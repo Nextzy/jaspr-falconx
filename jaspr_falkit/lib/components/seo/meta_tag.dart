@@ -10,7 +10,7 @@ import 'package:jaspr_falkit/lib.dart';
 /// schemaBlogPosting, breadcrumbItems, alternateLanguageUrls, keywords)
 /// are intentionally NOT inheritable and must be set on each [SeoMetaTags].
 class SeoDefaults extends InheritedComponent {
-  const new({
+  const SeoDefaults({
     required super.child,
     this.favicon,
     this.faviconSvg,
@@ -84,7 +84,7 @@ class SeoDefaults extends InheritedComponent {
 }
 
 class SeoMetaTags extends StatelessComponent {
-  const new({
+  const SeoMetaTags({
     //**** Default SEO *****//
     this.favicon,
     this.faviconSvg,
@@ -97,10 +97,10 @@ class SeoMetaTags extends StatelessComponent {
     this.url,
     this.imageUrl,
     this.canonical,
-    required this.type,
+    this.type,
     this.locale,
-    required this.imageWidth,
-    required this.imageHeight,
+    this.imageWidth,
+    this.imageHeight,
     this.imageAlt,
     this.video,
     this.iconUrl,
@@ -133,10 +133,10 @@ class SeoMetaTags extends StatelessComponent {
   final String? url;
   final String? imageUrl;
   final String? canonical;
-  final OgType type;
+  final OgType? type;
   final String? locale;
-  final String imageWidth;
-  final String imageHeight;
+  final String? imageWidth;
+  final String? imageHeight;
   final String? imageAlt;
   final String? video;
   final String? iconUrl;
@@ -174,11 +174,11 @@ class SeoMetaTags extends StatelessComponent {
     final resolvedColor = color ?? defaults?.color;
     final resolvedImageUrl = imageUrl ?? defaults?.imageUrl;
     final resolvedImageAlt = imageAlt ?? defaults?.imageAlt;
-    final resolvedImageWidth = imageWidth.isNotEmpty
-        ? imageWidth
+    final resolvedImageWidth = imageWidth?.isNotEmpty == true
+        ? imageWidth!
         : (defaults?.imageWidth ?? '1200');
-    final resolvedImageHeight = imageHeight.isNotEmpty
-        ? imageHeight
+    final resolvedImageHeight = imageHeight?.isNotEmpty == true
+        ? imageHeight!
         : (defaults?.imageHeight ?? '630');
     final resolvedRobots = robots ?? defaults?.robots ?? 'index,follow';
     final resolvedSiteName = defaults?.siteName;
@@ -334,7 +334,7 @@ class SeoMetaTags extends StatelessComponent {
 }
 
 class Meta extends StatelessComponent {
-  const new({
+  const Meta({
     this.id,
     this.name,
     this.property,
@@ -358,7 +358,7 @@ class Meta extends StatelessComponent {
 }
 
 class LinkHeader extends StatelessComponent {
-  const new({
+  const LinkHeader({
     required this.href,
     this.id,
     this.rel,

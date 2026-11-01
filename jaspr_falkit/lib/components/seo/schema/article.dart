@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// Article schema component with full schema.org support
 class ArticleSchema extends Schema {
-  new({
+  ArticleSchema({
     this.headline,
     this.alternativeHeadline,
     this.description,

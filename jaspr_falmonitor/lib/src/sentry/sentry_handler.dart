@@ -1,7 +1,8 @@
 import 'package:jaspr_falmonitor/lib.dart';
+import 'package:sentry/sentry.dart';
 
 class SentryHandler extends MonitorHandler<SentryAnalyticOption> {
-  new _();
+  SentryHandler._();
 
   static final SentryHandler instance = SentryHandler._();
 

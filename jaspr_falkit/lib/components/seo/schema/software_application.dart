@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// SoftwareApplication schema component with full schema.org support
 class SoftwareApplicationSchema extends Schema {
-  new({
+  SoftwareApplicationSchema({
     required this.name,
     this.url,
     this.description,
@@ -361,7 +361,7 @@ typedef SoftwareApplicationSchemaData = SoftwareApplicationSchema;
 
 /// WebApplication extends SoftwareApplication for web-specific applications
 class WebApplicationSchema extends Schema {
-  new({
+  WebApplicationSchema({
     this.name,
     this.url,
     this.description,

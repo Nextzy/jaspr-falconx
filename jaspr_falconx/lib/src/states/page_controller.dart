@@ -5,7 +5,7 @@ import 'package:jaspr_riverpod/misc.dart';
 
 abstract class PreloadComponentNotifier<DATA, EVENT>
     extends NullableComponentStateNotifier<DATA> {
-  new({
+  PreloadComponentNotifier({
     DATA? initialData,
     required DATA Function(dynamic json) fromJson,
     required String id,

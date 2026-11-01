@@ -2,7 +2,7 @@ import 'package:jaspr_falkit/lib.dart';
 
 /// Place schema for representing physical locations
 class PlaceSchema extends Schema {
-  new({
+  PlaceSchema({
     this.name,
     this.description,
     this.address,
@@ -181,7 +181,7 @@ typedef PlaceSchemaData = PlaceSchema;
 
 /// Helper class for opening hours
 class OpeningHours {
-  const new({
+  const OpeningHours({
     required this.dayOfWeek,
     required this.opens,
     required this.closes,

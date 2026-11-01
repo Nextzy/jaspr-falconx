@@ -1,7 +1,7 @@
 import 'package:jaspr_falkit/lib.dart';
 
 class TwitterMeta extends StatelessComponent {
-  const new({
+  const TwitterMeta({
     // *** Required *** //
     this.card = 'summary_large_image',
     // *** Recommend *** //

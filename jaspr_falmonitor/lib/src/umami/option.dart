@@ -1,7 +1,7 @@
 import 'package:jaspr_falmonitor/lib.dart';
 
 class UmamiAnalyticOption extends AnalyticOption {
-  const new({
+  const UmamiAnalyticOption({
     super.enabled,
     this.websiteId,
     this.scriptUrl,

@@ -13,7 +13,7 @@ class RiverpodEncoder<T> extends Converter<T, Object?> {
 }
 
 class RiverpodDecoder<T> extends Converter<Object?, T> {
-  const new(this.fromJson);
+  const RiverpodDecoder(this.fromJson);
 
   final T Function(Map<String, dynamic> json) fromJson;
 
@@ -23,7 +23,7 @@ class RiverpodDecoder<T> extends Converter<Object?, T> {
 }
 
 class RiverpodCodec<T> extends Codec<T, Object?> {
-  const new(this.fromJson);
+  const RiverpodCodec(this.fromJson);
 
   final T Function(Map<String, dynamic> json) fromJson;
 
@@ -51,7 +51,7 @@ class RiverpodResultEncoder<T> extends Converter<Result<T>, Object?> {
 }
 
 class RiverpodResultDecoder<T> extends Converter<Object?, Result<T>> {
-  const new(this.fromJson);
+  const RiverpodResultDecoder(this.fromJson);
 
   final T Function(dynamic json) fromJson;
 
@@ -95,7 +95,7 @@ class RiverpodResultDecoder<T> extends Converter<Object?, Result<T>> {
 }
 
 class RiverpodResultCodec<T> extends Codec<Result<T>, Object?> {
-  const new(this.fromJson);
+  const RiverpodResultCodec(this.fromJson);
 
   final T Function(dynamic json) fromJson;
 
