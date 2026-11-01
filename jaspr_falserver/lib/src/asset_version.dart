@@ -23,13 +23,19 @@ String versionedPath(String path, String? buildId) {
   return (id: id, rest: rest);
 }
 
-/// Copies [base] with its client script path moved under the build version.
+/// Copies [base] with its client script path and its standalone stylesheet
+/// path moved under the build version.
+///
+/// This copies every `ServerOptions` field one by one (jaspr 0.23: `clientId`,
+/// `clients`, `stylesId`, `styles`). When jaspr adds a field, add it here too,
+/// or the copy silently drops it.
 ServerOptions versionedServerOptions(ServerOptions base, String? buildId) {
   final clientId = base.clientId;
+  final stylesId = base.stylesId;
   return ServerOptions(
     clientId: clientId == null ? null : versionedPath(clientId, buildId),
     clients: base.clients,
-    stylesId: base.stylesId,
+    stylesId: stylesId == null ? null : versionedPath(stylesId, buildId),
     styles: base.styles,
   );
 }
