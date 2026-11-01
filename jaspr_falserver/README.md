@@ -59,7 +59,7 @@ script(src: versionedPath('scripts/analytics.js', buildId), defer: true),
 
 ## Header policy
 
-`CacheHeaderPolicy` picks the header. A header the page already set (for example with `markNotCacheable`) is kept.
+`assetMiddleware` answers each response with the first row that matches, top to bottom; every row except the 404 comes from `CacheHeaderPolicy`. A header the page already set (for example with `markNotCacheable`) is kept.
 
 | Response | `Cache-Control` |
 |---|---|
