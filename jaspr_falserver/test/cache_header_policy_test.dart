@@ -2,21 +2,27 @@ import 'package:jaspr_falserver/jaspr_falserver.dart';
 import 'package:test/test.dart';
 
 void main() {
-  const p = CachePolicy();
+  const p = CacheHeaderPolicy();
   String? h(
     String path, {
+    String method = 'GET',
     int status = 200,
+    bool setCookie = false,
     String? existing,
     String? id = 'b1',
-  }) => p.headerFor(
+    CacheHeaderPolicy policy = p,
+  }) => policy.headerFor(
     path: path,
+    method: method,
     statusCode: status,
+    hasSetCookie: setCookie,
     existing: existing,
     buildId: id,
   );
 
   test('keeps a header the render already set', () {
     expect(h('en/profile', existing: 'no-store'), isNull);
+    expect(h('en/profile', method: 'POST', existing: 'private'), isNull);
   });
 
   test('non-2xx is no-store', () {
@@ -32,6 +38,31 @@ void main() {
     );
     expect(h('en/profile', status: 304), 'public, max-age=0, s-maxage=86400');
     expect(h('_v/old/a.js', status: 304), 'no-store');
+  });
+
+  test('HEAD takes the same policy as GET', () {
+    expect(
+      h('en/profile', method: 'HEAD'),
+      'public, max-age=0, s-maxage=86400',
+    );
+    expect(
+      h('_v/b1/main.client.dart.js', method: 'HEAD'),
+      'public, max-age=31536000, immutable',
+    );
+  });
+
+  test('a method other than GET or HEAD is no-store', () {
+    for (final method in ['POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']) {
+      expect(h('en/profile', method: method), 'no-store');
+      expect(h('_v/b1/main.client.dart.js', method: method), 'no-store');
+      expect(h('images/a.png', method: method), 'no-store');
+    }
+  });
+
+  test('a response that sets a cookie is no-store', () {
+    expect(h('en/profile', setCookie: true), 'no-store');
+    expect(h('_v/b1/main.client.dart.js', setCookie: true), 'no-store');
+    expect(h('fonts/a.woff2', setCookie: true), 'no-store');
   });
 
   test('current version is immutable', () {
@@ -75,5 +106,21 @@ void main() {
 
   test('no build id: _v paths are stale', () {
     expect(h('_v/b1/styles.css', id: null), 'no-store');
+  });
+
+  test('custom TTLs replace the defaults', () {
+    const custom = CacheHeaderPolicy(
+      htmlEdgeTtl: Duration(hours: 1),
+      imageTtl: Duration(days: 7),
+      fontTtl: Duration(days: 365),
+    );
+    expect(h('en/profile', policy: custom), 'public, max-age=0, s-maxage=3600');
+    expect(h('images/a.png', policy: custom), 'public, max-age=604800');
+    expect(h('fonts/a.woff2', policy: custom), 'public, max-age=31536000');
+    expect(
+      h('_v/b1/main.client.dart.js', policy: custom),
+      'public, max-age=31536000, immutable',
+    );
+    expect(h('en/x', status: 404, policy: custom), 'no-store');
   });
 }

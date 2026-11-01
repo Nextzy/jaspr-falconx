@@ -55,4 +55,28 @@ void main() {
     expect(seenRequest.method, 'GET');
     expect(seenRequest.headers['accept-encoding'], 'gzip');
   });
+
+  test('a POST response is no-store', () async {
+    final r = await handler(
+      Request('POST', Uri.parse('http://localhost/en/profile')),
+    );
+    expect(r.headers['cache-control'], 'no-store');
+  });
+
+  test('a response that sets a cookie is no-store', () async {
+    final h = assetMiddleware(buildId: 'b1')(
+      (_) => Response.ok('x', headers: {'set-cookie': 'a=1'}),
+    );
+    final r = await h(Request('GET', Uri.parse('http://localhost/en/profile')));
+    expect(r.headers['cache-control'], 'no-store');
+  });
+
+  test('passes a custom policy through', () async {
+    final h = assetMiddleware(
+      buildId: 'b1',
+      policy: const CacheHeaderPolicy(htmlEdgeTtl: Duration(hours: 1)),
+    )(inner);
+    final r = await h(Request('GET', Uri.parse('http://localhost/en/profile')));
+    expect(r.headers['cache-control'], 'public, max-age=0, s-maxage=3600');
+  });
 }

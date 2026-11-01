@@ -1,12 +1,12 @@
 import 'package:jaspr_falserver/src/asset_version.dart';
-import 'package:jaspr_falserver/src/cache_policy.dart';
+import 'package:jaspr_falserver/src/cache_header_policy.dart';
 import 'package:shelf/shelf.dart';
 
 /// Serves `_v/<id>/<rest>` from `<rest>` and sets `Cache-Control` through
 /// [policy]. A header the inner handler already set is kept.
 Middleware assetMiddleware({
   required String? buildId,
-  CachePolicy policy = const CachePolicy(),
+  CacheHeaderPolicy policy = const CacheHeaderPolicy(),
 }) {
   return (inner) {
     return (request) async {
@@ -26,7 +26,9 @@ Middleware assetMiddleware({
       final response = await inner(forwarded);
       final header = policy.headerFor(
         path: path,
+        method: request.method,
         statusCode: response.statusCode,
+        hasSetCookie: response.headers.containsKey('set-cookie'),
         existing: response.headers['cache-control'],
         buildId: buildId,
       );

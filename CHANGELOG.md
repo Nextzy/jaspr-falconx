@@ -6,7 +6,7 @@ falconx moves from SPA-style hydration to Jaspr islands. Pages render on the ser
 
 ### Added
 
-- `jaspr_falserver` (new package): `CachePolicy`, `assetMiddleware`, `versionedPath`, `splitVersion`, `versionedServerOptions`.
+- `jaspr_falserver` (new package): `CacheHeaderPolicy`, `assetMiddleware`, `versionedPath`, `splitVersion`, `versionedServerOptions`. `CacheHeaderPolicy` takes `htmlEdgeTtl`, `imageTtl`, and `fontTtl`, and gives a public policy only to a `GET` or `HEAD` response that sets no cookie. It is not called `CachePolicy` because `dio_cache_interceptor` exports a `CachePolicy` through `jaspr_falconnect`, and the two names would clash in a server entrypoint that imports both barrels.
 - `jaspr_falconx`: `ServerData`, `requestHeader`, `setResponseStatus`, `pickLocale`, `localeFromPath`, and `FalUsecase` with its `mapUserMessage` hook.
 - `jaspr_falkit`: `ThemeBootScript`, `themeStorageKey`, `nextThemeMode`, `setThemePreference` (requires `ThemeBootScript` in the document head), `PageHead`, `PageSeoContext`, `SpeculationRules`, `speculationRulesJson`.
 - `jaspr_faltool`: formatter extensions. The string member is `truncateText` because `dart_faltool` already defines `String.truncate`. Apps that move their own `truncate` extension onto falconx must rename those calls.
