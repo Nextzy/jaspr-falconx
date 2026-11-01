@@ -9,9 +9,7 @@ void main() {
 
   group('FalRepository.runDataCatching', () {
     test('returns the result of execute', () async {
-      final result = await repo.runDataCatching(
-        () async => Result.success(1),
-      );
+      final result = await repo.runDataCatching(() async => Result.success(1));
       expect(result.value, 1);
     });
 
