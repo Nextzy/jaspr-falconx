@@ -92,6 +92,21 @@ assetMiddleware(
 
 `ServerData` from `jaspr_falconx` sets `no-store` when its load fails. A page that renders with partial data (one of several CMS calls failed) must call `markNotCacheable(context)` itself, or the CDN keeps the incomplete page for `htmlEdgeTtl`.
 
+## Internal CMS URL
+
+A server that reaches its CMS over a private network skips the CDN for its own calls. `resolveServerCmsBaseUrl` picks the base URL once at startup: it uses the internal URL only when `probe` reports it reachable, and falls back to the public URL otherwise, so a dead private network never turns every page into a 503.
+
+```dart
+final cmsBaseUrl = await resolveServerCmsBaseUrl(
+  publicUrl: publicUrl,
+  internalUrl: Platform.environment['CMS_INTERNAL_API_BASE_URL'],
+  probe: pingOk, // GET <baseUrl>/server/ping, 200 within 2 s
+  log: print,
+);
+```
+
+`validInternalCmsUrl` trims a value and removes one trailing `/`; it returns `null` unless the value is an absolute `http` or `https` URL with a host. `pingOk` returns `true` on 200, throws `StateError('HTTP <code>')` on another status, and throws on a network error or timeout.
+
 ## Cloudflare
 
 Cloudflare does not cache HTML by default, so the HTML rows above have no effect at the edge until a Cache Rule makes HTML eligible for cache and tells Cloudflare to respect the origin `Cache-Control`.
