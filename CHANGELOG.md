@@ -14,6 +14,10 @@ A page can now answer 404 or 503 from the CMS status, a locale switcher can buil
 
 - `jaspr_falserver`: `assetMiddleware` keeps versioned URLs away from the sitemap route.
 
+### Fixed
+
+- `jaspr_falkit`: `DefaultOpenGraphMeta` no longer preloads the share image, so the page stops downloading it early on every load.
+
 ## 4.2.0
 
 `NavigationProgress` is now flat by default, with no shadow. The new `glow` parameter restores the 4.1.0 look.
