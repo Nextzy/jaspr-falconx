@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:jaspr_falserver/src/asset_middleware.dart'
+    show versionedContextKey;
 import 'package:shelf/shelf.dart';
 
 /// One `<url>` entry: [loc], optional hreflang [alternates] keyed by language
@@ -57,7 +59,10 @@ Middleware sitemapMiddleware(
   return (inner) {
     return (request) async {
       final isRead = request.method == 'GET' || request.method == 'HEAD';
-      if (!isRead || request.url.path != relative) return inner(request);
+      final isVersioned = request.context.containsKey(versionedContextKey);
+      if (!isRead || isVersioned || request.url.path != relative) {
+        return inner(request);
+      }
       try {
         final body = renderSitemap(await load());
         return Response.ok(
@@ -65,7 +70,8 @@ Middleware sitemapMiddleware(
           headers: {'content-type': 'application/xml; charset=utf-8'},
         );
       } on Object catch (error) {
-        stderr.writeln('sitemap load failed: $error');
+        final message = '$error'.replaceAll(RegExp(r'\s*[\r\n]+\s*'), ' ');
+        stderr.writeln('sitemap load failed: $message');
         return Response(503, headers: {'retry-after': '60'});
       }
     };

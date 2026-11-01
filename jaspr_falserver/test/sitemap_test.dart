@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:jaspr_falserver/jaspr_falserver.dart';
 import 'package:shelf/shelf.dart';
 import 'package:test/test.dart';
@@ -86,5 +90,44 @@ void main() {
       expect(down.statusCode, 503);
       expect(down.headers['retry-after'], '60');
     });
+
+    test('writes exactly one stderr line for a multi-line error', () async {
+      final sink = _CaptureStdout();
+      await IOOverrides.runZoned(() async {
+        await wrap(() async => throw StateError('cms\ndown'))(
+          get('http://x/sitemap.xml'),
+        );
+      }, stderr: () => sink);
+      final lines = const LineSplitter().convert(sink.text);
+      expect(lines, hasLength(1));
+      expect(lines.single, contains('cms down'));
+    });
+
+    test('does not serve a versioned URL as the sitemap', () async {
+      final handler = const Pipeline()
+          .addMiddleware(assetMiddleware(buildId: 'b1'))
+          .addMiddleware(sitemapMiddleware(() async => []))
+          .addHandler((_) => Response.notFound('inner'));
+      final versioned = await handler(get('http://x/_v/b1/sitemap.xml'));
+      expect(versioned.statusCode, isNot(200));
+      expect(versioned.headers['cache-control'], 'no-store');
+      final plain = await handler(get('http://x/sitemap.xml'));
+      expect(plain.statusCode, 200);
+      expect(
+        plain.headers['cache-control'],
+        'public, max-age=0, s-maxage=86400',
+      );
+    });
   });
+}
+
+class _CaptureStdout implements Stdout {
+  final _buffer = StringBuffer();
+  String get text => _buffer.toString();
+
+  @override
+  void writeln([Object? object = '']) => _buffer.writeln(object);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => null;
 }
