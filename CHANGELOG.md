@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.2.0
+
+`NavigationProgress` is now flat by default, with no shadow. The new `glow` parameter restores the 4.1.0 look.
+
 ## 4.1.0
 
 A site that does full page loads on navigation can now show a thin progress bar, and `ServerData` can log an expected failure without a stack trace. `jaspr_falmonitor` is unchanged and keeps its own version.

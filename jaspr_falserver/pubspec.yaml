@@ -1,6 +1,6 @@
 name: jaspr_falserver
 description: Server-only helpers for jaspr_falconx apps, Cache-Control header policy and versioned asset middleware.
-version: 4.1.0
+version: 4.2.0
 publish_to: none
 
 environment:

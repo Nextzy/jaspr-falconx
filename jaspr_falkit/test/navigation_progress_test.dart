@@ -64,4 +64,18 @@ void main() {
     expect(body, isNot(contains('<script>alert')));
     expect(body, isNot(contains('</script><script>')));
   });
+
+  testServer('NavigationProgress is flat by default', (tester) async {
+    tester.pumpComponent(const NavigationProgress(color: '#2f6fed'));
+    final body = (await tester.request('/')).body;
+    expect(body, isNot(contains('box-shadow')));
+  });
+
+  testServer('NavigationProgress glow adds the box-shadow', (tester) async {
+    tester.pumpComponent(
+      const NavigationProgress(color: '#2f6fed', glow: true),
+    );
+    final body = (await tester.request('/')).body;
+    expect(body, contains('box-shadow:0 0 6px #2f6fed'));
+  });
 }

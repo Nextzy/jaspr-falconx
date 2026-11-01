@@ -21,10 +21,11 @@ class NavigationProgress extends StatelessComponent {
     this.height = '3px',
     this.showDelay = const Duration(milliseconds: 150),
     this.zIndex = 9999,
+    this.glow = false,
     super.key,
   });
 
-  /// CSS color of the bar and its glow.
+  /// CSS color of the bar and, when [glow] is true, its glow.
   final String color;
 
   /// CSS height of the bar.
@@ -35,6 +36,9 @@ class NavigationProgress extends StatelessComponent {
 
   /// CSS `z-index` of the bar.
   final int zIndex;
+
+  /// Whether the bar casts a soft `box-shadow` glow in [color].
+  final bool glow;
 
   @override
   Component build(BuildContext context) {
@@ -52,7 +56,7 @@ class NavigationProgress extends StatelessComponent {
     final c = _cssValue(color);
     final h = _cssValue(height);
     return '''
-#fal-nav-progress{position:fixed;top:0;left:0;width:0;height:$h;background:$c;box-shadow:0 0 6px $c;opacity:0;pointer-events:none;z-index:$zIndex}
+#fal-nav-progress{position:fixed;top:0;left:0;width:0;height:$h;background:$c;${glow ? 'box-shadow:0 0 6px $c;' : ''}opacity:0;pointer-events:none;z-index:$zIndex}
 #fal-nav-progress.run{opacity:1;width:85%;transition:width 2.4s cubic-bezier(.1,.6,.2,1)}
 #fal-nav-progress.done{opacity:0;width:100%;transition:width .18s ease-out,opacity .25s ease .18s}
 @media (prefers-reduced-motion:reduce){#fal-nav-progress.run{transition:none}#fal-nav-progress.done{transition:opacity .25s}}''';
