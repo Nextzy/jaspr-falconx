@@ -1,3 +1,4 @@
+import 'package:jaspr_faltool/src/utils/share_links.dart';
 import 'package:universal_web/web.dart' as web;
 
 class ShareUtils {
@@ -17,19 +18,12 @@ class ShareUtils {
     final fullUrl = _getFullUrl(url);
     // Facebook doesn't support pre-filled text in the sharer dialog
     // The message will be extracted from the Open Graph meta tags
-    final shareUrl =
-        'https://www.facebook.com/sharer/sharer.php?u=${Uri.encodeComponent(fullUrl)}';
-    web.window.open(shareUrl, '_blank');
+    web.window.open(ShareLinks.facebook(fullUrl), '_blank');
   }
 
   static Future<void> shareToTwitter(String url, {String? message}) async {
     final fullUrl = _getFullUrl(url);
-    final params = <String, String>{'url': fullUrl, 'text': ?message};
-    final queryString = params.entries
-        .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
-        .join('&');
-    final shareUrl = 'https://twitter.com/intent/tweet?$queryString';
-    web.window.open(shareUrl, '_blank');
+    web.window.open(ShareLinks.x(fullUrl, text: message), '_blank');
   }
 
   static Future<void> shareToLinkedIn(String url, {String? message}) async {
@@ -37,22 +31,13 @@ class ShareUtils {
     // LinkedIn uses Open Graph tags for title and description
     // Custom message can be added through summary parameter
     // (deprecated but sometimes works)
-    final params = <String, String>{'url': fullUrl, 'summary': ?message};
-    final queryString = params.entries
-        .map((e) => '${e.key}=${Uri.encodeComponent(e.value)}')
-        .join('&');
-    final shareUrl =
-        'https://www.linkedin.com/sharing/share-offsite/?$queryString';
-    web.window.open(shareUrl, '_blank');
+    web.window.open(ShareLinks.linkedIn(fullUrl, summary: message), '_blank');
   }
 
   static Future<void> shareToLine(String url, {String? message}) async {
     final fullUrl = _getFullUrl(url);
     // LINE allows custom text to be prepended to the URL
-    final shareText = message != null ? '$message $fullUrl' : fullUrl;
-    final shareUrl =
-        'https://social-plugins.line.me/lineit/share?text=${Uri.encodeComponent(shareText)}';
-    web.window.open(shareUrl, '_blank');
+    web.window.open(ShareLinks.line(fullUrl, text: message), '_blank');
   }
 
   static Future<bool> copyToClipboard(String text, {bool isUrl = false}) async {

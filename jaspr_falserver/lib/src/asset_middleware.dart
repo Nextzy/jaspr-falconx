@@ -3,6 +3,10 @@ import 'package:jaspr_falserver/src/cache_header_policy.dart';
 import 'package:jaspr_falserver/src/file_extension.dart';
 import 'package:shelf/shelf.dart';
 
+/// Context key [assetMiddleware] sets on a request it rewrote from a
+/// versioned URL, so dynamic middleware can refuse to serve it.
+const versionedContextKey = 'jaspr_falserver.versioned';
+
 /// Serves `_v/<id>/<rest>` from `<rest>` and sets `Cache-Control` through
 /// [policy]. A header the inner handler already set is kept.
 ///
@@ -31,7 +35,7 @@ Middleware assetMiddleware({
               request.requestedUri.replace(path: '/${split.rest}'),
               body: request.read(),
               headers: request.headers,
-              context: request.context,
+              context: {...request.context, versionedContextKey: true},
               protocolVersion: request.protocolVersion,
             );
 

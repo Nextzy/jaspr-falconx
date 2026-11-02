@@ -1,5 +1,28 @@
 # Changelog
 
+## 4.3.0
+
+A page can now answer 404 or 503 from the CMS status, a locale switcher can build its links, and a server can reach the CMS over a private URL and publish a sitemap. `jaspr_falmonitor` is unchanged and keeps its own version.
+
+### Added
+
+- `jaspr_falconx`: `pageErrorStatus(error)` returns 404 when the CMS answered 403 or 404, and 503 for every other failure, so crawlers retry. `isExpectedPageFailure(error)` is true for a missing record, which suits `ServerData.quietWhen`. `switchLocalePath(path, toCode, supported)` replaces the locale segment of a path, or prefixes one when the path has none, and keeps the query and fragment.
+- `jaspr_falserver`: `validInternalCmsUrl` normalizes a private CMS URL and returns null when it is empty or not an absolute `http`/`https` URL. `resolveServerCmsBaseUrl` picks that URL only when a probe reaches it, and otherwise falls back to the public URL. It falls back silently when the internal URL is unset or blank, and logs one line when the URL is set but malformed or the probe fails or throws. `pingOk` is a probe for it: it asks `/server/ping` and returns true on a 200, and it throws on another status, a network error, or a 2-second timeout. `SitemapUrl`, `renderSitemap`, and `sitemapMiddleware` write a sitemap with hreflang alternates and serve it on GET and HEAD; a failing loader gives 503 with `retry-after: 60`.
+- `jaspr_falkit`: `PageHead` takes an optional `defaultLanguageCode`. When set, the `x-default` alternate points at that language's URL; when null, it points at the current page as before.
+- `jaspr_falkit`: `ThemeBootScript` takes an optional `preferenceAttribute`. When set, the script writes the preference (`light`, `dark`, `system`) to that `<html>` attribute and writes the resolved theme (`light` or `dark`, following `prefers-color-scheme` live) to `data-theme`, which is what daisyUI reads. `window.falSetTheme` updates both. The default output is unchanged.
+- `jaspr_faltool`: `ShareLinks` builds share URLs without touching the browser: `facebook(url)`, `x(url, {text})`, `linkedIn(url, {summary})`, and `line(url, {text})`. `ShareUtils.shareTo*` now opens these URLs, so its output is unchanged.
+- `jaspr_falconx`: `applyPageErrorStatus(context, error)` sets the response status from `pageErrorStatus(error)` and, for a 503, `retry-after: 60`. It does nothing in the browser.
+- `jaspr_falconnect`: `FalRepository` is the data-layer sibling of `FalUsecase`. Its `runDataCatching` returns the call's `Result` and turns a thrown error into a failed `Result`: a `DioException` becomes the `NetworkException` from `toException()`, a `CommonException` becomes a `DataLayerException` with the same type, and any other object becomes an unexpected `DataLayerException`.
+
+### Changed
+
+- `jaspr_falserver`: `assetMiddleware` keeps versioned URLs away from the sitemap route.
+
+### Fixed
+
+- `jaspr_falkit`: `DefaultOpenGraphMeta` no longer preloads the share image, so the page stops downloading it early on every load.
+- `jaspr_falkit`: `PageHead` builds the canonical, `og:url`, alternates, and `PageSeoContext.url` from the path alone, so a query string such as `?fbclid=abc` or a fragment no longer reaches them.
+
 ## 4.2.0
 
 `NavigationProgress` is now flat by default, with no shadow. The new `glow` parameter restores the 4.1.0 look.

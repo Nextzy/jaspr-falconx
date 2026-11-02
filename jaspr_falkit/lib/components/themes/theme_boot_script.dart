@@ -20,6 +20,7 @@ class ThemeBootScript extends StatelessComponent {
     this.lightClass = 'light',
     this.darkClass = 'dark',
     this.storageKey = themeStorageKey,
+    this.preferenceAttribute,
     super.key,
   });
 
@@ -31,6 +32,14 @@ class ThemeBootScript extends StatelessComponent {
 
   /// localStorage key read and written by the script.
   final String storageKey;
+
+  /// `<html>` attribute that receives the preference (`light`, `dark`, or
+  /// `system`).
+  ///
+  /// When set, `data-theme` holds the resolved theme (`light` or `dark`)
+  /// instead, which is the theme name daisyUI reads. When null, `data-theme`
+  /// holds the preference.
+  final String? preferenceAttribute;
 
   @override
   Component build(BuildContext context) {
@@ -45,13 +54,18 @@ class ThemeBootScript extends StatelessComponent {
     final k = _jsString(storageKey);
     final l = _jsString(lightClass);
     final d = _jsString(darkClass);
+    final attribute = preferenceAttribute;
+    final themeAttributes = attribute == null
+        ? "h.setAttribute('data-theme',p);"
+        : "h.setAttribute('data-theme',dark?'dark':'light');"
+              "h.setAttribute('${_jsString(attribute)}',p);";
     // Paint before subscribing, so a browser without
     // MediaQueryList.addEventListener (Safari before 14) still gets the theme.
     // classList keeps every <html> class that is not a theme token.
     return """
 (function(){var k='$k',L=t('$l'),D=t('$d'),h=document.documentElement,m=matchMedia('(prefers-color-scheme: dark)'),cur;
 function t(s){return s.split(' ').filter(function(x){return x;});}
-function paint(p){var dark=p==='dark'||(p==='system'&&m.matches),c=h.classList,a=dark?D:L,i;for(i=0;i<L.length;i++)c.remove(L[i]);for(i=0;i<D.length;i++)c.remove(D[i]);for(i=0;i<a.length;i++)c.add(a[i]);h.setAttribute('data-theme',p);}
+function paint(p){var dark=p==='dark'||(p==='system'&&m.matches),c=h.classList,a=dark?D:L,i;for(i=0;i<L.length;i++)c.remove(L[i]);for(i=0;i<D.length;i++)c.remove(D[i]);for(i=0;i<a.length;i++)c.add(a[i]);$themeAttributes}
 function read(){try{return localStorage.getItem(k)||'system'}catch(e){return 'system'}}
 function onChange(){if(cur==='system')paint('system');}
 window.falSetTheme=function(p){cur=p;try{localStorage.setItem(k,p)}catch(e){}paint(p);};

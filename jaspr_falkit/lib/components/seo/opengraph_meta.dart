@@ -43,8 +43,6 @@ class DefaultOpenGraphMeta extends StatelessComponent {
         Meta(property: 'og:url', content: url, unique: true),
       if (imageUrl.isNotNullOrBlank)
         Meta(property: 'og:image', content: imageUrl, unique: true),
-      if (imageUrl.isNotNullOrBlank)
-        LinkHeader(rel: 'preload', href: imageUrl!, as: 'image'),
       if ((siteName ?? title).isNotNullOrBlank)
         Meta(
           property: 'og:site_name',

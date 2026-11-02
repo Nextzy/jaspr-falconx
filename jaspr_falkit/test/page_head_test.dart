@@ -5,11 +5,13 @@ PageHead _head(
   String path,
   void Function(PageSeoContext) capture, {
   String languageCode = 'en',
+  String? defaultLanguageCode,
 }) => PageHead(
   languageCode: languageCode,
   supportedLanguageCodes: const ['th', 'en'],
   siteUrl: 'https://nonthawit.com',
   path: path,
+  defaultLanguageCode: defaultLanguageCode,
   rootBreadcrumbName: 'Nonthawit',
   breadcrumbName: (segment) => segment == 'projects' ? 'Projects' : null,
   seo: (ctx) {
@@ -95,5 +97,39 @@ void main() {
       'policies',
       'abc',
     ]);
+  });
+
+  testServer('PageHead drops the query and fragment from every URL', (
+    tester,
+  ) async {
+    late PageSeoContext ctx;
+    tester.pumpComponent(_head('/th/blogs/a?fbclid=x#top', (c) => ctx = c));
+    await tester.request('/');
+
+    expect(ctx.url, 'https://nonthawit.com/th/blogs/a');
+    expect(ctx.canonical, 'https://nonthawit.com/th/blogs/a');
+    expect(ctx.alternateLanguageUrls.map((t) => '${t.locale}=${t.url}'), [
+      'th=https://nonthawit.com/th/blogs/a',
+      'en=https://nonthawit.com/en/blogs/a',
+      'x-default=https://nonthawit.com/th/blogs/a',
+    ]);
+    expect(ctx.breadcrumbItems.last.url, 'https://nonthawit.com/en/blogs/a');
+  });
+
+  testServer('PageHead points x-default at defaultLanguageCode', (
+    tester,
+  ) async {
+    late PageSeoContext ctx;
+    tester.pumpComponent(
+      _head('/en/projects/42', (c) => ctx = c, defaultLanguageCode: 'th'),
+    );
+    await tester.request('/');
+
+    final alternates = {
+      for (final t in ctx.alternateLanguageUrls) t.locale: t.url,
+    };
+    expect(alternates['x-default'], 'https://nonthawit.com/th/projects/42');
+    expect(alternates['en'], 'https://nonthawit.com/en/projects/42');
+    expect(ctx.canonical, 'https://nonthawit.com/en/projects/42');
   });
 }

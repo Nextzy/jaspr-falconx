@@ -31,6 +31,7 @@ class PageHead extends StatelessComponent {
     required this.seo,
     required this.rootBreadcrumbName,
     this.breadcrumbName,
+    this.defaultLanguageCode,
     super.key,
   });
 
@@ -43,7 +44,9 @@ class PageHead extends StatelessComponent {
   /// Origin without trailing slash, for example `https://nonthawit.com`.
   final String siteUrl;
 
-  /// Route path starting with `/`, for example `/en/projects/42`.
+  /// Route location starting with `/`, for example `/en/projects/42`.
+  ///
+  /// Any query or fragment is ignored: URLs use the path part only.
   final String path;
 
   /// Builds the SEO tags from the route-derived context.
@@ -56,9 +59,12 @@ class PageHead extends StatelessComponent {
   /// this is null or returns null.
   final String? Function(String segment)? breadcrumbName;
 
+  /// Language whose URL `x-default` points at. Null keeps the current page.
+  final String? defaultLanguageCode;
+
   @override
   Component build(BuildContext context) {
-    final full = '$siteUrl$path';
+    final full = '$siteUrl${Uri.parse(path).path}';
     final ctx = PageSeoContext(
       url: full,
       canonical: full,
@@ -77,7 +83,12 @@ class PageHead extends StatelessComponent {
         locale: code,
         url: _replaceFirstPathSegment(full, locale: code),
       ),
-    AlternateLanguageTag(locale: 'x-default', url: full),
+    AlternateLanguageTag(
+      locale: 'x-default',
+      url: defaultLanguageCode == null
+          ? full
+          : _replaceFirstPathSegment(full, locale: defaultLanguageCode!),
+    ),
   ];
 
   String _replaceFirstPathSegment(String url, {required String locale}) {
