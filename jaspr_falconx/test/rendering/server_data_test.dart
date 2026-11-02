@@ -5,8 +5,9 @@ import 'package:jaspr_falconx/jaspr_falconx.dart';
 import 'package:jaspr_test/server_test.dart';
 import 'package:test/fake.dart';
 
-/// Collects what is written to `stderr` inside [IOOverrides.runZoned].
-class _CapturedStderr extends Fake implements Stdout {
+/// Collects what is written to `stdout` or `stderr` inside
+/// [IOOverrides.runZoned].
+class _CapturedOutput extends Fake implements Stdout {
   final lines = <String>[];
 
   @override
@@ -55,7 +56,7 @@ void main() {
         errorBuilder: (_, e) => const Component.text('err'),
       ),
     );
-    final captured = _CapturedStderr();
+    final captured = _CapturedOutput();
     await IOOverrides.runZoned(
       () => tester.request('/'),
       stderr: () => captured,
@@ -82,13 +83,16 @@ void main() {
         errorBuilder: (_, e) => const Component.text('err'),
       ),
     );
-    final captured = _CapturedStderr();
+    final info = _CapturedOutput();
+    final errors = _CapturedOutput();
     final r = await IOOverrides.runZoned(
       () => tester.request('/'),
-      stderr: () => captured,
+      stdout: () => info,
+      stderr: () => errors,
     );
-    expect(captured.lines, hasLength(1));
-    final line = captured.lines.single;
+    expect(errors.lines, isEmpty);
+    expect(info.lines, hasLength(1));
+    final line = info.lines.single;
     expect(line, startsWith('[INFO]'));
     expect(line, contains('ServerData<String> load failed'));
     expect(line, contains('DomainLayerException'));
@@ -115,13 +119,10 @@ void main() {
         errorBuilder: (_, e) => const Component.text('err'),
       ),
     );
-    final captured = _CapturedStderr();
-    await IOOverrides.runZoned(
-      () => tester.request('/'),
-      stderr: () => captured,
-    );
-    expect(captured.lines, hasLength(1));
-    final line = captured.lines.single;
+    final info = _CapturedOutput();
+    await IOOverrides.runZoned(() => tester.request('/'), stdout: () => info);
+    expect(info.lines, hasLength(1));
+    final line = info.lines.single;
     expect(line, isNot(contains('\n')));
     expect(line, isNot(contains('\r')));
     expect(line, contains('first line second line third line'));
@@ -141,7 +142,7 @@ void main() {
         errorBuilder: (_, e) => const Component.text('err'),
       ),
     );
-    final captured = _CapturedStderr();
+    final captured = _CapturedOutput();
     await IOOverrides.runZoned(
       () => tester.request('/'),
       stderr: () => captured,
@@ -157,12 +158,15 @@ void main() {
         errorBuilder: (_, e) => const Component.text('err'),
       ),
     );
-    final captured = _CapturedStderr();
+    final info = _CapturedOutput();
+    final errors = _CapturedOutput();
     await IOOverrides.runZoned(
       () => tester.request('/'),
-      stderr: () => captured,
+      stdout: () => info,
+      stderr: () => errors,
     );
-    expect(captured.lines, isEmpty);
+    expect(info.lines, isEmpty);
+    expect(errors.lines, isEmpty);
   });
 
   testServer('requestHeader is null when the header is absent', (tester) async {
@@ -220,8 +224,20 @@ void main() {
     expect(r.headers['retry-after'], '60');
   });
 
+  test('logServerInfo writes one line to stdout and none to stderr', () {
+    final info = _CapturedOutput();
+    final errors = _CapturedOutput();
+    IOOverrides.runZoned(
+      () => logServerInfo('post not found'),
+      stdout: () => info,
+      stderr: () => errors,
+    );
+    expect(info.lines, ['[INFO] post not found']);
+    expect(errors.lines, isEmpty);
+  });
+
   test('logServerError writes the message, error, and stack trace', () {
-    final captured = _CapturedStderr();
+    final captured = _CapturedOutput();
     IOOverrides.runZoned(
       () => logServerError(
         'load failed',
@@ -237,7 +253,7 @@ void main() {
 
   test('logServerError prints a stack trace the error already has once', () {
     final trace = StackTrace.fromString('#0 inside');
-    final captured = _CapturedStderr();
+    final captured = _CapturedOutput();
     IOOverrides.runZoned(
       () => logServerError(
         'load failed',
