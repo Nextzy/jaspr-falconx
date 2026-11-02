@@ -128,10 +128,12 @@ Register it after `assetMiddleware`, which then sets `Cache-Control` on the resp
 `securityHeadersMiddleware` adds `Referrer-Policy`, `Permissions-Policy`, and `Content-Security-Policy` to every response, whatever the status or method. A header the page already set is kept.
 
 ```dart
+ServerApp.addMiddleware(securityHeadersMiddleware());
 ServerApp.addMiddleware(gzipMiddleware);
 ServerApp.addMiddleware(assetMiddleware(buildId: buildId));
-ServerApp.addMiddleware(securityHeadersMiddleware());
 ```
+
+Add it first so it is the outermost layer: otherwise a response that `assetMiddleware` or `sitemapMiddleware` answers itself, such as the 404 for a versioned page route, carries no security headers.
 
 | Header | Default |
 |---|---|

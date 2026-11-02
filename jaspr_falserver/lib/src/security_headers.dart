@@ -16,6 +16,7 @@ const defaultContentSecurityPolicy =
 /// `content-security-policy` to every response.
 ///
 /// A header the inner handler already set is kept; `null` turns a header off.
+/// Add it first so it is the outermost layer and covers every response.
 ///
 /// Throws [ArgumentError] when a value contains `\r` or `\n`.
 Middleware securityHeadersMiddleware({

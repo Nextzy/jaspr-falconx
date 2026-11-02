@@ -59,6 +59,20 @@ void main() {
     expect(r.headers['permissions-policy'], defaultPermissionsPolicy);
   });
 
+  test('keeps a mixed-case header without duplicating it', () async {
+    final r = await send(
+      (_) => Response.ok(
+        'x',
+        headers: {'Content-Security-Policy': "default-src 'self'"},
+      ),
+    );
+    expect(r.headers['content-security-policy'], "default-src 'self'");
+    expect(
+      r.headers.keys.where((k) => k.toLowerCase() == 'content-security-policy'),
+      hasLength(1),
+    );
+  });
+
   test('null turns one header off and leaves the others', () async {
     final r = await send(
       (_) => Response.ok('x'),
