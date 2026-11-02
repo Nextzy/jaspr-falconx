@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.4.0
+
+A Jaspr server can now send the baseline security headers from one middleware. `jaspr_falmonitor` is unchanged and keeps its own version.
+
+### Added
+
+- `jaspr_falserver`: `securityHeadersMiddleware` adds `referrer-policy`, `permissions-policy`, and `content-security-policy` to every response and keeps a header the inner handler already set. The defaults are `defaultReferrerPolicy`, `defaultPermissionsPolicy`, and a script-free `defaultContentSecurityPolicy`; pass `null` for a parameter to turn that header off. A value with `\r` or `\n` throws `ArgumentError`.
+
 ## 4.3.0
 
 A page can now answer 404 or 503 from the CMS status, a locale switcher can build its links, and a server can reach the CMS over a private URL and publish a sitemap. `jaspr_falmonitor` is unchanged and keeps its own version.
