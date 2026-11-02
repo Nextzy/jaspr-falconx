@@ -17,11 +17,12 @@ void logServerError(Object? message, {Object? error, StackTrace? stackTrace}) {
 }
 
 /// Writes [message] as one `[INFO]` line, with no stack trace, to the
-/// server's standard error.
+/// server's standard output.
 ///
 /// Unlike `Log.i`, which prints only in debug builds, this also writes in a
 /// release build. Use it for an expected failure that needs a trace in the
-/// log but no stack trace.
+/// log but no stack trace. It stays off standard error because log hosts
+/// such as Railway tag every standard-error line as an error.
 void logServerInfo(Object? message) {
-  stderr.writeln('[INFO] $message');
+  stdout.writeln('[INFO] $message');
 }
