@@ -123,6 +123,33 @@ ServerApp.addMiddleware(sitemapMiddleware(() async => [
 
 Register it after `assetMiddleware`, which then sets `Cache-Control` on the response; the sitemap middleware sets none. When `load` throws, it answers 503 with `retry-after: 60` and writes one line to stderr.
 
+## Security headers
+
+`securityHeadersMiddleware` adds `Referrer-Policy`, `Permissions-Policy`, and `Content-Security-Policy` to every response, whatever the status or method. A header the page already set is kept.
+
+```dart
+ServerApp.addMiddleware(gzipMiddleware);
+ServerApp.addMiddleware(assetMiddleware(buildId: buildId));
+ServerApp.addMiddleware(securityHeadersMiddleware());
+```
+
+| Header | Default |
+|---|---|
+| `Referrer-Policy` | `strict-origin-when-cross-origin` |
+| `Permissions-Policy` | `camera=(), microphone=(), geolocation=(), payment=(), usb=()` |
+| `Content-Security-Policy` | `frame-ancestors 'self'; base-uri 'self'; object-src 'none'` |
+
+The CSP has no `script-src`: that needs hashes for inline scripts and for scripts Cloudflare injects, so add it yourself. Pass a value to replace a default, or `null` to turn that header off:
+
+```dart
+securityHeadersMiddleware(
+  contentSecurityPolicy: null,
+  referrerPolicy: 'no-referrer',
+);
+```
+
+A value containing `\r` or `\n` throws `ArgumentError` when the middleware is created.
+
 ## Cloudflare
 
 Cloudflare does not cache HTML by default, so the HTML rows above have no effect at the edge until a Cache Rule makes HTML eligible for cache and tells Cloudflare to respect the origin `Cache-Control`.
