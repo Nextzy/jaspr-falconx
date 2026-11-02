@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.4.1
+
+`jaspr_falmonitor` is unchanged and keeps its own version.
+
+### Fixed
+
+- `jaspr_falconx`: `logServerInfo` writes its `[INFO]` line to standard output instead of standard error. Log hosts such as Railway tag every standard-error line as an error, so an expected failure that `ServerData.quietWhen` logs, such as a missing post answered with 404, showed up next to real errors. `logServerError` still writes to standard error.
+
 ## 4.4.0
 
 A Jaspr server can now send the baseline security headers from one middleware. `jaspr_falmonitor` is unchanged and keeps its own version.
