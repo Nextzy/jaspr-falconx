@@ -68,7 +68,7 @@ class EducationalOrganizationSchema extends Schema {
        );
 
   /// Creates a basic educational organization schema
-  factory basic({
+  factory EducationalOrganizationSchema.basic({
     required String name,
     required String url,
     String? description,
@@ -85,7 +85,7 @@ class EducationalOrganizationSchema extends Schema {
   }
 
   /// Creates a university schema
-  factory university({
+  factory EducationalOrganizationSchema.university({
     required String name,
     required String url,
     String? description,
@@ -110,7 +110,7 @@ class EducationalOrganizationSchema extends Schema {
   }
 
   /// Creates a school schema
-  factory school({
+  factory EducationalOrganizationSchema.school({
     required String name,
     required String url,
     String? description,

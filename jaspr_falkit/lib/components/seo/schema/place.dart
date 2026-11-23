@@ -47,7 +47,7 @@ class PlaceSchema extends Schema {
        );
 
   /// Creates a business location schema
-  factory businessLocation({
+  factory PlaceSchema.businessLocation({
     required String name,
     required SchemaDataType<PostalAddressSchema> address,
     String? description,
@@ -70,7 +70,7 @@ class PlaceSchema extends Schema {
   }
 
   /// Creates a basic place schema
-  factory basic({
+  factory PlaceSchema.basic({
     required String name,
     String? description,
     SchemaDataType<PostalAddressSchema>? address,
@@ -87,7 +87,7 @@ class PlaceSchema extends Schema {
   }
 
   /// Creates an event venue schema
-  factory eventVenue({
+  factory PlaceSchema.eventVenue({
     required String name,
     required SchemaDataType<PostalAddressSchema> address,
     String? description,

@@ -155,13 +155,10 @@ SeoMetaTags articleTags(PageSeoContext seo) => SeoMetaTags(
 
 ## Gotchas
 
-- The WebSite schema is rebuilt from `schemaWebSite` using only `name`, `description`, `url`, `inLanguage`, `datePublished`, `dateModified`, `author`, `publisher`, `keywords`, `image`, `mainEntity`, and `additionalProperties`. A `WebSchemaHelper.createWebSite(searchUrlTemplate: ...)` passed here loses its `potentialAction` and `sameAs`. Put them in `additionalProperties` (for example `{'potentialAction': WebSiteSchema.createSearchAction(searchUrlTemplate: ...)}`), or render a full schema yourself in `Document.head` without the `schema-group` id.
-- The BlogPosting schema is rebuilt from `schemaBlogPosting` using only `headline`, `description`, `url`, `datePublished`, `dateModified`, `author`, `publisher`, `image`, `keywords`, `articleSection`, `wordCount`, `timeRequired`, `inLanguage`, `articleBody`, and `additionalProperties`. `headline` falls back to `title`, `url` to `url`.
+- The WebSite and BlogPosting schemas start from the page's own values (`title`, `description`, `url`, `siteName`, `siteUrl`, `locale`, `author`, `publisher`, `keywords`, `imageUrl`); every field you set on `schemaWebSite` or `schemaBlogPosting` (`potentialAction`, `sameAs`, `about`, and the rest) is kept and wins over those values. `headline` falls back to `title`, `url` to `url`.
 - WebSite schema fallbacks: `name` is `schemaWebSite.name`, then `siteName`, then the page `title`; `url` is `schemaWebSite.url`, then `siteUrl`, then the page `url`. Set `siteUrl` on `SeoDefaults` so every page reports the same site URL.
 - Without `SeoDefaults.siteName`, `og:site_name` falls back to the page title.
-- `msvalidate.01` always carries `verification_token`: `SeoMetaTags` builds `MicrosoftMeta` without `msValidate`, and a `MicrosoftMeta` rendered beside `PageHead` does not replace it (the deeper head wins). Verify the site with Bing another way.
 - `SeoDefaults.twitter` supplies only `site`, `card`, and `creator`. Its `title`, `description`, `image`, and `imageAlt` are never read, so `SeoDefaults(twitter: TwitterMeta(image: x))` never emits `x`; set a site-wide image with `SeoDefaults.imageUrl`, or per page with `SeoMetaTags.twitter`.
 - `twitter:card` is emitted with no `content` when there is no image and no card is set.
 - `og:image:width` and `og:image:height` are always emitted, even without an image.
 - To stop indexing one page, pass `robots: 'noindex'`; the default is `index,follow`.
-- `title` is written into `<title>` as raw HTML. Strip `<` from untrusted titles.

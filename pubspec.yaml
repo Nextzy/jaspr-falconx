@@ -101,6 +101,14 @@ melos:
       description: Fail when a generated skill copy has drifted from its source or a published skill fails skills_lint.
       run: cd tool/skills_sync && dart pub get && dart run bin/skills_sync.dart check
 
+    check:constructors:
+      description: Fail on a `new` or lowercase-named `factory` constructor in lib/ (jaspr_builder 0.23.5 rejects the 3.13 forms).
+      run: |
+        set -- jaspr_*/lib
+        test -d "$1" || { echo "check:constructors: no jaspr_*/lib directory matched" >&2; exit 2; }
+        grep -rnE --include='*.dart' --exclude-dir=generated '^\s*(const\s+)?new\b|^\s*((const|external)\s+)*factory\s+[a-z_][A-Za-z0-9_]*\s*\(' "$@"
+        test $? -eq 1
+
     check:skills:test:
       description: Analyze and test tool/skills_sync, which melos run analyze and melos run test skip.
       run: cd tool/skills_sync && dart pub get && dart analyze && dart test

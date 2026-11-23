@@ -14,7 +14,7 @@ class BreadcrumbListSchema extends Schema {
       );
 
   /// Factory constructor for simple breadcrumbs from strings
-  factory fromStrings(List<String> breadcrumbs) {
+  factory BreadcrumbListSchema.fromStrings(List<String> breadcrumbs) {
     final items = breadcrumbs
         .map((name) => BreadcrumbItem(name: name))
         .toList();
@@ -22,7 +22,7 @@ class BreadcrumbListSchema extends Schema {
   }
 
   /// Factory constructor for breadcrumbs with URLs
-  factory withUrls(List<Map<String, String>> breadcrumbs) {
+  factory BreadcrumbListSchema.withUrls(List<Map<String, String>> breadcrumbs) {
     final items = breadcrumbs
         .map((item) => BreadcrumbItem(name: item['name']!, url: item['url']))
         .toList();

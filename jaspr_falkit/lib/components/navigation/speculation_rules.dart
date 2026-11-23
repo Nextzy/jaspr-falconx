@@ -1,4 +1,5 @@
 import 'package:jaspr_falkit/lib.dart';
+import 'package:jaspr_falkit/src/script_json.dart';
 
 /// Speculation Rules document: prefetch same-origin document links, skipping
 /// every path that starts with one of [excludePrefixes].
@@ -37,12 +38,12 @@ class SpeculationRules extends StatelessComponent {
 
   @override
   Component build(BuildContext context) {
-    final json = jsonEncode(
+    final json = encodeScriptJson(
       speculationRulesJson(
         eagerness: eagerness,
         excludePrefixes: excludePrefixes,
       ),
-    ).replaceAll('<', r'\u003c');
+    );
     return Component.element(
       tag: 'script',
       attributes: const {'type': 'speculationrules'},

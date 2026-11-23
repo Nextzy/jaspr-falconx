@@ -1,5 +1,7 @@
 import 'package:jaspr_falconnect/jaspr_falconnect.dart';
-import 'package:jaspr_falmodel/jaspr_falmodel.dart';
+
+/// Marks typed null or invalid data as a missing record for `pageErrorStatus`.
+const _missingData = DomainLayerException(type: BusinessErrorType.notFound);
 
 /// Base class for use cases: wraps failures into [Result] and unwraps
 /// required data.
@@ -67,10 +69,11 @@ abstract class FalUsecase {
     return result.resolve(
       (value) {
         if (value == null || (validator != null && !validator(value))) {
-          final resolveType = type ?? SystemErrorType.unexpected;
+          final resolveType = type ?? BusinessErrorType.notFound;
 
           throw DomainLayerException(
             type: resolveType,
+            originalException: type == null ? null : _missingData,
             userMessage:
                 userMessage ??
                 mapUserMessage(type: type, languageCode: languageCode),
@@ -82,6 +85,7 @@ abstract class FalUsecase {
       (exception, stackTrace) {
         throw exception.copyWith(
           type: type,
+          originalException: type == null ? null : exception,
           userMessage:
               userMessage ??
               exception.userMessage ??

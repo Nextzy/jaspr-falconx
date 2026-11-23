@@ -1,6 +1,11 @@
+import 'package:jaspr/jaspr.dart' show kIsWeb;
 import 'package:jaspr_faltool/src/utils/share_links.dart';
+import 'package:universal_web/js_interop.dart';
 import 'package:universal_web/web.dart' as web;
 
+/// Opens share dialogs and copies text in the browser.
+///
+/// Every method does nothing on the server.
 class ShareUtils {
   static String _getFullUrl(String url) {
     // If the URL is already absolute, return it as is
@@ -15,6 +20,7 @@ class ShareUtils {
   }
 
   static Future<void> shareToFacebook(String url) async {
+    if (!kIsWeb) return;
     final fullUrl = _getFullUrl(url);
     // Facebook doesn't support pre-filled text in the sharer dialog
     // The message will be extracted from the Open Graph meta tags
@@ -22,11 +28,13 @@ class ShareUtils {
   }
 
   static Future<void> shareToTwitter(String url, {String? message}) async {
+    if (!kIsWeb) return;
     final fullUrl = _getFullUrl(url);
     web.window.open(ShareLinks.x(fullUrl, text: message), '_blank');
   }
 
   static Future<void> shareToLinkedIn(String url, {String? message}) async {
+    if (!kIsWeb) return;
     final fullUrl = _getFullUrl(url);
     // LinkedIn uses Open Graph tags for title and description
     // Custom message can be added through summary parameter
@@ -35,14 +43,23 @@ class ShareUtils {
   }
 
   static Future<void> shareToLine(String url, {String? message}) async {
+    if (!kIsWeb) return;
     final fullUrl = _getFullUrl(url);
     // LINE allows custom text to be prepended to the URL
     web.window.open(ShareLinks.line(fullUrl, text: message), '_blank');
   }
 
+  /// Copies [text] and returns whether the browser accepted it.
+  ///
+  /// Returns `false` on the server or when the browser rejects the write.
   static Future<bool> copyToClipboard(String text, {bool isUrl = false}) async {
+    if (!kIsWeb) return false;
     final textToCopy = isUrl ? _getFullUrl(text) : text;
-    web.window.navigator.clipboard.writeText(textToCopy);
-    return true;
+    try {
+      await web.window.navigator.clipboard.writeText(textToCopy).toDart;
+      return true;
+    } on Object {
+      return false;
+    }
   }
 }

@@ -1,5 +1,4 @@
 import 'package:jaspr_falconnect/jaspr_falconnect.dart';
-import 'package:jaspr_falmodel/jaspr_falmodel.dart';
 
 /// Base class for repositories: wraps a thrown error into a failed [Result].
 ///

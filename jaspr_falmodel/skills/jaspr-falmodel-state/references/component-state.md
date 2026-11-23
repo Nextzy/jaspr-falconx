@@ -21,8 +21,8 @@ One per `FullComponentState` value, all with the shape `factory ComponentState.x
 | `toX` (one per state: `toInitial`, `toLoading`, `toSuccess`, `toFail`, ...) | `ComponentState<T> toX({T? data, String? id, UserFeedback? feedback, bool? build})` | the argument, else the state's default | dropped |
 | `toState` | `ComponentState<T> toState(FullComponentState state, {T? data, String? id, UserFeedback? feedback, bool? build})` | the argument, else `Information()` | dropped |
 | `copy` | `ComponentState<T> copy({FullComponentState? state, String? id, UserFeedback? feedback, T? data, bool? build})` | the argument, else kept | dropped |
-| `mapData` | `ComponentState<R> mapData<R>(R Function(T) f, {String? id, UserFeedback? feedback, bool? build})` | the argument, else kept | dropped |
-| `mapState` | `ComponentState<T> mapState(FullComponentState Function(FullComponentState) f, {String? id, UserFeedback? feedback, bool? build})` | the argument, else kept | dropped |
+| `mapData` | `ComponentState<R> mapData<R>(R Function(T) f, {String? id, UserFeedback? feedback, bool? build})` | the argument, else kept | kept |
+| `mapState` | `ComponentState<T> mapState(FullComponentState Function(FullComponentState) f, {String? id, UserFeedback? feedback, bool? build})` | the argument, else kept | kept |
 | `apply` | `R apply<R>(R Function(FullComponentState, T) f)` | n/a | n/a |
 | `addEvent` | `ComponentState<T> addEvent(Object event)` | kept | set |
 
@@ -89,7 +89,7 @@ class _TagCountState extends State<TagCount> {
 
 ## One-shot events
 
-`addEvent(event)` returns a copy carrying `event`. Every later `copy`, `to*`, `toState`, `mapData`, or `mapState` drops it, so call `addEvent` last and the component reacts to the event once.
+`addEvent(event)` returns a copy carrying `event`. Every later `copy`, `to*`, or `toState` drops it (`mapData` and `mapState` keep it), so call `addEvent` last and the component reacts to the event once.
 
 ```dart
 const String showSavedToast = 'show-saved-toast';

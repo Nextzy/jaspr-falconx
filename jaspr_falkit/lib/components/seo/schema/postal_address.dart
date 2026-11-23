@@ -31,7 +31,7 @@ class PostalAddressSchema extends Schema {
        );
 
   /// Creates a US address schema
-  factory usAddress({
+  factory PostalAddressSchema.usAddress({
     required String streetAddress,
     required String addressLocality,
     required String addressRegion,
@@ -51,7 +51,7 @@ class PostalAddressSchema extends Schema {
   }
 
   /// Creates an international address schema
-  factory international({
+  factory PostalAddressSchema.international({
     required String streetAddress,
     required String addressLocality,
     required String addressCountry,
@@ -70,7 +70,7 @@ class PostalAddressSchema extends Schema {
   }
 
   /// Creates a simple address schema
-  factory simple({
+  factory PostalAddressSchema.simple({
     required String streetAddress,
     required String city,
     required String country,
@@ -83,7 +83,7 @@ class PostalAddressSchema extends Schema {
   }
 
   /// Creates a European address schema
-  factory european({
+  factory PostalAddressSchema.european({
     required String streetAddress,
     required String city,
     required String postalCode,

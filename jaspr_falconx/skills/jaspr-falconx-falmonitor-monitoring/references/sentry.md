@@ -7,7 +7,7 @@
 | Field | Default | Meaning |
 |---|---|---|
 | `dns` | required | the Sentry DSN (the field name is a typo for DSN) |
-| `sendDefaultPii` | `true` | copied to Sentry's `sendDefaultPii`: request headers and the user's IP address |
+| `sendDefaultPii` | `false` | copied to Sentry's `sendDefaultPii`; on web it only adds the auto-inferred IP address (`{{auto}}`) |
 | `enabled` | `true` | `false` keeps the handler off |
 
 `initial(option)` stores the option and, when enabled, runs `Sentry.init` with `dsn` and `sendDefaultPii` only. Errors from `Sentry.init` are not caught.
@@ -41,6 +41,7 @@ Future<void> identifySignedInUser(String userId, String email) =>
 
 ## Gotchas
 
-- `Monitoring.init` already called `setupUserIdentifier` with the device id and `deviceInfo`. A later call replaces that user, so the device data is gone unless you pass it again (`Monitoring.deviceInfo`).
+- `Monitoring.init` already called `setupUserIdentifier` with the device id and `deviceInfo` (`platform`, `browser_name`, `language`, `screen_width`, `screen_height`). A later call replaces that user, so the device data is gone unless you pass it again (`Monitoring.deviceInfo`).
 - `setupUserIdentifier`, `captureError`, and `captureEvent` catch their own errors and log them with `Log.w` from `jaspr_faltool`; a failed report never throws.
-- `sendDefaultPii` defaults to `true`; set it to `false` unless users consented.
+- `sendDefaultPii` defaults to `false`; set it to `true` only when users consented to IP collection. It does not limit the rest: the Sentry 10.6.0 web SDK always attaches the full User-Agent header, the page URL with query string and fragment, the timezone name, `deviceMemory`, available screen size, `devicePixelRatio`, orientation, and online state. Apps needing less add their own Sentry scrubbing; this package adds none.
+- The stored device id is a persistent identifier sent to Sentry as the user id, so consent guidance applies to Sentry too, not only Umami.

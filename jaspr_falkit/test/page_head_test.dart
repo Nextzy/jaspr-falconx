@@ -1,3 +1,4 @@
+import 'package:jaspr/jaspr.dart';
 import 'package:jaspr_falkit/jaspr_falkit.dart';
 import 'package:jaspr_test/server_test.dart';
 
@@ -131,5 +132,33 @@ void main() {
     expect(alternates['x-default'], 'https://nonthawit.com/th/projects/42');
     expect(alternates['en'], 'https://nonthawit.com/en/projects/42');
     expect(ctx.canonical, 'https://nonthawit.com/en/projects/42');
+  });
+
+  testServer('an inner head replaces the outer hreflang links', (tester) async {
+    Component page(String path) => PageHead(
+      languageCode: 'en',
+      supportedLanguageCodes: const ['th', 'en'],
+      siteUrl: 'https://nonthawit.com',
+      path: path,
+      rootBreadcrumbName: 'Nonthawit',
+      seo: (ctx) => SeoMetaTags(
+        title: 'T',
+        alternateLanguageUrls: ctx.alternateLanguageUrls,
+      ),
+    );
+    tester.pumpComponent(
+      Document.head(children: [page('/en/'), page('/en/posts/1')]),
+    );
+    final response = await tester.request('/');
+
+    for (final locale in ['en', 'x-default']) {
+      expect(
+        'hreflang="$locale"'.allMatches(response.body).length,
+        1,
+        reason: locale,
+      );
+    }
+    expect(response.body, contains('href="https://nonthawit.com/en/posts/1"'));
+    expect(response.body, isNot(contains('href="https://nonthawit.com/en"')));
   });
 }

@@ -17,8 +17,8 @@ What `requiredResultData` throws:
 
 | `result` | Thrown exception |
 |---|---|
-| successful, but `null` or failing `validator` | `DomainLayerException(type: type ?? SystemErrorType.unexpected, userMessage: userMessage ?? mapUserMessage(type: type, languageCode: languageCode), developerMessage: developerMessage)` |
-| failed with `exception` | `exception.copyWith(type: type, userMessage: userMessage ?? exception.userMessage ?? mapUserMessage(type: type, languageCode: languageCode), developerMessage: developerMessage)`; `copyWith` keeps every field you pass `null` for |
+| successful, but `null` or failing `validator` | `DomainLayerException(type: type ?? BusinessErrorType.notFound, originalException: type == null ? null : <a not-found DomainLayerException>, userMessage: userMessage ?? mapUserMessage(type: type, languageCode: languageCode), developerMessage: developerMessage)` |
+| failed with `exception` | `exception.copyWith(type: type, originalException: type == null ? null : exception, userMessage: userMessage ?? exception.userMessage ?? mapUserMessage(type: type, languageCode: languageCode), developerMessage: developerMessage)`; `copyWith` keeps every field you pass `null` for |
 
 ## Sample
 
@@ -66,10 +66,9 @@ Give `ServerData` (`references/rendering.md`) `load: () => getPost(slug)`, since
 
 ## Gotchas
 
-- Passing `type:` to `requiredResultData` or `requiredFutureResultData` replaces the type of a failed `result`. A CMS 404 then reaches `pageErrorStatus` without its `NetworkErrorType` and gets 503 instead of 404. Leave `type` out on page loaders that feed `ServerData`.
-- The rethrown failure keeps its class when that class overrides `copyWith`, as `DomainLayerException`, `DataLayerException`, and `TodoException` do. A `NetworkException` comes back as a plain `CommonException` without `statusCode` and `response`, and only its type still carries the status.
+- The rethrown failure keeps its class when that class overrides `copyWith`, as `DomainLayerException`, `DataLayerException`, and `TodoException` do. A `NetworkException` comes back as a plain `CommonException` without `statusCode` and `response`, and only its type still carries the status. Pass `type:` and the original exception, with its CMS status, stays in `originalException`.
 - `mapUserMessage` receives the `type` argument you passed, which is `null` when you passed none; it never sees the failure's own type. On a failed `result` it runs only when the exception has no `userMessage` and you passed none.
-- A record the repository returns as `Result.success(null)` makes `requiredResultData` throw `DomainLayerException(type: SystemErrorType.unexpected)`, which `pageErrorStatus` maps to 503. For a page that should answer 404, return the CMS's failure (a `NetworkException` with 403 or 404) instead of a successful `null`.
+- A `Result.success(null)`, or a value that fails `validator`, makes `requiredResultData` throw a `DomainLayerException` that `pageErrorStatus` maps to 404. Without `type` its type is `BusinessErrorType.notFound` and `originalException` is `null`; with `type` it keeps your type and sets a not-found `DomainLayerException` as `originalException`.
 - `runDomainCatching` keeps a thrown `CommonException` as it is, while `runDataCatching` from `jaspr_falconnect` keeps a `DataLayerException` and wraps any other `CommonException` in a `DataLayerException` with the same type.
 - Code that reaches the browser (`@client` islands and anything they import) never imports `dart:io`, `package:jaspr/server.dart`, or `jaspr_falserver`. Server code may use `dart:io`.
 - Write constructors with the type name (`const Foo(...)`, `Foo._()`), never `new(...)`: consuming apps run jaspr_builder 0.23.5, which rejects primary constructors.

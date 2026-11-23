@@ -32,6 +32,41 @@ void main() {
     );
   });
 
+  test('requiredResultData answers 404 for null data', () {
+    expect(
+      () => _U().requiredResultData<String>(Result<String?>.success(null)),
+      throwsA(isA<CommonException>().having(pageErrorStatus, 'status', 404)),
+    );
+  });
+
+  test('requiredResultData answers 404 for typed null data', () {
+    expect(
+      () => _U().requiredResultData<String>(
+        Result<String?>.success(null),
+        type: 'post',
+      ),
+      throwsA(
+        isA<CommonException>()
+            .having((e) => e.type, 'type', 'post')
+            .having(pageErrorStatus, 'status', 404),
+      ),
+    );
+  });
+
+  test('requiredResultData keeps the 404 of a typed failure', () {
+    expect(
+      () => _U().requiredResultData<String>(
+        Result<String?>.failure(const NetworkNotFoundException()),
+        type: 'post',
+      ),
+      throwsA(
+        isA<CommonException>()
+            .having((e) => e.type, 'type', 'post')
+            .having(pageErrorStatus, 'status', 404),
+      ),
+    );
+  });
+
   test('requiredResultData rejects a failed validator', () {
     expect(
       () => _U().requiredResultData<int>(

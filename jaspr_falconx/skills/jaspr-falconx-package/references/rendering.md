@@ -97,17 +97,16 @@ void reportCmsFailure(CommonException error) {
 
 | Function | Returns or does |
 |---|---|
-| `int pageErrorStatus(CommonException error)` | 404 when the CMS answered 403 (Directus answers 403 for an unknown id) or 404; 503 for every other failure (5xx, timeout, network, unexpected), so crawlers retry |
+| `int pageErrorStatus(CommonException error)` | 404 when the error, or a `CommonException` in its `originalException` chain, is a missing record (the CMS answered 403, which Directus gives for an unknown id, or 404, or the type is `BusinessErrorType.notFound`); 503 for every other failure (5xx, timeout, network, unexpected), so crawlers retry |
 | `void applyPageErrorStatus(BuildContext context, CommonException error)` | `setResponseStatus` with `pageErrorStatus(error)`; a 503 also gets `retry-after: 60`. Does nothing in the browser |
 | `bool isExpectedPageFailure(CommonException error)` | `pageErrorStatus(error) == 404`; pass it as `quietWhen` so a missing record logs one info line |
 
-The CMS status is a `NetworkException`'s `statusCode`, or, for any other `CommonException`, the `statusCode` of its `type` when that is a `NetworkErrorType`. The second case covers the plain `CommonException` that `FalUsecase.requiredResultData` rethrows, which keeps the type but drops `statusCode`.
+Each link of the chain gives a CMS status: a `NetworkException`'s `statusCode`, or, for any other `CommonException`, the `statusCode` of its `type` when that is a `NetworkErrorType`. `FalUsecase.requiredResultData` rethrows a plain `CommonException` that drops `statusCode`. A failed result rethrown with `type:` keeps the original failure in `originalException`; without `type:` only the failure's type carries the status. Null data without `type:` throws a not-found `DomainLayerException` (`BusinessErrorType.notFound`, no marker); with `type:` it keeps your type and sets a not-found `DomainLayerException` as `originalException`. The walk finds the 404 in each case.
 
 ## Gotchas
 
 - Render `ServerData` only in the server-rendered tree, never inside a `@client` island or a component an island renders.
-- `ServerData` handles a failed `Result` only. An exception that `load` throws is not caught or logged by `ServerData`; return `runDomainCatching(...)` from a `FalUsecase` (or `runDataCatching(...)` from a `jaspr_falconnect` repository) so `load` never throws.
+- `ServerData` turns a thrown `load` into a failed result: a thrown `CommonException` as it is, another `Exception` wrapped as `SystemErrorType.unexpected` with it as `originalException`, anything else wrapped with its text in `developerMessage`. It is logged and still gets `cache-control: no-store`.
 - Without `applyPageErrorStatus` (or `setResponseStatus`) in `errorBuilder`, the error page is served with status 200.
-- `pageErrorStatus` answers 503 for a failure whose type you replaced, for example through `requiredResultData(type: ...)`; see `references/usecase.md`.
 - Code that reaches the browser (`@client` islands and anything they import) never imports `dart:io`, `package:jaspr/server.dart`, or `jaspr_falserver`. Server code may use `dart:io`. With the helpers here, a shared component needs no server import.
 - Write constructors with the type name (`const Foo(...)`, `Foo._()`), never `new(...)`: consuming apps run jaspr_builder 0.23.5, which rejects primary constructors.

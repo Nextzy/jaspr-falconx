@@ -29,7 +29,7 @@ Answers "does jaspr_falmodel already provide this?" here and routes "how do I ca
 
 ## Gotchas
 
-- `event` is one-shot: only the state that `addEvent` returns carries it. `copy`, `toState`, every `to*` transition, `mapData`, and `mapState` all drop it.
+- `event` is one-shot: only the state that `addEvent` returns carries it. `copy`, `toState`, and every `to*` transition drop it; `mapData` and `mapState` keep it.
 - Every `to*` transition and `toState` replace `feedback` with a default when you pass none: `Information()`, or `Warning()` for `toWarning` and `Failure()` for `toFail`. `copy`, `mapData`, and `mapState` keep the current `feedback`.
 - `copy` and the `to*` transitions cannot set `data` to `null` (`data ?? this.data`); build a new state with a factory, such as `ComponentState<User?>.normal(null)`.
 - The `build` parameter on `copy`, `to*`, `mapData`, and `mapState` is accepted and ignored; `ComponentState` has no `build` field.

@@ -133,12 +133,8 @@ Older aliases still compile and mean the same class: `WebSiteSchemaData`, `Websi
 
 ## Gotchas
 
-- `SchemaListDataType(schemaList: ...)` throws `JsonUnsupportedObjectError` when the page renders, because its `value` is a lazy iterable. Pass `mapList: [for (final p in people) p.schemaData]` or `strList` instead.
-- `BlogSchema`'s `dateCreated` and `dateModified` are `DateTime`s stored as is, which `jsonEncode` rejects with `JsonUnsupportedObjectError`. Leave them `null` and pass ISO strings through `additionalProperties`. `BlogPostingSchema` converts its dates and is safe.
-- `SchemaGroup` removes `@context` from each member's own `schemaData` map. A member built from a `const` map (`GenericSchema(data: const {...})`) throws `UnsupportedError`, and a schema rendered both inside a group and alone loses its `@context` alone.
 - `ArticleSchema`'s factories all write `@type: Article`. For `NewsArticle` or `TechArticle`, use the main constructor with `additionalProperties: {'@type': 'NewsArticle'}`.
 - Some helper maps carry no `@type`: `SoftwareApplicationSchema.createOffer`, `createAggregateRating`, and `createReview`, `OrganizationSchema.createAddress`, and `PersonSchemaHelper.createOrganization` and `createPersonReference`. Add the `@type` yourself when schema.org needs it.
 - `PersonSchema.createAlumniOf` accepts `degree`, `startDate`, and `endDate` but writes only `name` and `url`.
 - `PostalAddressSchema.european` maps an English country name to its ISO code with `getCountryCode` and falls back to the name it was given; `simple` writes the country as given.
 - `BreadcrumbListSchema` writes the URL and name inside an `item` `Thing` and puts `name` on the list item only when there is no URL. `WebSchemaHelper.createBreadcrumb` and `WebSiteSchema.createBreadcrumbList` build other shapes; `SeoMetaTags.breadcrumbItems` uses `BreadcrumbListSchema`.
-- JSON-LD strings go into the script unescaped. Keep untrusted text containing `</script` out of schema fields.

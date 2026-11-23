@@ -33,7 +33,7 @@ class DefaultMeta extends StatelessComponent {
   Component build(BuildContext context) => Document.head(
     children: [
       if (title.isNotNullOrBlank)
-        Component.element(tag: 'title', children: [RawText(title!)]),
+        Component.element(tag: 'title', children: [Component.text(title!)]),
       if (description.isNotNullOrBlank)
         Meta(name: 'description', content: description, unique: true),
       if (keywords != null && keywords.isNotNullOrEmpty)
@@ -49,15 +49,24 @@ class DefaultMeta extends StatelessComponent {
       if (robots.isNotNullOrBlank)
         Meta(name: 'robots', content: robots, unique: true),
       if (canonical.isNotNullOrBlank)
-        LinkHeader(rel: 'canonical', href: canonical!),
+        LinkHeader(
+          id: 'link-canonical',
+          unique: false,
+          rel: 'canonical',
+          href: canonical!,
+        ),
       if (favicon.isNotNullOrBlank)
         LinkHeader(
+          id: 'link-icon',
+          unique: false,
           rel: 'icon',
           href: favicon!,
           attributes: const {'sizes': 'any'},
         ),
       if (faviconSvg.isNotNullOrBlank)
         LinkHeader(
+          id: 'link-icon-svg',
+          unique: false,
           rel: 'icon',
           href: faviconSvg!,
           attributes: const {'type': 'image/svg+xml'},
@@ -65,9 +74,19 @@ class DefaultMeta extends StatelessComponent {
       if (themeColor.isNotNullOrBlank)
         Meta(name: 'theme-color', content: themeColor, unique: true),
       if (manifest.isNotNullOrBlank)
-        LinkHeader(rel: 'manifest', href: manifest!),
+        LinkHeader(
+          id: 'link-manifest',
+          unique: false,
+          rel: 'manifest',
+          href: manifest!,
+        ),
       if (imageSrc.isNotNullOrBlank)
-        LinkHeader(rel: 'image_src', href: imageSrc!),
+        LinkHeader(
+          id: 'link-image-src',
+          unique: false,
+          rel: 'image_src',
+          href: imageSrc!,
+        ),
     ],
   );
 }

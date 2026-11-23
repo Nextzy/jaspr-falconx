@@ -5,6 +5,10 @@ class UmamiHandler extends MonitorHandler<UmamiAnalyticOption> {
 
   static final UmamiHandler instance = UmamiHandler._();
 
+  /// Does nothing; the browser handler forgets its loaded tracker here.
+  @visibleForTesting
+  static void resetTrackerLoad() {}
+
   @override
   Future<void> initial(UmamiAnalyticOption option) async {
     // Stub: Do nothing on server.

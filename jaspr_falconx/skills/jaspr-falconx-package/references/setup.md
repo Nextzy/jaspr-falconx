@@ -4,7 +4,7 @@ The jaspr-falconx packages are not on pub.dev. List each one you import as a git
 
 ## Which package
 
-`jaspr_falconx` re-exports every package below except `jaspr_falserver`, and ships a copy of each one's skill. Every package ships its own skill plus copies of the skills of the packages its barrel re-exports: `jaspr_faltool` also ships the `dart_faltool` skill, `jaspr_falmodel` the `dart_falmodel` one, `jaspr_falconnect` the `dart_falconnect` one, and `jaspr_falkit` the `jaspr_falmodel` and `dart_falmodel` ones. `jaspr_falstore`, `jaspr_falmonitor`, and `jaspr_falserver` ship only their own. For how to call a package, read the skill shipped for it.
+`jaspr_falconx` re-exports every package below except `jaspr_falserver`, and ships a copy of each one's skill. Every package ships its own skill plus copies of the skills of the packages its barrel re-exports: `jaspr_faltool` also ships the `dart_faltool` skill, `jaspr_falmodel` the `dart_falmodel` one, `jaspr_falconnect` the `dart_falconnect`, `jaspr_falmodel`, and `dart_falmodel` ones, and `jaspr_falkit` the `jaspr_falmodel` and `dart_falmodel` ones. `jaspr_falstore`, `jaspr_falmonitor`, and `jaspr_falserver` ship only their own. For how to call a package, read the skill shipped for it.
 
 | Need | Package | Barrel |
 |---|---|---|
@@ -17,7 +17,7 @@ The jaspr-falconx packages are not on pub.dev. List each one you import as a git
 | Sentry errors and Umami analytics (`Monitoring`) | `jaspr_falmonitor` | `package:jaspr_falmonitor/jaspr_falmonitor.dart` |
 | Server-only shelf middleware: versioned assets, `Cache-Control`, security headers, sitemap, internal CMS URL | `jaspr_falserver` | `package:jaspr_falserver/jaspr_falserver.dart` |
 
-A single package's barrel re-exports only what its skill says. `jaspr_falkit` re-exports `jaspr_falmodel`; `jaspr_falconnect` does not, so code that names `Result` or `ComponentState` next to `jaspr_falconnect` also lists `jaspr_falmodel` (or lists `jaspr_falconx` instead). No `jaspr_fal*` barrel re-exports `jaspr`; list and import it yourself.
+A single package's barrel re-exports only what its skill says. `jaspr_falkit` and `jaspr_falconnect` re-export `jaspr_falmodel`, so code that names `Result` or `ComponentState` needs only one of them. No `jaspr_fal*` barrel re-exports `jaspr`; list and import it yourself.
 
 ## Git dependency
 

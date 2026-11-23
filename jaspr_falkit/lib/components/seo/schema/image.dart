@@ -66,7 +66,7 @@ class ImageSchema extends Schema {
        );
 
   /// Factory constructor for basic image
-  factory basic({
+  factory ImageSchema.basic({
     required String url,
     String? caption,
     int? width,
@@ -81,7 +81,7 @@ class ImageSchema extends Schema {
   }
 
   /// Factory constructor for photo with metadata
-  factory photo({
+  factory ImageSchema.photo({
     required String url,
     required String name,
     String? caption,
@@ -108,12 +108,16 @@ class ImageSchema extends Schema {
   }
 
   /// Factory constructor for thumbnail image
-  factory thumbnail({required String url, int width = 150, int height = 150}) {
+  factory ImageSchema.thumbnail({
+    required String url,
+    int width = 150,
+    int height = 150,
+  }) {
     return ImageSchema(url: url, width: width, height: height);
   }
 
   /// Factory constructor for hero/banner image
-  factory hero({
+  factory ImageSchema.hero({
     required String url,
     required String name,
     String? caption,
