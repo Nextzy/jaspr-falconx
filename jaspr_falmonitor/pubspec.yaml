@@ -12,7 +12,7 @@ dependencies:
   jaspr: ^0.23.5
   jaspr_faltool:
     path: ../jaspr_faltool
-  sentry: ^10.2.0
+  sentry: ^10.6.0
   universal_web: ^1.1.1+2
 
 dev_dependencies:
