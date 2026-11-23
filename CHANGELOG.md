@@ -1,5 +1,17 @@
 # Changelog
 
+## 4.5.0
+
+`jaspr_falmonitor` now ships a skill, so it moves from 0.0.1 to 0.1.0.
+
+### Added
+
+- Each `jaspr_fal*` package ships skills under its own `skills/` directory, and an app installs them with `dart run skills@ get`. The CLI reads only the packages an app lists directly, so `jaspr_falconx` and the packages that re-export another package also carry generated copies of the skills for what they re-export. `README.md` lists which skills each package gives you.
+
+### Changed
+
+- `jaspr_faltool`, `jaspr_falmodel`, and `jaspr_falconnect` depend on `dart_faltool`, `dart_falmodel`, and `dart_falconnect` 2.5.0.
+
 ## 4.4.1
 
 `jaspr_falmonitor` is unchanged and keeps its own version.

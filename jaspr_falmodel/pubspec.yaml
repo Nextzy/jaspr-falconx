@@ -1,6 +1,6 @@
 name: jaspr_falmodel
 description: A new Flutter package project.
-version: 4.4.1
+version: 4.5.0
 publish_to: none
 
 environment:
@@ -13,7 +13,7 @@ dependencies:
     git:
       url: https://github.com/Nextzy/dart-falconx
       path: dart_falmodel
-      ref: 2.4.2
+      ref: 2.5.0
   #    path: /Users/nonthawit/Data/Github/FalconX/dart-falconx/dart_falmodel
   jaspr_faltool:
     path: ../jaspr_faltool
