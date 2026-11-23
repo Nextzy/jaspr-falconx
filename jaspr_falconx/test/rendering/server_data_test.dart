@@ -43,6 +43,38 @@ void main() {
     expect(r.headers['cache-control'], 'no-store');
   });
 
+  testServer('renders errorBuilder and no-store when load throws', (
+    tester,
+  ) async {
+    tester.pumpComponent(
+      ServerData<String>(
+        load: () async => throw StateError('boom'),
+        builder: (_, d) => const Component.text('data'),
+        errorBuilder: (_, e) => const Component.text('err'),
+      ),
+    );
+    final r = await tester.request('/');
+    expect(r.body, contains('err'));
+    expect(r.headers['cache-control'], 'no-store');
+  });
+
+  testServer('passes a thrown CommonException to errorBuilder unchanged', (
+    tester,
+  ) async {
+    tester.pumpComponent(
+      ServerData<String>(
+        load: () async => throw const CommonException(
+          type: SystemErrorType.unexpected,
+          userMessage: 'try later',
+        ),
+        builder: (_, d) => const Component.text('data'),
+        errorBuilder: (_, e) => Component.text('err:${e.userMessage}'),
+      ),
+    );
+    final r = await tester.request('/');
+    expect(r.body, contains('err:try later'));
+  });
+
   testServer('logs a failed load to stderr', (tester) async {
     tester.pumpComponent(
       ServerData<String>(

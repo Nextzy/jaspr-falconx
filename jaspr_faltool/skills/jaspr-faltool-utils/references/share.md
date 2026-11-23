@@ -22,7 +22,7 @@ String lineLink(String articleUrl) => ShareLinks.line(articleUrl, text: 'Read th
 
 ## `ShareUtils`
 
-Browser only: each method reads `window` from `package:universal_web` with no `kIsWeb` check, so a call during server rendering throws. Call it from a browser event, such as an `onClick` handler in a `@client` island.
+Every method returns at once on the server (`kIsWeb` is false), so a call during server rendering is safe but does nothing. Call it from a browser event, such as an `onClick` handler in a `@client` island.
 
 A relative `url` (for example `/posts/1`) becomes absolute with `window.location.origin`; a URL starting with `http://` or `https://` is kept.
 
@@ -32,22 +32,20 @@ A relative `url` (for example `/posts/1`) becomes absolute with `window.location
 | `shareToTwitter` | `static Future<void> shareToTwitter(String url, {String? message})` | Opens `ShareLinks.x` with `message` as `text` |
 | `shareToLinkedIn` | `static Future<void> shareToLinkedIn(String url, {String? message})` | Opens `ShareLinks.linkedIn` with `message` as `summary` |
 | `shareToLine` | `static Future<void> shareToLine(String url, {String? message})` | Opens `ShareLinks.line` with `message` before the URL |
-| `copyToClipboard` | `static Future<bool> copyToClipboard(String text, {bool isUrl = false})` | Writes `text` (made absolute first when `isUrl`) to the clipboard |
+| `copyToClipboard` | `static Future<bool> copyToClipboard(String text, {bool isUrl = false})` | Writes `text` (made absolute first when `isUrl`) to the clipboard; returns `false` on the server or when the browser rejects the write |
 
 ```dart
 Future<void> onShareClicked(String postPath) async {
-  if (!kIsWeb) return;
   await ShareUtils.shareToTwitter(postPath, message: 'New post');
 }
 
 Future<void> onCopyLinkClicked(String postPath) async {
-  if (!kIsWeb) return;
   await ShareUtils.copyToClipboard(postPath, isUrl: true);
 }
 ```
 
 ## Gotchas
 
-- `copyToClipboard` starts the clipboard write without awaiting it and always returns `true`, so `true` does not prove the copy worked (the browser can refuse it outside a user gesture or a secure context).
+- `copyToClipboard` returns `false` on the server and when the browser refuses the write (outside a user gesture or a secure context, or without permission).
 - `window.open` from code that is not handling a user click is usually blocked as a pop-up.
 - `ShareLinks.x` targets `twitter.com/intent/tweet`, and `ShareUtils` names the method `shareToTwitter`.

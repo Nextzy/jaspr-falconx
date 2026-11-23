@@ -16,6 +16,27 @@ void main() {
       expect(pageErrorStatus(const NetworkInternalServerException()), 503);
     });
 
+    test('a typed exception wrapping a CMS 404 is 404', () {
+      expect(
+        pageErrorStatus(
+          const CommonException(
+            type: 'x',
+            originalException: NetworkNotFoundException(),
+          ),
+        ),
+        404,
+      );
+    });
+
+    test('a not-found business type is 404', () {
+      expect(
+        pageErrorStatus(
+          const CommonException(type: BusinessErrorType.notFound),
+        ),
+        404,
+      );
+    });
+
     test('a timeout is 503', () {
       expect(pageErrorStatus(const NetworkTimeoutException()), 503);
     });

@@ -260,8 +260,10 @@ class SeoMetaTags extends StatelessComponent {
           color: apple?.color ?? defaultApple?.color ?? resolvedColor,
           capable: apple?.capable ?? defaultApple?.capable,
           fullscreen: apple?.fullscreen ?? defaultApple?.fullscreen,
+          pwaScript: apple?.pwaScript ?? defaultApple?.pwaScript,
         ),
         MicrosoftMeta(
+          msValidate: microsoft?.msValidate ?? defaultMicrosoft?.msValidate,
           tileColor:
               microsoft?.tileColor ??
               defaultMicrosoft?.tileColor ??
@@ -280,47 +282,32 @@ class SeoMetaTags extends StatelessComponent {
             // WebSite schema is rendered on EVERY page (Google recommends this
             // for sitelinks searchbox + brand entity). BlogPosting is added
             // additionally on article pages — they are NOT mutually exclusive.
-            WebSiteSchema(
-              name: schemaWebSite?.name ?? resolvedSiteName ?? title,
-              description: schemaWebSite?.description ?? description,
-              url: schemaWebSite?.url ?? resolvedSiteUrl ?? url,
-              inLanguage: schemaWebSite?.inLanguage ?? resolvedLocale,
-              datePublished: schemaWebSite?.datePublished,
-              dateModified: schemaWebSite?.dateModified,
-              author:
-                  schemaWebSite?.author ?? resolvedAuthor?.toSchemaDataType(),
-              publisher:
-                  schemaWebSite?.publisher ??
-                  resolvedPublisher?.toSchemaDataType(),
-              keywords: schemaWebSite?.keywords ?? keywords,
-              image:
-                  schemaWebSite?.image ?? resolvedImageUrl?.toSchemaDataType(),
-              mainEntity: schemaWebSite?.mainEntity,
-              additionalProperties: schemaWebSite?.additionalProperties,
+            _mergedSchema(
+              fallback: WebSiteSchema(
+                name: resolvedSiteName ?? title,
+                description: description,
+                url: resolvedSiteUrl ?? url,
+                inLanguage: resolvedLocale,
+                author: resolvedAuthor?.toSchemaDataType(),
+                publisher: resolvedPublisher?.toSchemaDataType(),
+                keywords: keywords,
+                image: resolvedImageUrl?.toSchemaDataType(),
+              ),
+              given: schemaWebSite,
             ),
             if (isArticle)
-              BlogPostingSchema(
-                headline: schemaBlogPosting?.headline ?? title,
-                description: schemaBlogPosting?.description ?? description,
-                url: schemaBlogPosting?.url ?? url,
-                datePublished: schemaBlogPosting?.datePublished,
-                dateModified: schemaBlogPosting?.dateModified,
-                author:
-                    schemaBlogPosting?.author ??
-                    resolvedAuthor?.toSchemaDataType(),
-                publisher:
-                    schemaBlogPosting?.publisher ??
-                    resolvedPublisher?.toSchemaDataType(),
-                image:
-                    schemaBlogPosting?.image ??
-                    resolvedImageUrl?.toSchemaDataType(),
-                keywords: schemaBlogPosting?.keywords ?? keywords,
-                articleSection: schemaBlogPosting?.articleSection,
-                wordCount: schemaBlogPosting?.wordCount,
-                timeRequired: schemaBlogPosting?.timeRequired,
-                inLanguage: schemaBlogPosting?.inLanguage ?? resolvedLocale,
-                articleBody: schemaBlogPosting?.articleBody,
-                additionalProperties: schemaBlogPosting?.additionalProperties,
+              _mergedSchema(
+                fallback: BlogPostingSchema(
+                  headline: title,
+                  description: description,
+                  url: url,
+                  author: resolvedAuthor?.toSchemaDataType(),
+                  publisher: resolvedPublisher?.toSchemaDataType(),
+                  image: resolvedImageUrl?.toSchemaDataType(),
+                  keywords: keywords,
+                  inLanguage: resolvedLocale,
+                ),
+                given: schemaBlogPosting,
               ),
             ?schemaPerson ?? defaults?.schemaPerson,
             ?schemaOrganization ?? defaults?.schemaOrganization,
@@ -331,6 +318,12 @@ class SeoMetaTags extends StatelessComponent {
       ],
     );
   }
+
+  /// Merges [given] over [fallback]; the caller's present fields win.
+  static Schema _mergedSchema({required Schema fallback, Schema? given}) =>
+      given == null
+      ? fallback
+      : GenericSchema(data: {...fallback.schemaData, ...given.schemaData});
 }
 
 class Meta extends StatelessComponent {
@@ -381,7 +374,9 @@ class LinkHeader extends StatelessComponent {
   @override
   Component build(BuildContext context) => link(
     href: href,
-    id: unique ? 'link_$id$rel$type$as$attributes'.hashSha256(length: 5) : id,
+    id: unique
+        ? 'link_$id$href$rel$type$as$attributes'.hashSha256(length: 5)
+        : id,
     rel: rel,
     type: type,
     as: as,

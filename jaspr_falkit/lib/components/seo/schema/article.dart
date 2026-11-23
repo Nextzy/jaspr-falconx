@@ -91,7 +91,7 @@ class ArticleSchema extends Schema {
        );
 
   /// Factory constructor for news articles
-  factory newsArticle({
+  factory ArticleSchema.newsArticle({
     required String headline,
     required String datePublished,
     required SchemaDataType<OrganizationSchema> publisher,
@@ -116,7 +116,7 @@ class ArticleSchema extends Schema {
   }
 
   /// Factory constructor for tech articles
-  factory techArticle({
+  factory ArticleSchema.techArticle({
     required String headline,
     required String datePublished,
     required SchemaDataType<PersonSchema> author,
@@ -143,7 +143,7 @@ class ArticleSchema extends Schema {
   }
 
   /// Factory constructor for blog posts
-  factory blogPost({
+  factory ArticleSchema.blogPost({
     required String headline,
     required String datePublished,
     required SchemaDataType<PersonSchema> author,
@@ -170,7 +170,7 @@ class ArticleSchema extends Schema {
   }
 
   /// Factory constructor for scholarly articles
-  factory scholarlyArticle({
+  factory ArticleSchema.scholarlyArticle({
     required String headline,
     required String datePublished,
     required SchemaDataType<PersonSchema> author,

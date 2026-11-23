@@ -33,7 +33,7 @@ Answers "does jaspr_faltool already provide this?" here and routes "how do I cal
 - The barrel hides numeral's `NumeralNumExtension`, so `.percent` on a number is jaspr's CSS unit. numeral's `compact()`, `decimal()`, `percent()`, `bytes()`, and `currency()` number methods are not in scope either; `toPercentage` and the other number extensions from `dart_faltool` still are.
 - Code that reaches the browser (`@client` islands and anything they import) never imports `dart:io`, `package:jaspr/server.dart`, or `jaspr_falserver`. Server code may use `dart:io`.
 - Write constructors with the type name (`const Foo(...)`, `Foo._()`), never `new(...)`: consuming apps run jaspr_builder 0.23.5, which rejects primary constructors.
-- `ShareUtils` reads `window` with no `kIsWeb` check, so calling it during server rendering throws. Call it only in the browser, for example from an `onClick` handler in a `@client` island. `ShareLinks` is safe on both sides.
+- `ShareUtils` does nothing on the server, and `copyToClipboard` returns `false` there or when the browser refuses. `ShareLinks` is safe on both sides.
 - Every `Log` method writes nothing when jaspr's `kReleaseMode` is true, so do not rely on `Log` for production server logs.
 - `Log` defaults to logger's `DevelopmentFilter`, which logs only when asserts are on. Call `Log.setup(filter: ProductionFilter())` to log in every non-release run.
 - `EmojiWrapper.wrapEmojis` returns HTML and escapes nothing else in the text. Render it with `RawText` only for trusted or already escaped text; user input rendered that way is an XSS hole.

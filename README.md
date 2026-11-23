@@ -71,7 +71,7 @@ A skill you copied by hand into `.claude/skills/` is replaced only if your app l
 | `jaspr_falconx`    | `jaspr-falconx-package`, `jaspr-falconx-faltool-utils`, `jaspr-falconx-falmodel-state`, `jaspr-falconx-falconnect-network`, `jaspr-falconx-falkit-components`, `jaspr-falconx-falstore-storage`, `jaspr-falconx-falmonitor-monitoring`, `jaspr-falconx-dart-faltool-utils`, `jaspr-falconx-dart-falmodel-models`, `jaspr-falconx-dart-falconnect-network` |
 | `jaspr_faltool`    | `jaspr-faltool-utils`, `jaspr-faltool-dart-faltool-utils` |
 | `jaspr_falmodel`   | `jaspr-falmodel-state`, `jaspr-falmodel-dart-falmodel-models` |
-| `jaspr_falconnect` | `jaspr-falconnect-network`, `jaspr-falconnect-dart-falconnect-network` |
+| `jaspr_falconnect` | `jaspr-falconnect-network`, `jaspr-falconnect-dart-falconnect-network`, `jaspr-falconnect-falmodel-state`, `jaspr-falconnect-dart-falmodel-models` |
 | `jaspr_falkit`     | `jaspr-falkit-components`, `jaspr-falkit-falmodel-state`, `jaspr-falkit-dart-falmodel-models` |
 | `jaspr_falstore`   | `jaspr-falstore-storage` |
 | `jaspr_falmonitor` | `jaspr-falmonitor-monitoring` |

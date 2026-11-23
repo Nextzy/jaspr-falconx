@@ -13,7 +13,7 @@ Answers "does jaspr_falmonitor already provide this?" here and routes "how do I 
 
 | Need | Use | Sentry | Umami | Ref |
 |---|---|---|---|---|
-| Start monitoring in the browser | `Monitoring.init(sentry:, umami:)` | `Sentry.init` with the DSN | stores the option | below |
+| Start monitoring in the browser | `Monitoring.init(sentry:, umami:)` | `Sentry.init` with the DSN | adds the tracker script when `scriptUrl` and `websiteId` are set | below |
 | Report an error | `Monitoring.captureError(error, stackTrace:, attributes:)` | `Sentry.captureException` | does nothing | `references/sentry.md` |
 | Track a user action | `Monitoring.captureEvent(type:, name:, screenName:, eventAttributes:)` | an info-level event with a breadcrumb | `umami.track(type, data)` | `references/sentry.md`, `references/umami.md` |
 | Record a page view | `Monitoring.captureScreenView(path, referrer:)` | does nothing | `umami.track()` | `references/umami.md` |
@@ -32,7 +32,10 @@ Future<void> startMonitoring() async {
   if (!kIsWeb) return;
   await Monitoring.init(
     sentry: const SentryAnalyticOption(dns: sentryDsn, sendDefaultPii: false),
-    umami: const UmamiAnalyticOption(),
+    umami: const UmamiAnalyticOption(
+      websiteId: 'your-website-id',
+      scriptUrl: 'https://cloud.umami.is/script.js',
+    ),
   );
 }
 
@@ -42,10 +45,10 @@ Future<void> reportFailure(Object error, StackTrace stackTrace) =>
 
 Call `startMonitoring` once, from the client entrypoint or from a `@client` island's `initState`. `init` then:
 
-1. reads the device id from `localStorage` key `monitoring_device_id`, or generates and stores one (timestamp, random number, and a hash of browser traits);
-2. collects `deviceInfo` from `navigator`, `screen`, and `window`;
+1. reads the device id from `localStorage` key `monitoring_device_id`, or generates and stores a random 32-character hex id from `Random.secure()` (a stored value in any other format is replaced);
+2. collects `deviceInfo` from `navigator` and `screen`: exactly `platform`, `browser_name`, `language`, `screen_width`, and `screen_height`, or a single `error` key when the browser read fails;
 3. runs each given handler's `initial`;
-4. sends the device id and `deviceInfo` to both handlers' `setupUserIdentifier`.
+4. sends the device id and those five attributes (or the single `error` key) to both handlers' `setupUserIdentifier`.
 
 `Monitoring.userDeviceId` and `Monitoring.deviceInfo` throw until `init` has run. `getDeviceId()` reads or creates the id without the rest of `init`. The type parameter on `init` is unused.
 
@@ -102,9 +105,9 @@ The abstract methods return `FutureOr<void>`; a `Future<void>` override is valid
 ## Gotchas
 
 - `Monitoring.init` is browser-only. It reads `window.localStorage` and `navigator` through `universal_web`, whose server stubs throw, and an island's `initState` also runs during server pre-rendering, so guard it with `kIsWeb`. The `capture*` calls are safe on the server: `UmamiHandler` is a stub there, and an uninitialized `SentryHandler` does nothing.
-- `init` sends the device id and `deviceInfo` (user agent, language, screen and window sizes) to both handlers: Sentry gets them as the user id and user data, and Umami gets the whole `deviceInfo` map as `umami.identify` session data. `sendDefaultPii` controls neither. It defaults to `true` and adds request headers and the IP address to Sentry events; set it to `false` unless users consented, and leave the Umami option out (or `enabled: false`) when session data needs consent too.
+- `init` sends a random device id and five attributes (`platform`, `browser_name`, `language`, `screen_width`, `screen_height`) to both handlers: Sentry gets them as the user id and user data, and Umami gets the map as `umami.identify` session data. The stored device id is a persistent identifier, so consent guidance applies to Sentry as well as Umami. `sendDefaultPii` defaults to `false`, but the Sentry 10.6.0 web SDK attaches regardless of it the full User-Agent header, the page URL with query string and fragment, the timezone name, `deviceMemory`, available screen size, `devicePixelRatio`, orientation, and online state. On web, `sendDefaultPii: true` only adds the auto-inferred IP address (`{{auto}}`). An app that needs less must add its own Sentry scrubbing (for example `beforeSend`); this package does none. Leave the Umami option out (or `enabled: false`) when session data needs consent.
 - The Sentry option field is named `dns`, but it takes the Sentry DSN.
-- `UmamiHandler` never adds the Umami tracker script, and its `websiteId`, `scriptUrl`, `hostUrl`, `autoTrack`, and `domains` are unused. Add the script to the document head yourself; see `references/umami.md`.
+- `UmamiHandler.initial` adds the tracker when `scriptUrl` and `websiteId` are set, so remove a hand-added Umami `<script>`; calls do nothing while `window.umami` is missing. See `references/umami.md`.
 - Errors go to Sentry only, and page views to Umami only.
 - `Monitoring` has no public method for a signed-in user; call the handlers' `setupUserIdentifier` directly.
 - Code that reaches the browser (`@client` islands and anything they import) never imports `dart:io`, `package:jaspr/server.dart`, or `jaspr_falserver`. Server code may use `dart:io`.

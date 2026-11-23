@@ -102,7 +102,7 @@ class WebPageSchema extends Schema {
        );
 
   /// Creates a basic WebPage schema with essential SEO properties
-  factory basic({
+  factory WebPageSchema.basic({
     required String name,
     required String url,
     String? description,
@@ -125,7 +125,7 @@ class WebPageSchema extends Schema {
   }
 
   /// Creates a WebPage schema for article-like content
-  factory article({
+  factory WebPageSchema.article({
     required String headline,
     required String url,
     required String datePublished,

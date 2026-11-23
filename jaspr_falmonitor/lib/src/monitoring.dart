@@ -1,6 +1,7 @@
 import 'dart:async';
-import 'dart:math' as math;
+import 'dart:math';
 
+import 'package:jaspr_falmonitor/src/device_identity.dart';
 import 'package:jaspr_falmonitor/src/src.dart';
 import 'package:universal_web/web.dart' as web;
 
@@ -100,115 +101,31 @@ class Monitoring {
   static Future<Map<String, Object>> _getDeviceInfo() async {
     if (_deviceInfo != null) return _deviceInfo!;
 
-    final deviceData = <String, Object>{};
-
+    final Map<String, Object> deviceData;
     try {
-      // Get browser info from window.navigator
       final navigator = web.window.navigator;
-      deviceData
-        ..addAll({
-          'platform': 'web',
-          'browser_name': _getBrowserName(navigator.userAgent),
-          'app_name': navigator.appName,
-          'app_version': navigator.appVersion,
-          'user_agent': navigator.userAgent,
-          'vendor': navigator.vendor,
-          'language': navigator.language,
-          'languages': navigator.language,
-          'browser_platform': navigator.platform,
-          'product': navigator.product,
-          'vendor_sub': navigator.vendorSub,
-          'max_touch_points': navigator.maxTouchPoints,
-          'hardware_concurrency': navigator.hardwareConcurrency,
-          'app_code_name': navigator.appCodeName,
-          'product_sub': navigator.productSub,
-          'online': navigator.onLine,
-          'cookie_enabled': navigator.cookieEnabled,
-          'locale': navigator.language,
-          'timestamp': DateTime.now().toIso8601String(),
-        })
-        // Add screen info
-        ..addAll({
-          'screen_width': web.window.screen.width,
-          'screen_height': web.window.screen.height,
-          'screen_available_width': web.window.screen.availWidth,
-          'screen_available_height': web.window.screen.availHeight,
-          'screen_color_depth': web.window.screen.colorDepth,
-          'screen_pixel_depth': web.window.screen.pixelDepth,
-          'device_pixel_ratio': web.window.devicePixelRatio,
-        })
-        // Add window info
-        ..addAll({
-          'window_inner_width': web.window.innerWidth,
-          'window_inner_height': web.window.innerHeight,
-          'window_outer_width': web.window.outerWidth,
-          'window_outer_height': web.window.outerHeight,
-        });
+      deviceData = deviceAttributes(
+        userAgent: navigator.userAgent,
+        language: navigator.language,
+        screenWidth: web.window.screen.width,
+        screenHeight: web.window.screen.height,
+      );
     } on Object catch (e) {
-      deviceData['error'] = 'Failed to get device info: $e';
+      return _deviceInfo = {'error': 'Failed to get device info: $e'};
     }
 
-    _deviceInfo = deviceData;
-    return deviceData;
-  }
-
-  static String _getBrowserName(String userAgent) {
-    final ua = userAgent.toLowerCase();
-    if (ua.contains('firefox')) return 'Firefox';
-    if (ua.contains('samsungbrowser')) return 'Samsung Internet';
-    if (ua.contains('opera') || ua.contains('opr')) return 'Opera';
-    if (ua.contains('trident')) return 'Internet Explorer';
-    if (ua.contains('edge')) return 'Edge';
-    if (ua.contains('chrome')) return 'Chrome';
-    if (ua.contains('safari')) return 'Safari';
-    return 'Unknown';
+    return _deviceInfo = deviceData;
   }
 
   static Future<String> getDeviceId() async {
-    // Try to get from localStorage first
     const storageKey = 'monitoring_device_id';
     final storage = web.window.localStorage;
 
     final deviceId = storage.getItem(storageKey);
+    if (deviceId != null && isDeviceId(deviceId)) return deviceId;
 
-    if (deviceId == null || deviceId.isEmpty) {
-      // Generate a new device ID
-      final newDeviceId = _generateDeviceId();
-      storage.setItem(storageKey, newDeviceId);
-      return newDeviceId;
-    }
-
-    return deviceId;
-  }
-
-  static String _generateDeviceId() {
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final random = math.Random();
-    final randomValue = random.nextInt(999999);
-
-    // Create a unique ID combining timestamp and random value
-    final id = '$timestamp-${randomValue.toString().padLeft(6, '0')}';
-
-    // Add browser fingerprint for more uniqueness
-    final navigator = web.window.navigator;
-    final fingerprint = [
-      navigator.userAgent,
-      navigator.language,
-      navigator.platform,
-      web.window.screen.colorDepth.toString(),
-      web.window.screen.width.toString(),
-      web.window.screen.height.toString(),
-      DateTime.now().timeZoneOffset.inMinutes.toString(),
-    ].join('|');
-
-    // Create a simple hash of the fingerprint
-    var hash = 0;
-    for (var i = 0; i < fingerprint.length; i++) {
-      final char = fingerprint.codeUnitAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-
-    return '$id-${hash.abs().toRadixString(16)}';
+    final newDeviceId = generateDeviceId(Random.secure());
+    storage.setItem(storageKey, newDeviceId);
+    return newDeviceId;
   }
 }

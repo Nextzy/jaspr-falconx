@@ -124,7 +124,7 @@ class PersonSchema extends Schema {
        );
 
   /// Factory constructor for basic person
-  factory basic({
+  factory PersonSchema.basic({
     required String name,
     String? url,
     String? email,
@@ -143,7 +143,7 @@ class PersonSchema extends Schema {
   }
 
   /// Factory constructor for author
-  factory author({
+  factory PersonSchema.author({
     required String name,
     String? url,
     String? email,
@@ -164,7 +164,7 @@ class PersonSchema extends Schema {
   }
 
   /// Factory constructor for team member
-  factory teamMember({
+  factory PersonSchema.teamMember({
     required String name,
     required String givenName,
     required String familyName,
@@ -189,7 +189,7 @@ class PersonSchema extends Schema {
   }
 
   /// Factory constructor for professional profile
-  factory professional({
+  factory PersonSchema.professional({
     required String name,
     required String givenName,
     required String familyName,
@@ -222,7 +222,7 @@ class PersonSchema extends Schema {
   }
 
   /// Factory constructor for creative person
-  factory creative({
+  factory PersonSchema.creative({
     required String name,
     String? givenName,
     String? familyName,
@@ -251,7 +251,7 @@ class PersonSchema extends Schema {
   }
 
   /// Factory constructor for executive
-  factory executive({
+  factory PersonSchema.executive({
     required String name,
     required String givenName,
     required String familyName,

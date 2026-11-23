@@ -1,5 +1,4 @@
 import 'package:jaspr_falconnect/jaspr_falconnect.dart';
-import 'package:jaspr_falmodel/jaspr_falmodel.dart';
 import 'package:test/test.dart';
 
 class _Repo extends FalRepository;

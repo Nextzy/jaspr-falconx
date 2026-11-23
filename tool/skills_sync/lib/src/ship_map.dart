@@ -10,7 +10,7 @@ const Map<String, List<String>> shipMap = {
     'jaspr_falstore',
     'jaspr_faltool',
   ],
-  'jaspr_falconnect': ['dart_falconnect'],
+  'jaspr_falconnect': ['dart_falconnect', 'jaspr_falmodel'],
   'jaspr_falmodel': ['dart_falmodel'],
   'jaspr_faltool': ['dart_faltool'],
   'jaspr_falkit': ['jaspr_falmodel'],

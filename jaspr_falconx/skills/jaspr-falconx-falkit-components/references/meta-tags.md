@@ -8,7 +8,7 @@ Every parameter is optional unless the table says otherwise. A `String?` that is
 
 | Parameter | Emits |
 |---|---|
-| `title` | `<title>`, written as raw HTML |
+| `title` | `<title>`, text-escaped |
 | `description`, `publisher`, `author`, `robots`, `themeColor` | `<meta name="...">` (`theme-color` for `themeColor`) |
 | `keywords` (`List<String>`) | one `keywords` meta, trimmed and joined with `, ` |
 | `canonical` | `<link rel="canonical">` |
@@ -38,11 +38,11 @@ Every parameter is optional unless the table says otherwise. A `String?` that is
 | Component | Parameters (defaults) | Always emits |
 |---|---|---|
 | `TwitterMeta` | `card` (`'summary_large_image'`), `site`, `creator`, `title`, `description`, `image`, `imageAlt` | `twitter:card`, with no `content` when `card` is `null` |
-| `AppleMeta` | `title`, `capable`, `fullscreen`, `iconUrl`, `color`, `appleIcon`, `pwaScript` (an `unpkg.com` URL of `ios-pwa-splash`) | `apple-mobile-web-app-status-bar-style` `default`, `apple-mobile-web-app-capable`, `mobile-web-app-capable`, `apple-touch-fullscreen` (`capable` and `fullscreen` default to `yes`), and an inline script |
-| `MicrosoftMeta` | `msValidate` (`'verification_token'`), `tileColor`, `tileImageUrl` | `msvalidate.01` |
+| `AppleMeta` | `title`, `capable`, `fullscreen`, `iconUrl`, `color`, `appleIcon`, `pwaScript` (URL of an iOS splash library, default `null`) | `apple-mobile-web-app-status-bar-style` `default`, `apple-mobile-web-app-capable`, `mobile-web-app-capable`, `apple-touch-fullscreen` (`capable` and `fullscreen` default to `yes`), and, only when `pwaScript` is set, an inline script |
+| `MicrosoftMeta` | `msValidate` (`null`), `tileColor`, `tileImageUrl` | `msvalidate.01`, only when `msValidate` is not blank |
 | `PinterestMeta` | `pinterestRichPin`, `author` | `pinterest-rich-pin` (`true` when `null`); `author` writes `article:author` |
 
-`AppleMeta` adds `<link rel="apple-touch-icon">` from `appleIcon ?? iconUrl`. Its inline script waits for `window.load`, checks for iOS, then loads `pwaScript` and calls `iosPWASplash(icon, color ?? '#FFFFFF')`. With no icon it passes the string `'null'`.
+`AppleMeta` adds `<link rel="apple-touch-icon">` from `appleIcon ?? iconUrl`. Its inline script waits for `window.load`, checks for iOS, then loads `pwaScript` and calls `iosPWASplash(icon, color ?? '#FFFFFF')`. With no icon it passes `null`. With `pwaScript` unset or blank it renders no script and loads nothing. Values go into the script as JSON string literals, so a quote or `</script>` in them cannot break out.
 
 ## `AlternateLanguageMeta`
 
@@ -55,7 +55,7 @@ Each renders a bare `<meta>` or `<link>`; place it inside `Document.head`.
 | Component | Parameters (defaults) | `id` |
 |---|---|---|
 | `Meta` | `id`, `name`, `property`, `content`, `unique` (`false`) | with `unique: true`, a 5-character hash of `id`, `name`, and `property` |
-| `LinkHeader` | `href` (required), `id`, `rel`, `type`, `as`, `attributes`, `events`, `unique` (`true`) | with `unique: true`, a hash of `id`, `rel`, `type`, `as`, and `attributes` |
+| `LinkHeader` | `href` (required), `id`, `rel`, `type`, `as`, `attributes`, `events`, `unique` (`true`) | with `unique: true`, a hash of `id`, `href`, `rel`, `type`, `as`, and `attributes`; the singleton links (`canonical`, `manifest`, `image_src`, `apple-touch-icon`, the favicons, and the `hreflang` alternates, one per locale) use a fixed `id`, so a deeper head replaces them |
 
 jaspr's `Document.head` lets a deeper or later head replace an element with the same `id`, a `<meta>` with the same `name`, and any `<title>`. The hashed `id` extends that to `property` metas such as `og:title`.
 
@@ -89,7 +89,6 @@ class PlainHead extends StatelessComponent {
 
 ## Gotchas
 
-- `LinkHeader`'s hashed `id` leaves out `href`: two `unique: true` links that differ only in `href` share an `id`, and only the last one stays. Pass `unique: false` or distinct `id`s.
-- `title` goes into `<title>` as raw HTML; every `content` attribute is escaped. Strip `<` from untrusted titles.
+- Singleton links (`canonical`, `manifest`, `image_src`, `apple-touch-icon`, and the two favicon links) are keyed by `rel`, so the deepest head wins; other `unique: true` links are keyed by `rel` plus `href`, so links with different `href` coexist.
 - `ArticleOpenGraphMeta`'s `article:author` and `PinterestMeta`'s `author` both write `article:author`, so an article page rendered by `SeoMetaTags` can carry it twice.
-- `AppleMeta`'s script loads from `unpkg.com`. A `script-src` policy must allow that host and the inline script, or iOS gets no splash screen.
+- `AppleMeta` renders its inline script only when `pwaScript` is set. A `script-src` policy must then allow the inline script and the `pwaScript` host, or iOS gets no splash screen.

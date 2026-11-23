@@ -139,7 +139,7 @@ class WebSiteSchema extends Schema {
        );
 
   /// Creates a WebSite schema with search action for site search functionality
-  factory withSearch({
+  factory WebSiteSchema.withSearch({
     required String name,
     required String url,
     required String searchUrlTemplate,
@@ -166,7 +166,7 @@ class WebSiteSchema extends Schema {
   }
 
   /// Creates a basic website schema
-  factory basic({
+  factory WebSiteSchema.basic({
     required String name,
     required String url,
     String? description,
@@ -183,7 +183,7 @@ class WebSiteSchema extends Schema {
   }
 
   /// Creates a blog website schema
-  factory blog({
+  factory WebSiteSchema.blog({
     required String name,
     required String url,
     String? description,
@@ -204,7 +204,7 @@ class WebSiteSchema extends Schema {
   }
 
   /// Factory constructor for e-commerce websites
-  factory ecommerce({
+  factory WebSiteSchema.ecommerce({
     required String name,
     required String url,
     String? description,
@@ -225,7 +225,7 @@ class WebSiteSchema extends Schema {
   }
 
   /// Factory constructor for educational websites
-  factory educational({
+  factory WebSiteSchema.educational({
     required String name,
     required String url,
     String? description,

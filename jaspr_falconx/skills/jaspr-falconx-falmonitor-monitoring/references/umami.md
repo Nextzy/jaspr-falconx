@@ -4,16 +4,22 @@
 
 ## `UmamiAnalyticOption`
 
-| Field | Default | Read by the handler |
+| Field | Default | Tracker attribute |
 |---|---|---|
-| `enabled` | `true` | yes |
-| `websiteId`, `scriptUrl`, `hostUrl`, `autoTrack`, `domains` | `null` | no |
+| `enabled` | `true` | none; `false` turns the handler off |
+| `scriptUrl` | `null` | `src` |
+| `websiteId` | `null` | `data-website-id` |
+| `hostUrl` | `null` | `data-host-url`, only when set |
+| `autoTrack` | `null` | `data-auto-track` (`"true"` or `"false"`), only when set |
+| `domains` | `null` | `data-domains`, comma-joined, only when set |
 
-`initial(option)` only stores the option. It does not load the tracker, so add the Umami script to your document head yourself:
+When `enabled` and both `scriptUrl` and `websiteId` are set, `initial(option)` appends one `<script defer>` with those attributes to `document.head` and completes when it fires `load` or `error`, or after 10 seconds, with one warning, if the script never answers. Remove a hand-added Umami `<script>`, or the page loads the tracker twice. `initial` loads the tracker once per page: a later call with a different `websiteId` or `scriptUrl` does not replace the script. With either field unset, `initial` only stores the option and you load the tracker yourself. `UmamiHandler.resetTrackerLoad()` is a test-only hook that clears the once-per-page memo.
 
-```html
-<script defer src="https://umami.example.com/script.js"
-        data-website-id="your-website-id"></script>
+```dart
+const UmamiAnalyticOption(
+  websiteId: 'your-website-id',
+  scriptUrl: 'https://umami.example.com/script.js',
+);
 ```
 
 ## What each call sends
@@ -35,7 +41,7 @@ Future<void> trackSignup(String plan) => Monitoring.captureEvent(
 
 ## Gotchas
 
-- The tracker must be on the page before `Monitoring.init` runs with an Umami option, because `init` calls `setupUserIdentifier`, which reads `window.umami` with no error guard. `captureEvent` and `captureScreenView` catch their errors and log them with `Log.w` from `jaspr_faltool`.
+- Every handler call does nothing, after one `Log.w` from `jaspr_faltool`, while `window.umami` is undefined: the script failed to load, an ad blocker stopped it, or `initial` has not run.
 - To send a user id, put it in `attributes` under `id`; Umami uses an `id` property in the `identify` data as the Distinct ID.
-- The tracker records page views by default. Calling `captureScreenView` on every route change as well counts each page twice; turn the tracker's own page views off with `data-auto-pageview="false"` (Umami 3.2 and later) if you send them yourself.
+- The tracker records page views by default. Calling `captureScreenView` on every route change as well counts each page twice; set `autoTrack: false` (`data-auto-track="false"`) if you send them yourself. It disables all automatic tracking, page views, click events, and path changes alike, so send those you still want.
 - `eventAttributes` keys share one object with `name` and `screen_name`, so an attribute with either key overwrites it.

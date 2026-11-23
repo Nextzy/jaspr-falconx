@@ -10,7 +10,9 @@ class ResultStreamFetcherList {
   }) {
     _fetcherMap.removeWhere((key, value) => value.isClose);
     if (_canFetch(key, debounceFetch)) {
-      final fetcher = ResultStreamFetcher<T>();
+      final fetcher = ResultStreamFetcher<T>(
+        BehaviorSubject<ComponentState<T?>>(),
+      );
       _fetcherMap[key] = fetcher;
       return fetcher.fetch(call);
     } else {

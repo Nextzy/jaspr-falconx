@@ -164,7 +164,7 @@ class SoftwareApplicationSchema extends Schema {
        );
 
   /// Factory constructor for mobile applications
-  factory mobileApp({
+  factory SoftwareApplicationSchema.mobileApp({
     required String name,
     required List<String> operatingSystem,
     String? url,
@@ -197,7 +197,7 @@ class SoftwareApplicationSchema extends Schema {
   }
 
   /// Factory constructor for desktop applications
-  factory desktopApp({
+  factory SoftwareApplicationSchema.desktopApp({
     required String name,
     required List<String> operatingSystem,
     String? url,
@@ -412,7 +412,7 @@ class WebApplicationSchema extends Schema {
        );
 
   /// Factory constructor for SaaS applications
-  factory saas({
+  factory WebApplicationSchema.saas({
     required String name,
     required String url,
     String? description,
@@ -439,7 +439,7 @@ class WebApplicationSchema extends Schema {
   }
 
   /// Factory constructor for progressive web apps
-  factory pwa({
+  factory WebApplicationSchema.pwa({
     required String name,
     required String url,
     String? description,

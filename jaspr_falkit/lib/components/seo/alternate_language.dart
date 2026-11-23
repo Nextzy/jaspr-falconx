@@ -17,6 +17,8 @@ class AlternateLanguageMeta extends StatelessComponent {
     children: tags
         .map(
           (tag) => LinkHeader(
+            id: 'link-alternate-${tag.locale ?? tag.url}',
+            unique: false,
             rel: 'alternate',
             href: tag.url ?? '',
             attributes: {if (tag.locale != null) 'hreflang': tag.locale!},

@@ -1,4 +1,5 @@
 import 'package:jaspr_falkit/lib.dart';
+import 'package:jaspr_falkit/src/script_json.dart';
 
 class AppleMeta extends StatelessComponent {
   const AppleMeta({
@@ -8,7 +9,7 @@ class AppleMeta extends StatelessComponent {
     this.iconUrl,
     this.color,
     this.appleIcon,
-    this.pwaScript = 'https://unpkg.com/ios-pwa-splash@1.0.0/cdn.min.js',
+    this.pwaScript,
   });
 
   final String? title;
@@ -17,7 +18,9 @@ class AppleMeta extends StatelessComponent {
   final String? iconUrl;
   final String? color;
   final String? appleIcon;
-  final String pwaScript;
+
+  /// URL of an iOS splash library; the inline script loads it only when set.
+  final String? pwaScript;
 
   @override
   Component build(BuildContext context) => Document.head(
@@ -45,13 +48,19 @@ class AppleMeta extends StatelessComponent {
         unique: true,
       ),
       if (appleIcon.isNotNullOrBlank || iconUrl.isNotNullOrBlank)
-        LinkHeader(rel: 'apple-touch-icon', href: appleIcon ?? iconUrl!),
-      script(
-        id: (appleIcon ?? iconUrl)?.hashSha256(length: 5),
-        // Load `pwaScript` only on iOS, after `window.load`, and call into it
-        // from its `onload` so other platforms never download it.
-        content:
-            """
+        LinkHeader(
+          id: 'link-apple-touch-icon',
+          unique: false,
+          rel: 'apple-touch-icon',
+          href: appleIcon ?? iconUrl!,
+        ),
+      if (pwaScript.isNotNullOrBlank)
+        script(
+          id: (appleIcon ?? iconUrl)?.hashSha256(length: 5),
+          // Load `pwaScript` only on iOS, after `window.load`, and call into it
+          // from its `onload` so other platforms never download it.
+          content:
+              """
 window.addEventListener('load', function() {
   var isIOS = (
     ['iPad Simulator','iPhone Simulator','iPod Simulator','iPad','iPhone','iPod']
@@ -62,15 +71,15 @@ window.addEventListener('load', function() {
   
   if (isIOS) {
     var s = document.createElement('script');
-    s.src = '$pwaScript';
+    s.src = ${encodeScriptJson(pwaScript)};
     s.onload = function() {
-      iosPWASplash('${appleIcon ?? iconUrl}', '${color ?? '#FFFFFF'}');
+      iosPWASplash(${encodeScriptJson(appleIcon ?? iconUrl)}, ${encodeScriptJson(color ?? '#FFFFFF')});
     };
     document.head.appendChild(s);
   }
 });
 """,
-      ),
+        ),
     ],
   );
 }

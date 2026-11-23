@@ -100,7 +100,7 @@ class BlogPostingSchema extends Schema {
        );
 
   /// Factory constructor for personal blog posts
-  factory personal({
+  factory BlogPostingSchema.personal({
     required String headline,
     required DateTime datePublished,
     required SchemaDataType<PersonSchema> author,
@@ -125,7 +125,7 @@ class BlogPostingSchema extends Schema {
   }
 
   /// Factory constructor for corporate blog posts
-  factory corporate({
+  factory BlogPostingSchema.corporate({
     required String headline,
     required DateTime datePublished,
     required SchemaDataType<PersonSchema> author,

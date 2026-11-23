@@ -1,13 +1,13 @@
 ---
 name: jaspr-falconnect-network
-description: Use when calling `jaspr_falconnect` APIs such as `jasprHttpClientConfig`, `FalRepository.runDataCatching`, `ResultStreamFetcher`, or `ResultStreamFetcherList`, or before writing an HTTP client configuration, a repository try/catch that turns errors into a `Result`, or a fetch stream that emits loading and success states of your own, since jaspr_falconnect also re-exports dart_falconnect and the networking libraries it brings.
+description: Use when calling `jaspr_falconnect` APIs such as `jasprHttpClientConfig`, `FalRepository.runDataCatching`, `ResultStreamFetcher`, or `ResultStreamFetcherList`, or before writing an HTTP client configuration, a repository try/catch that turns errors into a `Result`, or a fetch stream that emits loading and success states of your own, or when asking where `Result` or `ComponentState` comes from, since jaspr_falconnect also re-exports dart_falconnect, the networking libraries it brings, and jaspr_falmodel.
 ---
 
 # jaspr_falconnect network
 
 Answers "does jaspr_falconnect already provide this?" here and routes "how do I call it?" to `references/repository.md`. `package: jaspr_falconnect`; its barrel also re-exports `dart_falconnect`, so `dio`, `retrofit`, `dio_cache_interceptor`, `web_socket_channel`, `HttpClientConfig`, `DefaultHttpClient`, the interceptors, and `DatasourceBoundState` come with it. HTTP, WebSocket, and JSON-RPC detail lives in the skill shipped for `dart_falconnect` (installed with this package).
 
-`Result`, `ComponentState`, `DataLayerException`, and the other exception types that these APIs take and return come from `jaspr_falmodel` (which re-exports `dart_falmodel`). This barrel does not re-export them.
+`Result`, `ComponentState`, `DataLayerException`, and the other exception types that these APIs take and return come from `jaspr_falmodel` (which re-exports `dart_falmodel`). This barrel also re-exports `jaspr_falmodel`, so they need no separate import.
 
 ## Capability map
 
@@ -52,7 +52,6 @@ It also sets `contentType` to JSON. Every other `HttpClientConfig` field keeps i
 - The logger is added only when `debugLogging ?? kDebugMode` is true, so release builds (`kReleaseMode`) never construct it. Pass `debugLogging: false` to keep it off in debug runs too.
 - The logger prints the request line and errors, with no headers or bodies. It prints to the browser console in an island and to stdout on the server.
 - The logger is the last item of the returned config's `interceptors`, so `copyWith(interceptors: ...)` drops it. Pass your interceptors to `jasprHttpClientConfig` instead.
-- `Result` and `ComponentState` are not in this barrel. Code that names them needs `jaspr_falmodel` (or a barrel that re-exports it) in scope, and an app that imports a package directly lists it in its own `pubspec.yaml`. An app that lists `jaspr_falconx` needs no separate `jaspr_falmodel`, because the umbrella re-exports it.
 - Listing `jaspr_falmodel` beside `jaspr_falconnect` (which depends on it) as git dependencies fails `dart pub get` at a tag `ref:`, because the sibling `path: ../` dependencies resolve to the commit hash. Use the tag's full 40-character commit hash as `ref:` for every listed `jaspr_fal*` package; the "When you list more than one package" section of the `jaspr-falconx` README explains how to read it.
 - These APIs return `Result`, never fpdart's `Either`.
 - A fetcher reports a failed `Result` as a stream error carrying the exception, then closes; it never emits a fail state. Always pass `onError` to `listen`. See `references/repository.md`.

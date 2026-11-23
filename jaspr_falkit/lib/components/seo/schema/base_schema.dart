@@ -1,4 +1,5 @@
 import 'package:jaspr_falkit/lib.dart';
+import 'package:jaspr_falkit/src/script_json.dart';
 
 /// Base class for all Schema.org components
 abstract class Schema extends StatelessComponent {
@@ -26,7 +27,7 @@ abstract class Schema extends StatelessComponent {
     },
     children: [
       RawText(
-        jsonEncode(
+        encodeScriptJson(
           Map<String, dynamic>.from(schemaData)
             ..removeWhere((k, v) => v == null),
         ),
@@ -45,13 +46,13 @@ class SchemaGroup extends Schema {
          schemaData: {
            '@context': context,
            '@graph': schemas
-               .map((schema) => schema.schemaData..remove('@context'))
+               .map((schema) => {...schema.schemaData}..remove('@context'))
                .toList(),
          },
        );
 
   /// Factory for common website + organization combo
-  factory websiteWithOrganization({
+  factory SchemaGroup.websiteWithOrganization({
     required String websiteName,
     required String websiteUrl,
     required String organizationName,
@@ -99,7 +100,7 @@ class SchemaGroup extends Schema {
   }
 
   /// Factory for article with breadcrumb
-  factory articleWithBreadcrumb({
+  factory SchemaGroup.articleWithBreadcrumb({
     required String headline,
     required String url,
     required String datePublished,
@@ -157,7 +158,7 @@ class SchemaGroup extends Schema {
   }
 
   /// Factory for blog with recent posts
-  factory blogWithPosts({
+  factory SchemaGroup.blogWithPosts({
     required String blogName,
     required String blogUrl,
     required Map<String, dynamic> publisher,

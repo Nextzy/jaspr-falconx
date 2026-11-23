@@ -1,5 +1,39 @@
 # Changelog
 
+## 4.6.0
+
+Library defects that the package skills had documented as gotchas are fixed, and several defaults change, so read Changed before you upgrade. `jaspr_falmonitor` moves from 0.1.0 to 0.2.0.
+
+### Added
+
+- `jaspr_falconnect`: the barrel re-exports `jaspr_falmodel`, so an app that imports `jaspr_falconnect` no longer needs a second import for the models. It also ships the `jaspr_falmodel` skill copies.
+- A new `melos run check:constructors` guards against constructors written without the type name (`new(...)` and `factory name(...)`), which consuming apps on jaspr_builder 0.23.5 cannot build.
+
+### Changed
+
+- `jaspr_falmonitor`: `sendDefaultPii` now defaults to `false`. Set it to `true` to get the old behaviour.
+- `jaspr_falmonitor`: `Monitoring` sends five attributes instead of the browser fingerprint, plus a random device id. Ids stored by an earlier version are replaced.
+- `jaspr_falmonitor`: when you set `scriptUrl` and `websiteId`, `UmamiHandler` adds the tracker script, so remove a tracker you added by hand or the page loads it twice. Without them it adds nothing.
+- `jaspr_falkit`: `AppleMeta` loads no iOS splash script unless you set `pwaScript`.
+- `jaspr_falkit`: `MicrosoftMeta` writes `msvalidate.01` only when you set `msValidate`; it no longer writes a placeholder.
+- `jaspr_falkit`: the page title is escaped, so pass plain text and not HTML entities such as `&amp;`.
+- `jaspr_falconx`: `pageErrorStatus` answers 404 when `requiredResultData` finds null or invalid data, with or without a `type`, and when a typed failure wraps a CMS 404. Before, all three answered 503.
+
+### Fixed
+
+- `jaspr_falkit`: script-embedded JSON, such as JSON-LD, is escaped so a value cannot close the `<script>` tag.
+- `jaspr_falkit`: `SeoMetaTags` merges the `schemaWebSite` and `schemaBlogPosting` you pass over its defaults and keeps every field of both.
+- `jaspr_falkit`: `LinkHeader` ids include `href`, so two links with the same `rel` no longer replace each other. The canonical, manifest, `image_src`, apple-touch-icon, the two favicon links, and the hreflang alternates use fixed ids, so a deeper head still replaces them.
+- `jaspr_falkit`: schemas encode `DateTime` as ISO-8601, and they encode lazy iterables, `toJson` results, and `const` maps.
+- `jaspr_falkit`: `SchemaGroup` no longer mutates the schemas it groups.
+- `jaspr_falconx`: `ServerData` no longer fails the request when `load` throws. A thrown `CommonException` reaches `errorBuilder` unchanged, and any other error is wrapped as `SystemErrorType.unexpected`.
+- `jaspr_falconnect`: a second debounced fetch caller receives the latest state.
+- `jaspr_falmonitor`: `UmamiHandler.initial` loads the tracker once per page and stops waiting for it after 10 seconds. Calls made while the tracker is missing are skipped.
+- `jaspr_falmonitor`: `autoTrack: false` maps to `data-auto-track="false"`, which turns off all automatic Umami tracking.
+- `jaspr_falmonitor`: the skill now lists what Sentry's web SDK sends whatever `sendDefaultPii` says (user agent, page URL, timezone, and device hints). This package scrubs none of it; add your own Sentry scrubbing if you need less.
+- `jaspr_faltool`: `ShareUtils` does nothing on the server, and `copyToClipboard` returns the real result of the write.
+- `jaspr_falmodel`: `mapData` and `mapState` keep the event of the state they transform.
+
 ## 4.5.0
 
 `jaspr_falmonitor` now ships a skill, so it moves from 0.0.1 to 0.1.0.

@@ -4,7 +4,7 @@ class SentryAnalyticOption extends AnalyticOption {
   const SentryAnalyticOption({
     super.enabled,
     required this.dns,
-    this.sendDefaultPii = true,
+    this.sendDefaultPii = false,
   });
 
   final String dns;

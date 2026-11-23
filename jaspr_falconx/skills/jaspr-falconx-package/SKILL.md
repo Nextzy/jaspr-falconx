@@ -42,8 +42,7 @@ import 'package:jaspr_falconx/jaspr_falconx.dart';
 ## Gotchas
 
 - `ServerData` renders on the server only. Built in the browser it throws `UnsupportedError`, so never put it inside a `@client` island or a component an island renders.
-- `ServerData` handles a failed `Result` and sets no status code. Call `applyPageErrorStatus` in `errorBuilder`, or the error page goes out as 200 (with `cache-control: no-store`). It does not catch an exception that `load` throws; wrap the call in `runDomainCatching` (or `runDataCatching` from `jaspr_falconnect`).
-- `requiredResultData(type: ...)` replaces the failure's type, so a CMS 404 rethrown with your `type` loses its status and `pageErrorStatus` answers 503. See `references/usecase.md`.
+- `ServerData` handles a failed `Result` and sets no status code. Call `applyPageErrorStatus` in `errorBuilder`, or the error page goes out as 200 (with `cache-control: no-store`).
 - `jaspr_falserver` is not re-exported. List it on its own and import `package:jaspr_falserver/jaspr_falserver.dart` only from the server entrypoint and code only it reaches; naming its `Middleware` type also needs `shelf` listed and imported. See `references/setup.md`.
 - In a server file that imports `package:jaspr/server.dart` beside the umbrella, `Response` is both shelf's and dio's (`ambiguous_import`); hide the one you do not use. Beside the umbrella, `HttpResponse` is Retrofit's and shadows `dart:io`'s without a diagnostic. See `references/setup.md`.
 - The `jaspr_faltool` barrel, and so the umbrella, hides fpdart's `Unit` and `option` and numeral's `NumeralNumExtension`; jaspr's CSS `Unit`, `<option>` element, and `.percent` win.

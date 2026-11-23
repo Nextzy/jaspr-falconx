@@ -1,6 +1,6 @@
 # Repository and fetchers
 
-`package: jaspr_falconnect`. `Result`, `ComponentState`, `DataLayerException`, `CommonException`, and `SystemErrorType` are `jaspr_falmodel` types; this barrel does not re-export them.
+`package: jaspr_falconnect`. `Result`, `ComponentState`, `DataLayerException`, `CommonException`, and `SystemErrorType` are `jaspr_falmodel` types, which this barrel re-exports.
 
 ## `FalRepository`
 
@@ -17,7 +17,7 @@ It awaits `execute` and returns its `Result`, success or failure, unchanged. Any
 | any other `CommonException`, such as a `NetworkNotFoundException` | a `DataLayerException` with the same `type`, `userMessage`, `developerMessage`, `originalException`, and `stackTrace` |
 | any other object | a `DataLayerException` with `type: SystemErrorType.unexpected`, `developerMessage: e.toString()`, the object as `originalException`, and the stack trace |
 
-Wrap each repository method's whole body, so a thrown error never reaches the caller. With `Result` in scope (from `jaspr_falmodel`), a method reads `Future<Result<Article>> article(int id) => runDataCatching(() async => Result.success(await _api.getArticle(id)));`, where `_api` is your Retrofit client. `DatasourceBoundState.asRemoteResultFuture` from `dart_falconnect` also returns a `Future<Result<T>>` and can be the body.
+Wrap each repository method's whole body, so a thrown error never reaches the caller. With `Result` in scope (this barrel re-exports `jaspr_falmodel`), a method reads `Future<Result<Article>> article(int id) => runDataCatching(() async => Result.success(await _api.getArticle(id)));`, where `_api` is your Retrofit client. `DatasourceBoundState.asRemoteResultFuture` from `dart_falconnect` also returns a `Future<Result<T>>` and can be the body.
 
 ## `ResultStreamFetcher<T>`
 
@@ -118,7 +118,7 @@ The island starts the fetch behind `kIsWeb`, because `initState` also runs while
 ## Gotchas
 
 - Failures arrive through `onError`, never as a fail `ComponentState`. A `listen` without `onError` sends the exception to the zone's uncaught error handler.
-- The stream is single-subscription. A debounced second call for an open key returns the first call's stream, and listening to it again throws `StateError` (`Stream has already been listened to`). Share one subscription per key, or pass `debounceFetch: false`.
+- `ResultStreamFetcherList` backs each fetcher with a `BehaviorSubject`, so a debounced second call for an open key returns the same stream and its listener receives the latest state (and latest error), including the final success state when it subscribes late.
 - A debounced call ignores its own `call`: a future's result is discarded, and a stream is never listened to.
 - Reusing a key for a different `T` while its fetcher is open throws a `TypeError` from the cast. Give each type its own key.
 - `closeSync` and `closeAsync` close the fetchers but do not empty the list; closed fetchers are dropped on the next `fetchStream` or `fetchFuture`.

@@ -47,7 +47,7 @@ class ContactPointSchema extends Schema {
        );
 
   /// Creates a sales contact point
-  factory sales({
+  factory ContactPointSchema.sales({
     required String telephone,
     String? email,
     SchemaDataType<Schema>? areaServed,
@@ -65,7 +65,7 @@ class ContactPointSchema extends Schema {
   }
 
   /// Creates a customer service contact point
-  factory customerService({
+  factory ContactPointSchema.customerService({
     required String telephone,
     String? email,
     SchemaDataType<Schema>? areaServed,
@@ -85,7 +85,7 @@ class ContactPointSchema extends Schema {
   }
 
   /// Creates a technical support contact point
-  factory technicalSupport({
+  factory ContactPointSchema.technicalSupport({
     required String telephone,
     String? email,
     String? url,
@@ -105,7 +105,7 @@ class ContactPointSchema extends Schema {
   }
 
   /// Creates a billing support contact point
-  factory billing({
+  factory ContactPointSchema.billing({
     required String telephone,
     String? email,
     SchemaDataType<Schema>? availableLanguage,
@@ -121,7 +121,7 @@ class ContactPointSchema extends Schema {
   }
 
   /// Creates a reservations contact point
-  factory reservations({
+  factory ContactPointSchema.reservations({
     required String telephone,
     String? email,
     String? url,
@@ -139,7 +139,7 @@ class ContactPointSchema extends Schema {
   }
 
   /// Creates an emergency contact point
-  factory emergency({
+  factory ContactPointSchema.emergency({
     required String telephone,
     String? email,
     SchemaDataType<Schema>? areaServed,

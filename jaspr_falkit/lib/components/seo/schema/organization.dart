@@ -137,7 +137,7 @@ class OrganizationSchema extends Schema {
        );
 
   /// Factory constructor for corporations
-  factory corporation({
+  factory OrganizationSchema.corporation({
     required String name,
     required String url,
     SchemaDataType<ImageSchema>? logo,
@@ -164,7 +164,7 @@ class OrganizationSchema extends Schema {
   }
 
   /// Factory constructor for non-profit organizations
-  factory nonProfit({
+  factory OrganizationSchema.nonProfit({
     required String name,
     required String url,
     SchemaDataType<ImageSchema>? logo,

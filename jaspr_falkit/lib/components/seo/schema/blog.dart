@@ -123,7 +123,7 @@ class BlogSchema extends Schema {
        );
 
   /// Factory constructor for personal blogs
-  factory personal({
+  factory BlogSchema.personal({
     required String name,
     required String url,
     required SchemaDataType<PersonSchema> author,
@@ -144,7 +144,7 @@ class BlogSchema extends Schema {
   }
 
   /// Factory constructor for corporate blogs
-  factory corporate({
+  factory BlogSchema.corporate({
     required String name,
     required String url,
     required SchemaDataType<OrganizationSchema> publisher,

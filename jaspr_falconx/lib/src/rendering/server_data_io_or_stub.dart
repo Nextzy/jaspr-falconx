@@ -8,7 +8,8 @@ import 'package:jaspr_falmodel/jaspr_falmodel.dart';
 /// [quietWhen] returns true, one line with [logServerInfo]), sets
 /// `cache-control: no-store` on the response so an error page is never
 /// cached, then renders [errorBuilder]. `ServerData` sets no status code;
-/// the error builder picks one.
+/// the error builder picks one. A [load] that throws counts as a failed
+/// load with a [SystemErrorType.unexpected] exception.
 class ServerData<T> extends StatelessComponent {
   /// Creates a server-side data loader.
   const ServerData({
@@ -39,7 +40,7 @@ class ServerData<T> extends StatelessComponent {
   Component build(BuildContext context) {
     return AsyncBuilder(
       builder: (context) async {
-        final result = await load();
+        final result = await _load();
         if (result.isSuccess) {
           return builder(context, result.value);
         }
@@ -61,5 +62,29 @@ class ServerData<T> extends StatelessComponent {
         return errorBuilder(context, error);
       },
     );
+  }
+
+  Future<Result<T>> _load() async {
+    try {
+      return await load();
+    } on CommonException catch (e) {
+      return Result.failure(e);
+    } on Exception catch (e, st) {
+      return Result.failure(
+        CommonException(
+          type: SystemErrorType.unexpected,
+          originalException: e,
+          stackTrace: st,
+        ),
+      );
+    } on Object catch (e, st) {
+      return Result.failure(
+        CommonException(
+          type: SystemErrorType.unexpected,
+          developerMessage: '$e',
+          stackTrace: st,
+        ),
+      );
+    }
   }
 }
