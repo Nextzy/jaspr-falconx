@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 4.5.0
+
+`jaspr_falmonitor` now ships a skill, so it moves from 0.0.1 to 0.1.0.
 
 ### Added
 
